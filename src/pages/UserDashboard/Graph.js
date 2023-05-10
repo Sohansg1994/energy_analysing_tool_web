@@ -2,55 +2,6 @@ import React, { useEffect, useState } from "react";
 import { PieChart, Pie, ResponsiveContainer, Label, LabelList } from "recharts";
 import axios from "axios";
 
-const dataSets = [
-  [
-    { name: "Ground Floor", totalUnits: 15 },
-    { name: "First Floor", totalUnits: 40 },
-  ],
-  [
-    { name: "Lights", totalUnits: 5 },
-    { name: "Kitchen", totalUnits: 10 },
-    { name: "BedRoom", totalUnits: 15 },
-    { name: "TV Lobby", totalUnits: 25 },
-  ],
-  [
-    { name: "Lights", totalUnits: 5 },
-    { name: "Lights", totalUnits: 5 },
-    { name: "Other", totalUnits: 5 },
-    { name: "B1", totalUnits: 15 },
-    { name: "B2", totalUnits: 25 },
-  ],
-];
-
-/*const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-  payload,
-  index,
-}) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="black"
-      position="relative"
-      textAnchor={x > cx ? "start" : "end"}
-      dominantBaseline="central"
-    >
-      {`${payload.name}(${(percent * 100).toFixed(0)}%)`}
-    </text>
-  );
-};*/
-
 export default function Graph(props) {
   const newdataSets = [
     [
@@ -74,6 +25,7 @@ export default function Graph(props) {
   const [dataSets, setDataSets] = useState([]);
   const [projectTotalUnits, setProjectTotalUnits] = useState(null);
   const { projectId } = props;
+  const { isCalculated } = props;
   const pieWidth = 100 / dataSets.length;
   const maxRadius = 225;
   const minRadius = 100;
@@ -105,7 +57,7 @@ export default function Graph(props) {
 
   useEffect(() => {
     getGraphData();
-  }, []);
+  }, [isCalculated]);
 
   return (
     <ResponsiveContainer
@@ -119,7 +71,7 @@ export default function Graph(props) {
             key={i}
             data={data}
             dataKey="totalUnits"
-            cx={`${pieWidth + 5}%`}
+            cx={`${pieWidth + 15}%`}
             cy="50%"
             innerRadius={minRadius + i * radiusStep}
             outerRadius={minRadius + (i + 1) * radiusStep}

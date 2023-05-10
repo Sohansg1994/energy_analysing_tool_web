@@ -50,6 +50,10 @@ const ResultCalculation = (props) => {
   const [calculationSteps, setCalculationSteps] = useState([]);
   const [units, setUnits] = useState("");
 
+  const handleClick = () => {
+    props.handleCalculation();
+  };
+
   const [rows, setRows] = useState([
     createData("Total Units", ""),
     createData("Usage Charge", ""),
@@ -75,6 +79,7 @@ const ResultCalculation = (props) => {
         }
       );
       if (response.status === 200) {
+        handleClick();
         console.log(response);
         setCalculationSteps(response.data.data[0].calculationSteps);
         setUnits(response.data.data[0].totalUnits);

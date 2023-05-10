@@ -77,6 +77,8 @@ function ProjectDetails() {
 
   const [isAddClick, setIsAddClick] = useState(false);
 
+  const [isCalculated, setIsCalculated] = useState(false);
+
   const isOptionEqualToValue = (option, value) => option.id === value.id;
 
   const type = [
@@ -159,7 +161,6 @@ function ProjectDetails() {
     const response = await axios.get(`/project?projectId=${projectId}`, config);
     const backEndData = response.data.root;
     setData(backEndData);
-    console.log("getData");
   };
 
   const addNode = async () => {
@@ -246,8 +247,6 @@ function ProjectDetails() {
     } catch {}
   };
 
-  // Node adding function
-
   //Node find function
   const findNode = (data, nodeId) => {
     if (data.frontEndId === nodeId) {
@@ -262,7 +261,6 @@ function ProjectDetails() {
     }
     return null;
   };
-  //Node Delete Function
 
   //find Parent node
   const findParentNode = (data, nodeId) => {
@@ -310,6 +308,11 @@ function ProjectDetails() {
 
   const handleAddClick = () => {
     getData();
+  };
+
+  const handleCalculation = () => {
+    setIsCalculated(!isCalculated);
+    console.log(isCalculated);
   };
 
   return (
@@ -542,9 +545,15 @@ function ProjectDetails() {
               </Box>
             </Paper>
             <Paper>
-              <ResultCalculation projectId={projectId} isProject={isProject} />
+              <ResultCalculation
+                projectId={projectId}
+                isProject={isProject}
+                handleCalculation={handleCalculation}
+              />
             </Paper>
-            <Paper>{<Graph projectId={projectId} />}</Paper>
+            <Paper>
+              {<Graph projectId={projectId} isCalculated={isCalculated} />}
+            </Paper>
             <Paper sx={{ mb: 10 }}>
               <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
                 <Typography>Download Your Full Report</Typography>

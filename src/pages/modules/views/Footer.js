@@ -2,108 +2,148 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Container from "@mui/material/Container";
-
-function Copyright() {
-  return (
-    <React.Fragment>
-      {"© "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-    </React.Fragment>
-  );
-}
+import { Divider, Typography } from "@mui/material";
+import { MdEmail, MdLocationOn, MdCall } from "react-icons/md";
+import { IoLogoWhatsapp } from "react-icons/io";
+import { FaFacebookSquare, FaLinkedin } from "react-icons/fa";
+import { ImLeaf } from "react-icons/im";
+import { hover } from "@testing-library/user-event/dist/hover";
+import { SupportOutlined } from "@mui/icons-material";
 
 const iconStyle = {
-  width: 48,
-  height: 48,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  backgroundColor: "warning.main",
-  mr: 1,
+  fontSize: "2rem",
   "&:hover": {
-    bgcolor: "warning.dark",
+    fontSize: "4rem",
   },
 };
 
-const LANGUAGES = [
-  {
-    code: "en-US",
-    name: "English",
+const subHeadingStyle = {
+  fontSize: 16,
+  fontFamily: "sans-serif",
+  "&:hover": {
+    borderBottom: "1px solid",
   },
-  {
-    code: "fr-FR",
-    name: "Français",
-  },
-];
-
-// const useStyles = makeStyles((theme) => ({
-//   rootBox: {
-//     [theme.breakpoints.down('md')]: {
-//       justifyContent: 'center'
-//     }
-//   },
-//   footerNav: {
-//     display: 'flex',
-//     flexWrap: 'wrap',
-//     justifyContent: 'center',
-//     marginRight: 'auto',
-//     marginLeft: theme.spacing(3),
-//     marginBottom: theme.spacing(0),
-//
-//     [theme.breakpoints.down('md')]: {
-//       width: '100%',
-//       marginLeft: 'auto',
-//       marginTop: theme.spacing(3),
-//       marginBottom: theme.spacing(2),
-//     }
-//   },
-//   footerLink: {
-//     marginLeft: theme.spacing(3),
-//     marginRight: theme.spacing(3),
-//     [theme.breakpoints.down('md')]: {
-//       marginBottom: theme.spacing(2),
-//     }
-//   },
-// }));
+};
 
 export default function Footer() {
-  const content = {
-    brand: { image: "nereus-assets/img/nereus-light.png", width: 110 },
-    copy: "© 2020 Nereus All rights reserved.",
-    link1: "First Link",
-    link2: "Second Link",
-    link3: "Third Link",
-    link4: "Fourth Link",
-  };
-
-  let brand;
-
-  if (content.brand.image) {
-    brand = (
-      <img src={content.brand.image} alt="" width={content.brand.width} />
-    );
-  } else {
-    brand = content.brand.text || "";
-  }
-
   return (
     <footer>
       <Container
         maxWidth={false}
         sx={{
-          my: 8,
+          mt: 8,
           display: "flex",
-          backgroundColor: "#94AF9F",
-          justifyContent: "center",
+          flexDirection: "row",
+          backgroundColor: "#1e1e1f",
         }}
       >
-        <Box sx={{ py: 4, width: "80%", backgroundColor: "#999" }}>
-          <p>slfkjsd lkfjdfk jsdlfkjd</p>
+        <Box
+          sx={{
+            pt: 4,
+            pb: 2,
+            width: "100%",
+            backgroundColor: "#1e1e1f",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            color: "#fff",
+          }}
+        >
+          <Box
+            sx={{
+              position: "inherit",
+              width: "40%",
+              borderRight: "0.2em solid rgba(105, 105, 106, 0.5) ",
+              padding: "0.5em",
+              display: "flex",
+              pr: 4,
+              justifyContent: "space-between",
+              flexDirection: "row",
+            }}
+          >
+            <Box sx={{ mt: 4 }}>
+              <ImLeaf size="7rem" color="#4caf50" />
+              <Typography
+                sx={{
+                  fontSize: 35,
+                  fontFamily: "Montserrat",
+                }}
+              >
+                GREENBILL
+              </Typography>
+            </Box>
+            <Box>
+              <Typography>Power Consumption Service Provider</Typography>
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              width: "60%",
+              backgroundColor: "#1e1e1f",
+              display: "flex",
+
+              justifyContent: "space-evenly",
+              color: "#fff",
+            }}
+          >
+            <Box>
+              <Typography sx={subHeadingStyle}>FOLLOW US</Typography>
+              {/*<Divider sx={{ backgroundColor: "white" }} />*/}
+              <Box
+                sx={{
+                  py: 3,
+                  display: "flex",
+                  flexDirection: "row",
+                  columnGap: 2,
+                }}
+              >
+                <FaFacebookSquare style={iconStyle} />
+                <FaLinkedin style={iconStyle} />
+              </Box>
+            </Box>
+
+            <Box>
+              <Typography sx={subHeadingStyle}>CONTACT</Typography>
+              {/*<Divider sx={{ backgroundColor: "white" }} />*/}
+              <Box sx={{ py: 3 }}>
+                <Typography sx={{ pb: 1.5 }}>
+                  <MdLocationOn size="1.5rem" />
+                </Typography>
+                <Typography
+                  sx={{
+                    pb: 1.5,
+                    display: "flex",
+                    flexDirection: "row",
+                    columnGap: 2,
+                  }}
+                >
+                  {<MdEmail size="1.5rem" />}
+                  {"support@greenbill.lk"}
+                </Typography>
+                <Typography sx={{ pb: 1.5 }}>
+                  <MdCall size="1.5rem" />
+                </Typography>
+                <Typography>
+                  <IoLogoWhatsapp size="1.5rem" />
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
         </Box>
       </Container>
+      <Box sx={{ backgroundColor: "black", width: "100%" }}>
+        <Typography
+          sx={{
+            color: "#69696a",
+            display: "flex",
+            justifyContent: "center",
+            py: 2,
+          }}
+        >
+          {"© 2023 Copyright: greenbill.lk "}
+        </Typography>
+      </Box>
     </footer>
   );
 }

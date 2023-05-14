@@ -48,7 +48,7 @@ function SignIn() {
         const firstName = response.data.data[0].firstName;
         const role = response.data.data[0].role;
         const accessTokenET = response.data.data[0].accessTokenExpireTime;
-        console.log(accessTokenET);
+        const userId = response.data.data[0].userId;
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
         setFirstName(firstName);
@@ -58,6 +58,10 @@ function SignIn() {
         localStorage.setItem("accessTokenExpiration", accessTokenET);
         localStorage.setItem("firstName", firstName);
         localStorage.setItem("role", role);
+        localStorage.setItem("userId", userId);
+        console.log(accessTokenET);
+        console.log(accessToken);
+        console.log(userId);
 
         console.log(firstName);
 

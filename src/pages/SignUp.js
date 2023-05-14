@@ -23,8 +23,7 @@ function SignUp() {
   const [refreshToken, setRefreshToken] = React.useState(null);
   const [firstName, setFirstName] = React.useState(null);
   const [role, setRole] = React.useState(null);
-  const [accessTokenExpireTime, setAccessTokenExpireTime] =
-    React.useState(null);
+
   let navigate = useNavigate();
 
   const validate = (values) => {
@@ -53,9 +52,9 @@ function SignUp() {
         const firstName = response.data.data[0].firstName;
         const role = response.data.data[0].role;
         const accessTokenET = response.data.data[0].accessTokenExpireTime;
+        const userId = response.data.data[0].userId;
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
-        setAccessTokenExpireTime(accessTokenET);
         setFirstName(firstName);
         setRole(role);
         localStorage.setItem("accessToken", accessToken);
@@ -63,8 +62,10 @@ function SignUp() {
         localStorage.setItem("accessTokenExpiration", accessTokenET);
         localStorage.setItem("firstName", firstName);
         localStorage.setItem("role", role);
-        console.log(accessTokenExpireTime);
+        localStorage.setItem("userId", userId);
+        console.log(accessTokenET);
         console.log(accessToken);
+        console.log(userId);
 
         setSent(true);
         navigate("/subcription");

@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 function SignIn() {
   const [sent, setSent] = React.useState(false);
   const [warning, setWarning] = React.useState(false);
+  const [warningMessage, setWarningMessage] = React.useState(null);
   const [accessToken, setAccessToken] = React.useState(null);
   const [refreshToken, setRefreshToken] = React.useState(null);
   const [firstName, setFirstName] = React.useState(null);
@@ -71,7 +72,8 @@ function SignIn() {
         console.log(response.status);
       }
     } catch (error) {
-      //console.error(error);
+      console.log(error.response.data.message);
+      setWarningMessage(error.response.data.message);
       setWarning(true);
     }
   };
@@ -144,6 +146,9 @@ function SignIn() {
                   mb: 2,
                   fontFamily: "Montserrat",
                   backgroundColor: "#1F8A70",
+                  "&:hover": {
+                    backgroundColor: "#1c7861",
+                  },
                 }}
                 disabled={submitting || sent}
                 fullWidth
@@ -152,7 +157,7 @@ function SignIn() {
               </FormButton>
               {warning && (
                 <Stack spacing={2}>
-                  <Alert severity="error">Invalid Email or Password</Alert>
+                  <Alert severity="error">{warningMessage}</Alert>
                 </Stack>
               )}
             </Box>

@@ -231,6 +231,32 @@ function ProjectDetails() {
     }
   };
 
+  const updateNode = async () => {
+    let label = `${inputName} `;
+    let type = `Appliance`;
+    let applianceCategory = applianceData.applianceType;
+
+    let frontEndId = selectedNode;
+
+    let applianceHours = hours;
+
+    let wattRate = wattCapacity;
+
+    let applianceQuantity = quantity;
+
+    const nodeApplianceData = {
+      frontEndId: frontEndId,
+      nodeType: type,
+      parentFrontEndId: selectedNode,
+      name: label,
+      wattRate: wattRate,
+      hours: applianceHours,
+      quantity: applianceQuantity,
+      applianceType: applianceCategory,
+    };
+    console.log(nodeApplianceData);
+  };
+
   const deleteNode = async () => {
     const accessToken = localStorage.getItem("accessToken");
     const config = {
@@ -433,11 +459,13 @@ function ProjectDetails() {
                   />
 
                   <TextField
-                    label="Watt Capacity"
-                    id="outlined-start-adornment"
+                    label={"Watt Capacity"}
+                    id="outlined-basic"
                     fullWidth
                     // value={wattCapacity}
-                    value={isAppliance ? applianceData.wattRate : wattCapacity}
+                    placeholder={isAppliance ? applianceData.wattRate : null}
+                    defaultValue={isAppliance ? applianceData.wattRate : null}
+                    value={wattCapacity}
                     disabled={selectedType.id !== 2 && !isAppliance}
                     onChange={(e) => setWattCapacity(e.target.value)}
                     InputProps={{
@@ -456,6 +484,7 @@ function ProjectDetails() {
                     id="outlined-start-adornment"
                     fullWidth
                     //value={hours}
+
                     value={isAppliance ? applianceData.hours : hours}
                     disabled={selectedType.id !== 2 && !isAppliance}
                     onChange={(e) => setHours(e.target.value)}
@@ -512,7 +541,7 @@ function ProjectDetails() {
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={addNode}
+                      onClick={updateNode}
                       sx={{ width: "25%" }}
                     >
                       Update

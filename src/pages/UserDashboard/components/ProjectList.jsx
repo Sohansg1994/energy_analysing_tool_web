@@ -11,15 +11,16 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import ProjectCreate from "./ProjectCreate";
 import axios from "axios";
-
+import { MdDelete } from "react-icons/md";
+import { GrView } from "react-icons/gr";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#28282a",
     color: theme.palette.common.white,
-    fontSize: 17,
+    fontSize: 16,
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 17,
+    fontSize: 16,
   },
 }));
 
@@ -106,10 +107,25 @@ export default function ProjectList() {
                     >
                       View
                     </Button>
+                    {/*<Button
+                      variant="contained"
+                      color="info"
+                      endIcon={<GrView color="white" />}
+                    >
+                      View
+                  </Button>*/}
 
-                    <Button
+                    {/*<Button
                       variant="contained"
                       color="error"
+                      onClick={() => handleDelete(project.projectId)}
+                    >
+                      Delete
+                  </Button>*/}
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      startIcon={<MdDelete />}
                       onClick={() => handleDelete(project.projectId)}
                     >
                       Delete

@@ -19,6 +19,7 @@ import axios from "axios";
 function SignUp() {
   const [sent, setSent] = React.useState(false);
   const [warning, setWarning] = React.useState(false);
+  const [warningMessage, setWarningMessage] = React.useState(null);
   const [accessToken, setAccessToken] = React.useState(null);
   const [refreshToken, setRefreshToken] = React.useState(null);
   const [firstName, setFirstName] = React.useState(null);
@@ -71,8 +72,9 @@ function SignUp() {
         navigate("/subcription");
       }
     } catch (error) {
+      setWarningMessage(error.response.data.message);
       setWarning(true);
-      //console.error(error);
+
       // handle error
     }
   };
@@ -168,6 +170,9 @@ function SignUp() {
                   mb: 2,
                   fontFamily: "Montserrat",
                   backgroundColor: "#1F8A70",
+                  "&:hover": {
+                    backgroundColor: "#1c7861",
+                  },
                 }}
                 disabled={submitting || sent}
                 fullWidth
@@ -176,7 +181,7 @@ function SignUp() {
               </FormButton>
               {warning && (
                 <Stack spacing={2}>
-                  <Alert severity="warning">Email Already Registered</Alert>
+                  <Alert severity="warning">{warningMessage}</Alert>
                 </Stack>
               )}
             </Box>

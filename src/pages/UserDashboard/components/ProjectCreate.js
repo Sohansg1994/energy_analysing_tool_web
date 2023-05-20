@@ -62,6 +62,7 @@ function ProjectCreate(props) {
         id="outlined-required"
         label="Required"
         defaultValue="Project Name"
+        size="small"
         sx={{ width: "30%" }}
         value={projectName}
         onChange={(e) => setProjectName(e.target.value)}
@@ -71,6 +72,7 @@ function ProjectCreate(props) {
         disablePortal
         id="combo-box-demo"
         options={Type}
+        size="small"
         sx={{ width: "30%" }}
         value={projectType}
         renderInput={(params) => <TextField {...params} label="Type" />}
@@ -78,7 +80,19 @@ function ProjectCreate(props) {
           setProjectType(newValue?.label || "");
         }}
       />
-      <Button variant="contained" sx={{ width: "30%" }} onClick={handleSubmit}>
+      <Button
+        variant="contained"
+        sx={{
+          width: "30%",
+
+          fontFamily: "Montserrat",
+          backgroundColor: "#1F8A70",
+          "&:hover": {
+            backgroundColor: "#1c7861",
+          },
+        }}
+        onClick={handleSubmit}
+      >
         Create
       </Button>
     </Container>

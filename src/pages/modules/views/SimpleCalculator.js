@@ -7,27 +7,29 @@ import Typography from "../components/Typography";
 import TextField from "../components/TextField";
 import Paper from "@mui/material/Paper";
 import Snackbar from "../components/Snackbar";
-import { Button } from "@mui/material";
+import { Button, Card, CardActionArea } from "@mui/material";
 import axios from "axios";
 function SimpleCalculator() {
-  const [units, setUnits] = useState(0);
+  const [units, setUnits] = useState(null);
   const [result, setResult] = useState({
     monthlyFixedCharge: 0,
     chargeForConsumption: 0,
     totalCharge: 0,
   });
 
-  const isValid = units > 0;
+  const [isValid, setIsValid] = useState(false);
 
   //const monthlyFixedCharge = 700.0;
   //const chargeForConsumption = units * 12.0;
   //const totalCharge = monthlyFixedCharge + chargeForConsumption;
 
-  const handleSubmit = async (units) => {
+  const handleSubmit = async () => {
     try {
-      const response = await axios.post("/user/register", units);
+      const response = await axios.get(`/playground/simpleBill?units=${units}`);
+      console.log(response.data.data[0]);
       if (response.status === 200) {
-        setResult(response);
+        setResult(response.data.data[0]);
+        setIsValid(true);
       }
     } catch (error) {}
   };
@@ -76,7 +78,9 @@ function SimpleCalculator() {
 
                   fontFamily: "Montserrat",
                   backgroundColor: "#1F8A70",
-                  color: "white",
+                  "&:hover": {
+                    backgroundColor: "#1c7861",
+                  },
                 }}
               >
                 Calculate
@@ -85,104 +89,208 @@ function SimpleCalculator() {
           </Box>
         </Grid>
         {isValid ? (
-          <Grid item xs={14} md={7} sx={{ zIndex: 1 }}>
-            <Box
+          <Grid
+            item
+            xs={14}
+            md={7}
+            sx={{
+              zIndex: 1,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              //flexDirection: "column",
+            }}
+          >
+            <Card
               sx={{
-                justifyContent: "center",
-                py: 8,
-                px: 4,
+                width: "90%",
+                height: "90%",
+                background: "rgba(255, 255, 255, 0.1) ",
+                /* background:
+                  "linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.8) 100%)",*/
+                borderRadius: 5,
+                boxShadow: "10px 10px 10px rgba(30,30,30,0.5)",
               }}
             >
-              <Box component="div">
-                <Grid container spacing={2}>
-                  <Grid item xs={5} sx={{ px: 1, py: 1, textAlign: "right" }}>
-                    <Typography align="right">Consumed units</Typography>
-                  </Grid>
-                  <Grid item xs={7} sx={{ px: 0, py: 0, textAlign: "left" }}>
-                    <Paper
-                      variant="outlined"
-                      sx={{
-                        width: "80%",
-                        height: "100%",
-                        mx: 0,
-                        my: 0,
-                        px: 1,
-                        py: 1,
-                      }}
-                    >
-                      <Typography align="left" sx={{ backgroundColor: "#fff" }}>
-                        {units}
-                      </Typography>
-                    </Paper>
-                  </Grid>
+              <CardActionArea>
+                <Box
+                  sx={{
+                    justifyContent: "center",
+                    py: 8,
+                    px: 4,
+                  }}
+                >
+                  <Box component="div">
+                    <Grid container spacing={2}>
+                      <Grid
+                        item
+                        xs={5}
+                        sx={{ px: 1, py: 1, textAlign: "right" }}
+                      >
+                        <Typography align="right">Consumed units</Typography>
+                      </Grid>
+                      <Grid
+                        item
+                        xs={7}
+                        sx={{ px: 0, py: 0, textAlign: "left" }}
+                      >
+                        <Paper
+                          variant="outlined"
+                          sx={{
+                            width: "80%",
+                            height: "100%",
+                            mx: 0,
+                            my: 0,
+                            px: 1,
+                            py: 1,
+                          }}
+                        >
+                          <Typography
+                            align="left"
+                            sx={{ backgroundColor: "#fff" }}
+                          >
+                            {result.totalUnits}
+                          </Typography>
+                        </Paper>
+                      </Grid>
 
-                  <Grid item xs={5} sx={{ px: 1, py: 1, textAlign: "right" }}>
-                    <Typography align="right">Monthly fixed charge</Typography>
-                  </Grid>
-                  <Grid item xs={7} sx={{ px: 0, py: 0, textAlign: "left" }}>
-                    <Paper
-                      variant="outlined"
-                      sx={{
-                        width: "80%",
-                        height: "100%",
-                        mx: 0,
-                        my: 0,
-                        px: 1,
-                        py: 1,
-                      }}
-                    >
-                      <Typography align="left" sx={{ backgroundColor: "#fff" }}>
-                        {result.monthlyFixedCharge}
-                      </Typography>
-                    </Paper>
-                  </Grid>
+                      <Grid
+                        item
+                        xs={5}
+                        sx={{ px: 1, py: 1, textAlign: "right" }}
+                      >
+                        <Typography align="right">
+                          Monthly fixed charge
+                        </Typography>
+                      </Grid>
+                      <Grid
+                        item
+                        xs={7}
+                        sx={{ px: 0, py: 0, textAlign: "left" }}
+                      >
+                        <Paper
+                          variant="outlined"
+                          sx={{
+                            width: "80%",
+                            height: "100%",
+                            mx: 0,
+                            my: 0,
+                            px: 1,
+                            py: 1,
+                          }}
+                        >
+                          <Typography
+                            align="left"
+                            sx={{ backgroundColor: "#fff" }}
+                          >
+                            {result.fixedCharge}
+                          </Typography>
+                        </Paper>
+                      </Grid>
 
-                  <Grid item xs={5} sx={{ px: 1, py: 1, textAlign: "right" }}>
-                    <Typography align="right">
-                      Charge for consumption
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={7} sx={{ px: 0, py: 0, textAlign: "left" }}>
-                    <Paper
-                      variant="outlined"
-                      sx={{
-                        width: "80%",
-                        height: "100%",
-                        mx: 0,
-                        my: 0,
-                        px: 1,
-                        py: 1,
-                      }}
-                    >
-                      <Typography align="left" sx={{ backgroundColor: "#fff" }}>
-                        {result.chargeForConsumption}
-                      </Typography>
-                    </Paper>
-                  </Grid>
+                      <Grid
+                        item
+                        xs={5}
+                        sx={{ px: 1, py: 1, textAlign: "right" }}
+                      >
+                        <Typography align="right">
+                          Charge for consumption
+                        </Typography>
+                      </Grid>
+                      <Grid
+                        item
+                        xs={7}
+                        sx={{ px: 0, py: 0, textAlign: "left" }}
+                      >
+                        <Paper
+                          variant="outlined"
+                          sx={{
+                            width: "80%",
+                            height: "100%",
+                            mx: 0,
+                            my: 0,
+                            px: 1,
+                            py: 1,
+                          }}
+                        >
+                          <Typography
+                            align="left"
+                            sx={{ backgroundColor: "#fff" }}
+                          >
+                            {result.usageCharge}
+                          </Typography>
+                        </Paper>
+                      </Grid>
 
-                  <Grid item xs={5} sx={{ px: 1, py: 1, textAlign: "right" }}>
-                    <Typography align="right">Total charge</Typography>
-                  </Grid>
-                  <Grid item xs={7} sx={{ px: 0, py: 0, textAlign: "left" }}>
-                    <Paper
-                      variant="outlined"
-                      sx={{
-                        width: "80%",
-                        height: "100%",
-                        mx: 0,
-                        my: 0,
-                        px: 1,
-                        py: 1,
-                      }}
-                    >
-                      <Typography align="left" sx={{ backgroundColor: "#fff" }}>
-                        {result.totalCharge}
-                      </Typography>
-                    </Paper>
-                  </Grid>
-                </Grid>
-              </Box>
-            </Box>
+                      <Grid
+                        item
+                        xs={5}
+                        sx={{ px: 1, py: 1, textAlign: "right" }}
+                      >
+                        <Typography align="right">Levy</Typography>
+                      </Grid>
+                      <Grid
+                        item
+                        xs={7}
+                        sx={{ px: 0, py: 0, textAlign: "left" }}
+                      >
+                        <Paper
+                          variant="outlined"
+                          sx={{
+                            width: "80%",
+                            height: "100%",
+                            mx: 0,
+                            my: 0,
+                            px: 1,
+                            py: 1,
+                          }}
+                        >
+                          <Typography
+                            align="left"
+                            sx={{ backgroundColor: "#fff" }}
+                          >
+                            {result.levy}
+                          </Typography>
+                        </Paper>
+                      </Grid>
+
+                      <Grid
+                        item
+                        xs={5}
+                        sx={{ px: 1, py: 1, textAlign: "right" }}
+                      >
+                        <Typography align="right">Total charge</Typography>
+                      </Grid>
+                      <Grid
+                        item
+                        xs={7}
+                        sx={{ px: 0, py: 0, textAlign: "left" }}
+                      >
+                        <Paper
+                          variant="outlined"
+                          sx={{
+                            width: "80%",
+                            height: "100%",
+                            mx: 0,
+                            my: 0,
+                            px: 1,
+                            py: 1,
+                          }}
+                        >
+                          <Typography
+                            align="left"
+                            sx={{ backgroundColor: "#fff" }}
+                          >
+                            {result.billAmount}
+                          </Typography>
+                        </Paper>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Box>
+              </CardActionArea>
+            </Card>
           </Grid>
         ) : (
           <Snackbar

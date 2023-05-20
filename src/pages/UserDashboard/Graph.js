@@ -85,7 +85,7 @@ export default function Graph(props) {
               midAngle,
               outerRadius,
               name,
-              unitPercentageOfParent,
+              unitPercentageOfProject,
             }) => {
               const radius = outerRadius + 25; // adjust the radius to move the label outside the graph
               const x = cx + radius * Math.cos((-midAngle * Math.PI) / 180);
@@ -99,7 +99,7 @@ export default function Graph(props) {
                   dominantBaseline="central"
                   style={{ fontSize: 14 }}
                 >
-                  {`${name} ${unitPercentageOfParent.toFixed(2)}%`}
+                  {`${name} ${unitPercentageOfProject.toFixed(2)}%`}
                 </text>
               );
             }}

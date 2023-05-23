@@ -232,7 +232,13 @@ function ProjectDetails() {
   };
 
   const updateNode = async () => {
-    let label = `${inputName} `;
+    const accessToken = localStorage.getItem("accessToken");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    let label = inputName;
     let type = `Appliance`;
     let applianceCategory = applianceData.applianceType;
 
@@ -247,14 +253,31 @@ function ProjectDetails() {
     const nodeApplianceData = {
       frontEndId: frontEndId,
       nodeType: type,
-      parentFrontEndId: selectedNode,
+
       name: label,
       wattRate: wattRate,
       hours: applianceHours,
       quantity: applianceQuantity,
       applianceType: applianceCategory,
     };
-    console.log(nodeApplianceData);
+
+    try {
+      const response = await axios.put(
+        "/node/update",
+        nodeApplianceData,
+        config
+      );
+      if (response.status === 200) {
+        getData();
+
+        setHours("");
+        setQuantity("");
+        setWattCapacity("");
+        setInputName("");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const deleteNode = async () => {
@@ -407,11 +430,20 @@ function ProjectDetails() {
             <Paper elevation={3}>
               <Box p={3}>
                 <TextField
+                  sx={{
+                    "& .MuiInputBase-input::placeholder": {
+                      opacity: 0.75, // Adjust the opacity value as per your preference
+                    },
+                  }}
                   label="Name"
+                  id="outlined-basic"
                   variant="outlined"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  placeholder={isAppliance ? applianceData.name : ""}
                   fullWidth
-                  //value={inputName}
-                  value={isAppliance ? applianceData.name : inputName}
+                  value={inputName}
                   onChange={(e) => setInputName(e.target.value)}
                 />
                 <Autocomplete
@@ -454,17 +486,30 @@ function ProjectDetails() {
                         label="Appliance Type"
                         variant="outlined"
                         fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        placeholder={
+                          isAppliance ? applianceData.applianceType : ""
+                        }
                       />
                     )}
                   />
 
                   <TextField
+                    sx={{
+                      "& .MuiInputBase-input::placeholder": {
+                        opacity: 0.75, // Adjust the opacity value as per your preference
+                      },
+                    }}
                     label={"Watt Capacity"}
                     id="outlined-basic"
                     fullWidth
-                    // value={wattCapacity}
-                    placeholder={isAppliance ? applianceData.wattRate : null}
-                    defaultValue={isAppliance ? applianceData.wattRate : null}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    placeholder={isAppliance ? applianceData.wattRate : ""}
+                    variant="outlined"
                     value={wattCapacity}
                     disabled={selectedType.id !== 2 && !isAppliance}
                     onChange={(e) => setWattCapacity(e.target.value)}
@@ -480,12 +525,20 @@ function ProjectDetails() {
                   sx={{ mt: 3, display: "flex", columnGap: 3, width: "100%" }}
                 >
                   <TextField
+                    sx={{
+                      "& .MuiInputBase-input::placeholder": {
+                        opacity: 0.75, // Adjust the opacity value as per your preference
+                      },
+                    }}
                     label="Hours"
-                    id="outlined-start-adornment"
+                    id="outlined-basic"
                     fullWidth
-                    //value={hours}
-
-                    value={isAppliance ? applianceData.hours : hours}
+                    value={hours}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    placeholder={isAppliance ? applianceData.hours : ""}
+                    variant="outlined"
                     disabled={selectedType.id !== 2 && !isAppliance}
                     onChange={(e) => setHours(e.target.value)}
                     InputProps={{
@@ -495,7 +548,7 @@ function ProjectDetails() {
                     }}
                   />
 
-                  <TextField
+                  {/*<TextField
                     label="Quantity"
                     variant="outlined"
                     fullWidth
@@ -503,6 +556,25 @@ function ProjectDetails() {
                     value={isAppliance ? applianceData.quantity : quantity}
                     disabled={selectedType.id !== 2 && !isAppliance}
                     onChange={(e) => setQuantity(e.target.value)}
+                  />*/}
+
+                  <TextField
+                    sx={{
+                      "& .MuiInputBase-input::placeholder": {
+                        opacity: 0.75, // Adjust the opacity value as per your preference
+                      },
+                    }}
+                    id="outlined-basic"
+                    label="Quantity"
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    placeholder={isAppliance ? applianceData.quantity : ""}
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    variant="outlined"
+                    disabled={selectedType.id !== 2 && !isAppliance}
                   />
                 </Box>
 

@@ -64,6 +64,7 @@ function SimpleCalculator() {
                 onChange={(e) => setUnits(e.target.value)}
                 noBorder
                 placeholder="No of units"
+                label="Quantity"
                 variant="standard"
                 sx={{ width: "100%", mt: 3, mb: 2 }}
               />

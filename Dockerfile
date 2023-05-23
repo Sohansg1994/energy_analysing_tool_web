@@ -4,6 +4,7 @@ COPY . .
 RUN npm ci
 RUN npm run build
 ENV NODE_ENV production
+ENV NODE_OPTIONS --max_old_space_size=2048
 EXPOSE 3000
 CMD ["npx", "serve", "build"]
 

@@ -9,6 +9,7 @@ import Paper from "@mui/material/Paper";
 import Snackbar from "../components/Snackbar";
 import { Button, Card, CardActionArea } from "@mui/material";
 import axios from "axios";
+
 function SimpleCalculator() {
   const [units, setUnits] = useState(null);
   const [result, setResult] = useState({
@@ -18,10 +19,6 @@ function SimpleCalculator() {
   });
 
   const [isValid, setIsValid] = useState(false);
-
-  //const monthlyFixedCharge = 700.0;
-  //const chargeForConsumption = units * 12.0;
-  //const totalCharge = monthlyFixedCharge + chargeForConsumption;
 
   const handleSubmit = async () => {
     try {
@@ -35,7 +32,7 @@ function SimpleCalculator() {
   };
 
   return (
-    <Container component="section" sx={{ mt: 10, display: "flex" }}>
+    <Container id="bill-calculator-component" component="section" sx={{ mt: 10, display: "flex" }}>
       <Grid container sx={{ bgcolor: "warning.main" }}>
         <Grid item xs={10} md={5} sx={{ zIndex: 1 }}>
           <Box

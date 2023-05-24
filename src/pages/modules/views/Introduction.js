@@ -4,7 +4,7 @@ import Typography from "../components/Typography";
 import IntroductionLayout from "./IntroductionLayout";
 
 export default function Introduction() {
-  const imageUrl = "/pexels-laura-penwell-3608056.jpg";
+  const imageUrl = "/background_pic.jpg";
 
   return (
     <IntroductionLayout
@@ -39,8 +39,7 @@ export default function Introduction() {
       >
         Calculate your GREEN BILL
       </Typography>
-
-      <Button
+      <Button id="build-project-component"
         variant="contained"
         size="large"
         component="a"

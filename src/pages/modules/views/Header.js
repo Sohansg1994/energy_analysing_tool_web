@@ -4,7 +4,7 @@ import Link from "@mui/material/Link";
 import AppBar from "../components/AppBar";
 import Toolbar from "../components/Toolbar";
 import { MdPerson } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
 const rightLinkStyles = {
@@ -237,9 +237,9 @@ function Header() {
                   ...rightLinkStyles,
                   color: "secondary.main",
                   marginTop: "0.8rem",
+                  cursor: "pointer",
                 }}
                 onClick={handleLogout}
-                // href="/signin"
               >
                 {"Log Out"}
               </Link>

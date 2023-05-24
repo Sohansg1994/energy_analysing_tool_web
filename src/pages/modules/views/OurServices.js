@@ -55,35 +55,23 @@ const ImageIconButton = styled(ButtonBase)(({theme}) => ({
 
 const images = [
   {
-    url: 'https://images.unsplash.com/photo-1534081333815-ae5019106622?auto=format&fit=crop&w=400',
-    title: 'Electricity bill calculator',
-    width: '40%',
+    url: "/project_pic.jpg",
+    title: 'Build Your Project',
+    width: '34%',
+    containerId: '#build-project-component'
   },
   {
-    url: 'https://images.unsplash.com/photo-1531299204812-e6d44d9a185c?auto=format&fit=crop&w=400',
-    title: 'Technical Assist',
-    width: '30%',
+    url: '/home_visit_pic.jpg',
+    title: 'Home Visits',
+    width: '28%',
+    containerId: '#home-visits-component'
   },
   {
-    url: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=400',
-    title: 'On Premise Support',
-    width: '30%',
+    url: '/bill_calculator_pic.jpg',
+    title: 'Calculate Home Bill Now',
+    width: '38%',
+    containerId: '#bill-calculator-component'
   }
-  // {
-  //   url: 'https://images.unsplash.com/photo-1453747063559-36695c8771bd?auto=format&fit=crop&w=400',
-  //   title: 'Tour',
-  //   width: '38%',
-  // },
-  // {
-  //   url: 'https://images.unsplash.com/photo-1523309996740-d5315f9cc28b?auto=format&fit=crop&w=400',
-  //   title: 'Gastronomy',
-  //   width: '38%',
-  // },
-  // {
-  //   url: 'https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=400',
-  //   title: 'Shopping',
-  //   width: '24%',
-  // }
 ];
 
 export default function OurServices() {
@@ -133,7 +121,7 @@ export default function OurServices() {
                 className="imageTitle"
                 sx={{fontFamily: 'Montserrat'}}
               >
-                {image.title}
+                <a style={{color: "inherit", textDecoration: "none"}} href={image.containerId}>{image.title}</a>
                 <div className="imageMarked"/>
               </Typography>
             </Box>

@@ -187,6 +187,8 @@ function ProjectDetails() {
         const response = await axios.post("/node/add", nodeSectionData, config);
         if (response.status === 200) {
           getData();
+
+          setInputName("");
         }
       } catch (error) {
         console.log(error);
@@ -224,6 +226,10 @@ function ProjectDetails() {
         );
         if (response.status === 200) {
           getData();
+          setHours("");
+          setQuantity("");
+          setWattCapacity("");
+          setInputName("");
         }
       } catch (error) {
         console.log(error);

@@ -79,6 +79,9 @@ function ProjectDetails() {
 
   const [isCalculated, setIsCalculated] = useState(false);
 
+  const [isError, setIsError] = useState(false);
+  const [isTypeError, setIsTypeError] = useState(false);
+
   const isOptionEqualToValue = (option, value) => option.id === value.id;
 
   const type = [
@@ -107,14 +110,20 @@ function ProjectDetails() {
       setIsAppliance(false);
       setIsProject(true);
       setIsSection(false);
+      setIsError(false);
+      setIsTypeError(false);
     } else if (nodetype === "Section") {
       setIsAppliance(false);
       setIsProject(false);
       setIsSection(true);
+      setIsError(false);
+      setIsTypeError(false);
     } else {
       setIsAppliance(true);
       setIsProject(false);
       setIsSection(false);
+      setIsError(false);
+      setIsTypeError(false);
       console.log(data.name);
       // Check if selected node is an appliance node
 
@@ -164,6 +173,14 @@ function ProjectDetails() {
   };
 
   const addNode = async () => {
+    setIsError(false);
+
+    if (selectedType.id === 0 || selectedType.id == undefined) {
+      console.log(selectedType.id === 0 || selectedType.id == undefined);
+      setIsTypeError(true);
+      return;
+    }
+
     const accessToken = localStorage.getItem("accessToken");
     const config = {
       headers: {
@@ -183,12 +200,18 @@ function ProjectDetails() {
         name: label,
       };
 
+      if (inputName.length <= 0) {
+        setIsError(true);
+        return;
+      }
+
       try {
         const response = await axios.post("/node/add", nodeSectionData, config);
         if (response.status === 200) {
           getData();
 
           setInputName("");
+          setSelectedType(0);
         }
       } catch (error) {
         console.log(error);
@@ -218,6 +241,21 @@ function ProjectDetails() {
       };
       console.log(nodeApplianceData);
 
+      if (
+        inputName.length <= 0 ||
+        selectedApplianceType.id === 0 ||
+        selectedApplianceType.id === undefined ||
+        wattCapacity.length <= 0 ||
+        isNaN(wattCapacity) ||
+        hours.length <= 0 ||
+        isNaN(hours) ||
+        quantity.length <= 0 ||
+        isNaN(quantity)
+      ) {
+        setIsError(true);
+        return;
+      }
+
       try {
         const response = await axios.post(
           "/node/add",
@@ -230,6 +268,8 @@ function ProjectDetails() {
           setQuantity("");
           setWattCapacity("");
           setInputName("");
+          setSelectedType(0);
+          setSelectedApplianceType(0);
         }
       } catch (error) {
         console.log(error);
@@ -238,6 +278,22 @@ function ProjectDetails() {
   };
 
   const updateNode = async () => {
+    setIsError(false);
+    setIsTypeError(false);
+
+    if (
+      inputName.length <= 0 ||
+      wattCapacity.length <= 0 ||
+      isNaN(wattCapacity) ||
+      hours.length <= 0 ||
+      isNaN(hours) ||
+      quantity.length <= 0 ||
+      isNaN(quantity)
+    ) {
+      setIsError(true);
+      return;
+    }
+
     const accessToken = localStorage.getItem("accessToken");
     const config = {
       headers: {
@@ -275,7 +331,8 @@ function ProjectDetails() {
       );
       if (response.status === 200) {
         getData();
-
+        setSelectedApplianceType(0);
+        setSelectedType(0);
         setHours("");
         setQuantity("");
         setWattCapacity("");
@@ -394,6 +451,19 @@ function ProjectDetails() {
           >
             <Paper elevation={3}>
               <Box p={3}>
+                <Typography
+                  sx={{
+                    backgroundColor: "#1e1e1f",
+                    color: "white",
+                    p: 1,
+                    textAlign: "center",
+                    fontFamily: "Montserrat",
+                    fontSize: 16,
+                    fontWeight: 10,
+                  }}
+                >
+                  Project Tree
+                </Typography>
                 <TreeView
                   aria-label="rich object"
                   defaultCollapseIcon={<ExpandMoreIcon />}
@@ -404,6 +474,7 @@ function ProjectDetails() {
                     flexGrow: 1,
                     maxWidth: 400,
                     overflowY: "hidden",
+                    mt: 3,
                   }}
                 >
                   {renderTree(data)}
@@ -417,13 +488,26 @@ function ProjectDetails() {
               boxShadow: 2,
               height: "100%",
               overflowY: "auto",
+              p: 3, // to adjest padding of whole form
             }}
           >
+            <Typography
+              sx={{
+                backgroundColor: "#1e1e1f",
+                color: "white",
+                p: 1,
+                textAlign: "center",
+                fontFamily: "Montserrat",
+                fontSize: 16,
+                fontWeight: 10,
+              }}
+            >
+              Create Your Component
+            </Typography>
             {isSection && (
               <Box
                 sx={{
                   pt: 3,
-                  pb: 3,
                 }}
               >
                 <SectionComponents
@@ -434,7 +518,13 @@ function ProjectDetails() {
               </Box>
             )}
             <Paper elevation={3}>
-              <Box p={3}>
+              <Box
+                sx={{
+                  pt: 3,
+                  p: 3,
+                  mt: 3,
+                }}
+              >
                 <TextField
                   sx={{
                     "& .MuiInputBase-input::placeholder": {
@@ -451,6 +541,14 @@ function ProjectDetails() {
                   fullWidth
                   value={inputName}
                   onChange={(e) => setInputName(e.target.value)}
+                  error={
+                    isError == true && inputName.length <= 0 ? true : false
+                  }
+                  helperText={
+                    isError == true && inputName.length <= 0
+                      ? "Please fill in all the fields"
+                      : ""
+                  } // Display error message if any
                 />
                 <Autocomplete
                   options={type}
@@ -469,6 +567,22 @@ function ProjectDetails() {
                       label="Type"
                       variant="outlined"
                       fullWidth
+                      error={
+                        isTypeError == true &&
+                        (selectedType.id === 0 ||
+                          selectedType.id === undefined) &&
+                        !isAppliance
+                          ? true
+                          : false
+                      }
+                      helperText={
+                        isTypeError == true &&
+                        (selectedType.id === 0 ||
+                          selectedType.id === undefined) &&
+                        !isAppliance
+                          ? "Please select the type"
+                          : ""
+                      } // Display error message if any
                     />
                   )}
                 />
@@ -498,6 +612,22 @@ function ProjectDetails() {
                         placeholder={
                           isAppliance ? applianceData.applianceType : ""
                         }
+                        error={
+                          isError == true &&
+                          (selectedApplianceType.id === 0 ||
+                            selectedApplianceType.id === undefined) &&
+                          !isAppliance
+                            ? true
+                            : false
+                        }
+                        helperText={
+                          isError == true &&
+                          (selectedApplianceType === 0 ||
+                            selectedApplianceType === undefined) &&
+                          !isAppliance
+                            ? "Please select the appliance type"
+                            : ""
+                        } // Display error message if any
                       />
                     )}
                   />
@@ -524,6 +654,20 @@ function ProjectDetails() {
                         <InputAdornment position="start">W</InputAdornment>
                       ),
                     }}
+                    error={
+                      isError == true &&
+                      (wattCapacity.length <= 0 || isNaN(wattCapacity))
+                        ? true
+                        : false
+                    }
+                    helperText={
+                      isError == true &&
+                      (wattCapacity.length <= 0 || isNaN(wattCapacity))
+                        ? wattCapacity.length <= 0
+                          ? "Please fill all the feilds"
+                          : "Invalid input"
+                        : ""
+                    } // Display error message if any
                   />
                 </Box>
 
@@ -552,6 +696,18 @@ function ProjectDetails() {
                         <InputAdornment position="start">H</InputAdornment>
                       ),
                     }}
+                    error={
+                      isError == true && (hours.length <= 0 || isNaN(hours))
+                        ? true
+                        : false
+                    }
+                    helperText={
+                      isError == true && (hours.length <= 0 || isNaN(hours))
+                        ? hours.length <= 0
+                          ? "Please fill all the feilds"
+                          : "Invalid input"
+                        : ""
+                    } // Display error message if any
                   />
 
                   {/*<TextField
@@ -581,6 +737,20 @@ function ProjectDetails() {
                     onChange={(e) => setQuantity(e.target.value)}
                     variant="outlined"
                     disabled={selectedType.id !== 2 && !isAppliance}
+                    error={
+                      isError == true &&
+                      (quantity.length <= 0 || isNaN(quantity))
+                        ? true
+                        : false
+                    }
+                    helperText={
+                      isError == true &&
+                      (quantity.length <= 0 || isNaN(quantity))
+                        ? quantity.length <= 0
+                          ? "Please fill all the feilds"
+                          : "Invalid input"
+                        : ""
+                    } // Display error message if any
                   />
                 </Box>
 
@@ -609,7 +779,13 @@ function ProjectDetails() {
                       color="primary"
                       onClick={addNode}
                       disabled={isAppliance === true}
-                      sx={{ width: "25%" }}
+                      sx={{
+                        width: "25%",
+                        backgroundColor: "#1F8A70",
+                        "&:hover": {
+                          backgroundColor: "#1c7861",
+                        },
+                      }}
                     >
                       Add
                     </Button>
@@ -620,7 +796,13 @@ function ProjectDetails() {
                       variant="contained"
                       color="primary"
                       onClick={updateNode}
-                      sx={{ width: "25%" }}
+                      sx={{
+                        width: "25%",
+                        backgroundColor: "#1F8A70",
+                        "&:hover": {
+                          backgroundColor: "#1c7861",
+                        },
+                      }}
                     >
                       Update
                     </Button>
@@ -661,19 +843,7 @@ function ProjectDetails() {
             <Paper>
               {<Graph projectId={projectId} isCalculated={isCalculated} />}
             </Paper>
-            <Paper sx={{ mb: 10 }}>
-              <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
-                <Typography>Download Your Full Report</Typography>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={deleteNode}
-                  sx={{ width: "25%" }}
-                >
-                  Download
-                </Button>
-              </Box>
-            </Paper>
+            <Paper sx={{ mb: 10 }}></Paper>
           </Box>
         </Box>
       </Container>

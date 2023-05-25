@@ -19,8 +19,13 @@ function SimpleCalculator() {
   });
 
   const [isValid, setIsValid] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const handleSubmit = async () => {
+    if (units.length <= 0 || isNaN(units)) {
+      setIsError(true);
+      return;
+    }
     try {
       const response = await axios.get(`/playground/simpleBill?units=${units}`);
       console.log(response.data.data[0]);
@@ -32,7 +37,11 @@ function SimpleCalculator() {
   };
 
   return (
-    <Container id="bill-calculator-component" component="section" sx={{ mt: 10, display: "flex" }}>
+    <Container
+      id="bill-calculator-component"
+      component="section"
+      sx={{ mt: 10, display: "flex" }}
+    >
       <Grid container sx={{ bgcolor: "warning.main" }}>
         <Grid item xs={10} md={5} sx={{ zIndex: 1 }}>
           <Box
@@ -61,9 +70,20 @@ function SimpleCalculator() {
                 onChange={(e) => setUnits(e.target.value)}
                 noBorder
                 placeholder="No of units"
-                label="Quantity"
                 variant="standard"
                 sx={{ width: "100%", mt: 3, mb: 2 }}
+                error={
+                  isError == true && (units.length <= 0 || isNaN(units))
+                    ? true
+                    : false
+                }
+                helperText={
+                  isError == true && (units.length <= 0 || isNaN(units))
+                    ? units.length <= 0
+                      ? "Please fill all the feild"
+                      : "Invalid input"
+                    : ""
+                } // Display error message if any
               />
               <Button
                 variant="contained"

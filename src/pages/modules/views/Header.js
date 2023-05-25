@@ -128,6 +128,15 @@ function Header() {
       }
     } catch (error) {
       console.log("Error");
+      setIsTokenValid(false);
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("expirationTime");
+      localStorage.removeItem("firstName");
+      setAccessToken(null);
+      setRefreshToken(null);
+      setFirstName(null);
+      navigate("/signIn");
     }
   };
 

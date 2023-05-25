@@ -18,7 +18,15 @@ function ProjectCreate(props) {
   const [projectName, setProjectName] = useState("");
   const [projectType, setProjectType] = useState("");
 
+  const [isError, setIsError] = useState(false);
+
   const handleSubmit = async () => {
+    setIsError(false);
+    if (projectName.length <= 0 || projectType.length <= 0) {
+      setIsError(true);
+      return;
+    }
+
     const accessToken = localStorage.getItem("accessToken");
     console.log(accessToken);
     const data = {
@@ -37,12 +45,17 @@ function ProjectCreate(props) {
       const response = await axios.post("/project", data, config);
       if (response.status === 200) {
         getProjectList();
-        console.log(response);
+        setProjectName("");
+        setProjectType("");
       }
     } catch (error) {
       console.log(error.message);
     }
   };
+
+  useEffect(() => {
+    console.log(isNaN(projectName));
+  });
 
   return (
     <Container
@@ -53,19 +66,25 @@ function ProjectCreate(props) {
         pb: 4,
         pt: 4,
         display: "flex",
-        alignItems: "center",
+        alignItems: "start",
         justifyContent: "space-between",
       }}
     >
       <TextField
         required
         id="outlined-required"
-        label="Required"
+        label="Project Name"
         defaultValue="Project Name"
         size="small"
         sx={{ width: "30%" }}
         value={projectName}
+        inputMode="numeric"
+        pattern="[0-9]*"
         onChange={(e) => setProjectName(e.target.value)}
+        error={isError && projectName.length <= 0 ? true : false}
+        helperText={
+          isError && projectName.length <= 0 ? "Please fill project name" : ""
+        } // Display error message if any
       />
 
       <Autocomplete
@@ -75,7 +94,18 @@ function ProjectCreate(props) {
         size="small"
         sx={{ width: "30%" }}
         value={projectType}
-        renderInput={(params) => <TextField {...params} label="Type" />}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Type"
+            error={isError && projectType.length <= 0 ? true : false}
+            helperText={
+              isError && projectType.length <= 0
+                ? "Please select project type"
+                : ""
+            }
+          />
+        )}
         onChange={(event, newValue) => {
           setProjectType(newValue?.label || "");
         }}

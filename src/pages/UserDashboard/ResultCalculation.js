@@ -11,7 +11,9 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
-import { TextField } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
+import { MdDownload } from "react-icons/md";
+import { FiDownload } from "react-icons/fi";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -102,7 +104,7 @@ const ResultCalculation = (props) => {
   return (
     <Box
       sx={{
-        mt: 2,
+        mt: 4,
 
         width: "100%",
         justifyContent: "space-evenly",
@@ -112,7 +114,7 @@ const ResultCalculation = (props) => {
         <Box
           p={3}
           sx={{
-            mt: 5,
+            mt: 3,
             mb: 3,
             display: "flex",
             flexDirection: "column",
@@ -124,9 +126,15 @@ const ResultCalculation = (props) => {
         >
           <Button
             variant="contained"
-            color="success"
             onClick={handleCalculation}
-            sx={{ width: "60%", justifyItems: "center" }}
+            sx={{
+              width: "60%",
+              justifyItems: "center",
+              backgroundColor: "#1F8A70",
+              "&:hover": {
+                backgroundColor: "#1c7861",
+              },
+            }}
           >
             Calculate
           </Button>
@@ -196,6 +204,35 @@ const ResultCalculation = (props) => {
                 </TableBody>
               </Table>
             </TableContainer>
+          )}
+
+          {isResultUpdated && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                mt: 10,
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  mr: 0.5,
+                  backgroundColor: "#1e1e1f",
+                  color: "white",
+                  p: 0.9,
+                }}
+              >
+                Download Your Full Report
+              </Typography>
+              <Button
+                variant="contained"
+                color="info"
+                startIcon={<FiDownload />}
+              >
+                Download
+              </Button>
+            </Box>
           )}
         </Box>
       )}

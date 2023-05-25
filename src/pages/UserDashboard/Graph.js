@@ -35,7 +35,7 @@ export default function Graph(props) {
     const accessToken = localStorage.getItem("accessToken");
 
     const response = await axios.get(
-      `http://localhost:8080/playground/graphs/project?projectId=${projectId}`,
+      `/playground/graphs/project?projectId=${projectId}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

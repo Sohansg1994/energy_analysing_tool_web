@@ -73,12 +73,12 @@ function SimpleCalculator() {
                 variant="standard"
                 sx={{ width: "100%", mt: 3, mb: 2 }}
                 error={
-                  isError == true && (units.length <= 0 || isNaN(units))
+                  isError === true && (units.length <= 0 || isNaN(units))
                     ? true
                     : false
                 }
                 helperText={
-                  isError == true && (units.length <= 0 || isNaN(units))
+                  isError === true && (units.length <= 0 || isNaN(units))
                     ? units.length <= 0
                       ? "Please fill all the feild"
                       : "Invalid input"

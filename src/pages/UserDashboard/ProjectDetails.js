@@ -81,6 +81,7 @@ function ProjectDetails() {
 
   const [isError, setIsError] = useState(false);
   const [isTypeError, setIsTypeError] = useState(false);
+  const [isSectionError, setIsSectionError] = useState(false);
 
   const isOptionEqualToValue = (option, value) => option.id === value.id;
 
@@ -112,18 +113,21 @@ function ProjectDetails() {
       setIsSection(false);
       setIsError(false);
       setIsTypeError(false);
+      setIsSectionError(false);
     } else if (nodetype === "Section") {
       setIsAppliance(false);
       setIsProject(false);
       setIsSection(true);
       setIsError(false);
       setIsTypeError(false);
+      setIsSectionError(false);
     } else {
       setIsAppliance(true);
       setIsProject(false);
       setIsSection(false);
       setIsError(false);
       setIsTypeError(false);
+      setIsSectionError(false);
       console.log(data.name);
       // Check if selected node is an appliance node
 
@@ -174,9 +178,11 @@ function ProjectDetails() {
 
   const addNode = async () => {
     setIsError(false);
+    setIsSectionError(false);
+    setIsTypeError(false);
 
-    if (selectedType.id === 0 || selectedType.id == undefined) {
-      console.log(selectedType.id === 0 || selectedType.id == undefined);
+    if (selectedType.id === 0 || selectedType.id === undefined) {
+      console.log(selectedType.id === 0 || selectedType.id === undefined);
       setIsTypeError(true);
       return;
     }
@@ -201,7 +207,7 @@ function ProjectDetails() {
       };
 
       if (inputName.length <= 0) {
-        setIsError(true);
+        setIsSectionError(true);
         return;
       }
 
@@ -542,10 +548,12 @@ function ProjectDetails() {
                   value={inputName}
                   onChange={(e) => setInputName(e.target.value)}
                   error={
-                    isError == true && inputName.length <= 0 ? true : false
+                    (isError || isSectionError) && inputName.length <= 0
+                      ? true
+                      : false
                   }
                   helperText={
-                    isError == true && inputName.length <= 0
+                    (isError || isSectionError) && inputName.length <= 0
                       ? "Please fill in all the fields"
                       : ""
                   } // Display error message if any
@@ -568,7 +576,7 @@ function ProjectDetails() {
                       variant="outlined"
                       fullWidth
                       error={
-                        isTypeError == true &&
+                        isTypeError &&
                         (selectedType.id === 0 ||
                           selectedType.id === undefined) &&
                         !isAppliance
@@ -576,7 +584,7 @@ function ProjectDetails() {
                           : false
                       }
                       helperText={
-                        isTypeError == true &&
+                        isTypeError &&
                         (selectedType.id === 0 ||
                           selectedType.id === undefined) &&
                         !isAppliance
@@ -613,7 +621,7 @@ function ProjectDetails() {
                           isAppliance ? applianceData.applianceType : ""
                         }
                         error={
-                          isError == true &&
+                          isError &&
                           (selectedApplianceType.id === 0 ||
                             selectedApplianceType.id === undefined) &&
                           !isAppliance
@@ -621,7 +629,7 @@ function ProjectDetails() {
                             : false
                         }
                         helperText={
-                          isError == true &&
+                          isError &&
                           (selectedApplianceType === 0 ||
                             selectedApplianceType === undefined) &&
                           !isAppliance
@@ -655,13 +663,13 @@ function ProjectDetails() {
                       ),
                     }}
                     error={
-                      isError == true &&
+                      isError &&
                       (wattCapacity.length <= 0 || isNaN(wattCapacity))
                         ? true
                         : false
                     }
                     helperText={
-                      isError == true &&
+                      isError &&
                       (wattCapacity.length <= 0 || isNaN(wattCapacity))
                         ? wattCapacity.length <= 0
                           ? "Please fill all the feilds"
@@ -697,12 +705,12 @@ function ProjectDetails() {
                       ),
                     }}
                     error={
-                      isError == true && (hours.length <= 0 || isNaN(hours))
+                      isError && (hours.length <= 0 || isNaN(hours))
                         ? true
                         : false
                     }
                     helperText={
-                      isError == true && (hours.length <= 0 || isNaN(hours))
+                      isError && (hours.length <= 0 || isNaN(hours))
                         ? hours.length <= 0
                           ? "Please fill all the feilds"
                           : "Invalid input"
@@ -738,14 +746,12 @@ function ProjectDetails() {
                     variant="outlined"
                     disabled={selectedType.id !== 2 && !isAppliance}
                     error={
-                      isError == true &&
-                      (quantity.length <= 0 || isNaN(quantity))
+                      isError && (quantity.length <= 0 || isNaN(quantity))
                         ? true
                         : false
                     }
                     helperText={
-                      isError == true &&
-                      (quantity.length <= 0 || isNaN(quantity))
+                      isError && (quantity.length <= 0 || isNaN(quantity))
                         ? quantity.length <= 0
                           ? "Please fill all the feilds"
                           : "Invalid input"

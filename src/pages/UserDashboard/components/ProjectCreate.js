@@ -81,11 +81,9 @@ function ProjectCreate(props) {
         inputMode="numeric"
         pattern="[0-9]*"
         onChange={(e) => setProjectName(e.target.value)}
-        error={isError == true && projectName.length <= 0 ? true : false}
+        error={isError && projectName.length <= 0 ? true : false}
         helperText={
-          isError == true && projectName.length <= 0
-            ? "Please fill project name"
-            : ""
+          isError && projectName.length <= 0 ? "Please fill project name" : ""
         } // Display error message if any
       />
 
@@ -100,9 +98,9 @@ function ProjectCreate(props) {
           <TextField
             {...params}
             label="Type"
-            error={isError == true && projectType.length <= 0 ? true : false}
+            error={isError && projectType.length <= 0 ? true : false}
             helperText={
-              isError == true && projectType.length <= 0
+              isError && projectType.length <= 0
                 ? "Please select project type"
                 : ""
             }

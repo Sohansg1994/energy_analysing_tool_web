@@ -9,23 +9,28 @@ import {
 import React from "react";
 import CountUp from "react-countup";
 import { IoPeople } from "react-icons/io5";
-import { MdDashboard } from "react-icons/md";
+import { MdWork } from "react-icons/md";
 
 function StaticsSummary() {
   return (
     <>
       <Box
         sx={{
-          mt: 15,
           display: "flex",
-          flexDirection: "row",
           justifyContent: "space-around",
+          backgroundColor: "#94AF9F",
+          flexWrap: "wrap",
+          rowGap: 2,
+          p: 3,
+          mt: 15,
+          borderRadius: 3,
+          boxShadow: "10px 10px 10px rgba(30,30,30,0.5)",
         }}
       >
         <Card
           sx={{
-            width: 345,
-            height: 345,
+            width: 300,
+            height: 200,
 
             //background:
             //  "linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.8) 100%)",
@@ -33,76 +38,76 @@ function StaticsSummary() {
             boxShadow: "10px 10px 10px rgba(30,30,30,0.5)",
           }}
         >
-          <CardActionArea
-            sx={{
-              height: 345,
-            }}
-          >
-            <CardContent>
-              <Typography
-                sx={{ textAlign: "center", fontSize: 50, fontWeight: "bold" }}
-              >
-                <IoPeople />
-              </Typography>
-              <Typography
-                sx={{ textAlign: "center", fontSize: 25, fontWeight: "bold" }}
-              >
-                Users
-              </Typography>
-              <Typography
-                sx={{
-                  textAlign: "center",
-                  fontSize: 40,
-                  fontWeight: "bold",
-                  fontFamily: "Montserrat",
+          <CardContent>
+            <Typography
+              sx={{ textAlign: "center", fontSize: 50, fontWeight: "bold" }}
+            >
+              <IoPeople />
+            </Typography>
 
-                  mt: 5,
-                }}
-              >
-                <CountUp start={0} end={10} duration={10 / 5} delay={0.5} />+
-              </Typography>
-            </CardContent>
-          </CardActionArea>
+            <Typography
+              sx={{
+                textAlign: "center",
+                fontSize: 30,
+                fontWeight: "bold",
+                fontFamily: "Montserrat",
+
+                mb: 1.5,
+              }}
+            >
+              <CountUp start={0} end={10} duration={10 / 5} delay={0.5} />+
+            </Typography>
+            <Typography
+              sx={{
+                textAlign: "center",
+                fontSize: 20,
+                fontWeight: "bold",
+                fontFamily: "Montserrat",
+              }}
+            >
+              USERS
+            </Typography>
+          </CardContent>
         </Card>
         <Card
           sx={{
-            width: 345,
-            height: 345,
+            width: 300,
+            height: 200,
             //background: "rgba(0,0,0,0.2);",
             borderRadius: 5,
             boxShadow: "10px 10px 10px rgba(30,30,30,0.5)",
           }}
         >
-          <CardActionArea
-            sx={{
-              height: 345,
-            }}
-          >
-            <CardContent>
-              <Typography
-                sx={{ textAlign: "center", fontSize: 50, fontWeight: "bold" }}
-              >
-                <MdDashboard />
-              </Typography>
-              <Typography
-                sx={{ textAlign: "center", fontSize: 25, fontWeight: "bold" }}
-              >
-                Projects
-              </Typography>
-              <Typography
-                sx={{
-                  textAlign: "center",
-                  fontSize: 40,
-                  fontWeight: "bold",
-                  fontFamily: "Montserrat",
+          <CardContent>
+            <Typography
+              sx={{ textAlign: "center", fontSize: 50, fontWeight: "bold" }}
+            >
+              <MdWork />
+            </Typography>
 
-                  mt: 5,
-                }}
-              >
-                <CountUp start={0} end={40} duration={5} delay={0.5} />+
-              </Typography>
-            </CardContent>
-          </CardActionArea>
+            <Typography
+              sx={{
+                textAlign: "center",
+                fontSize: 30,
+                fontWeight: "bold",
+                fontFamily: "Montserrat",
+
+                mb: 1.5,
+              }}
+            >
+              <CountUp start={0} end={40} duration={5} delay={0.5} />+
+            </Typography>
+            <Typography
+              sx={{
+                textAlign: "center",
+                fontSize: 20,
+                fontWeight: "bold",
+                fontFamily: "Montserrat",
+              }}
+            >
+              PROJECTS
+            </Typography>
+          </CardContent>
         </Card>
       </Box>
     </>

@@ -31,7 +31,32 @@ import { useNavigate } from "react-router-dom";
 function Subcription() {
   let navigate = useNavigate();
   const [sent, setSent] = useState(false);
-  const [subcriptionPlan, setSubcriptionPlan] = useState([]);
+  const [subcriptionPlan, setSubcriptionPlan] = useState([
+    {
+      cycle: "",
+      maxNumNode: 0,
+      maxNumProject: 0,
+      name: "",
+      planType: "",
+      rate: 0,
+    },
+    {
+      cycle: "",
+      maxNumNode: 0,
+      maxNumProject: 0,
+      name: "",
+      planType: "",
+      rate: 0,
+    },
+    {
+      cycle: "",
+      maxNumNode: 0,
+      maxNumProject: 0,
+      name: "",
+      planType: "",
+      rate: 0,
+    },
+  ]);
 
   /*const validate = (values) => {
     const errors = required(
@@ -83,15 +108,16 @@ function Subcription() {
 
   const getSubcriptionPlans = async () => {
     const accessToken = localStorage.getItem("accessToken");
+
     try {
-      const response = await axios.get(`/subscription/plan`, {
+      const response = await axios.get(`/subscription/plans`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
       console.log(response);
       if (response.status === 200) {
-        setSubcriptionPlan(response.data.data[0]);
+        setSubcriptionPlan(response.data.data);
       } else {
       }
     } catch (error) {
@@ -99,12 +125,23 @@ function Subcription() {
       // handle error
     }
   };
+  useEffect(() => {
+    console.log("here");
+    getSubcriptionPlans();
+  }, []);
+  useEffect(() => {
+    console.log(subcriptionPlan);
+  });
 
   const tiers = [
     {
       title: "Free",
-      price: ``,
-      description: [`Sentence 1 ${1}`, ` Projects - `, ` Nodes`],
+      price: subcriptionPlan[0].rate,
+      description: [
+        `${subcriptionPlan[0].cycle}`,
+        ` ${subcriptionPlan[0].maxNumProject} Projects`,
+        ` ${subcriptionPlan[0].maxNumNode} Nodes`,
+      ],
       buttonText: "Get started",
       buttonVariant: "outlined",
       plan: "FREE",
@@ -114,8 +151,12 @@ function Subcription() {
     {
       title: "Domestic Lite",
       subheader: "Most popular",
-      price: ``,
-      description: [`Projects `, `Nodes`],
+      price: subcriptionPlan[1].rate,
+      description: [
+        `${subcriptionPlan[1].cycle}`,
+        ` ${subcriptionPlan[1].maxNumProject} Projects`,
+        `  ${subcriptionPlan[1].maxNumNode}  Nodes `,
+      ],
       buttonText: "Get started",
       // buttonVariant: 'contained',
       buttonVariant: "disabled",
@@ -124,15 +165,15 @@ function Subcription() {
     },
   ];
 
-  useEffect(() => {
-    getSubcriptionPlans();
-  });
-
   return (
     <React.Fragment>
       <Header />
       <AppFormSub>
-        <Container maxWidth="md" component="main">
+        <Container
+          maxWidth="md"
+          component="main"
+          sx={{ backgroundColor: "#c1decd" }}
+        >
           <Grid
             container
             spacing={3}
@@ -140,7 +181,8 @@ function Subcription() {
               display: "flex",
               columnGap: 3,
               width: "100%",
-              justifyContent: "space-evenly",
+              justifyContent: "space-between",
+              backgroundColor: "#c1decd",
             }}
           >
             {tiers.map((tier) => (
@@ -152,16 +194,23 @@ function Subcription() {
                 //sm={tier.title === "Enterprise" ? 12 : 6}
                 //md={4}
               >
-                <Card>
+                <Card
+                  sx={{
+                    minWidth: "350px",
+                    borderRadius: 5,
+                    boxShadow: "10px 10px 10px rgba(30,30,30,0.5)",
+                  }}
+                >
                   <CardHeader
                     title={tier.title}
                     subheader={tier.subheader}
-                    titleTypographyProps={{ align: "center" }}
+                    titleTypographyProps={{ align: "center", fontSize: 30 }}
                     action={
                       tier.title === "Domestic Lite" ? <StarIcon /> : null
                     }
                     subheaderTypographyProps={{
                       align: "center",
+                      fontSize: 18,
                     }}
                     sx={{
                       backgroundColor: (theme) =>
@@ -186,7 +235,11 @@ function Subcription() {
                       >
                         LKR {tier.price}
                       </Typography>
-                      <Typography variant="h6" color="text.secondary">
+                      <Typography
+                        variant="h6"
+                        color="text.secondary"
+                        sx={{ mb: 2 }}
+                      >
                         /mo
                       </Typography>
                     </Box>
@@ -194,9 +247,10 @@ function Subcription() {
                       {tier.description.map((line) => (
                         <Typography
                           component="li"
-                          variant="subtitle1"
+                          variant="h5"
                           align="center"
                           key={line}
+                          sx={{ mb: 1.5 }}
                         >
                           {line}
                         </Typography>
@@ -209,6 +263,11 @@ function Subcription() {
                       variant={tier.buttonVariant}
                       varient={tier.buttonStatus}
                       onClick={() => handleSubmit(tier.plan)}
+                      /*sx={{
+                        "&:hover": {
+                          backgroundColor: "#1c7861",
+                        },
+                      }}*/
                       //href={tier.path}
                     >
                       {tier.buttonText}

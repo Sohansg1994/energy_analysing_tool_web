@@ -11,26 +11,21 @@ function StaticForm(props) {
     <Box
       sx={{
         display: "flex",
-        backgroundRepeat: "no-repeat",
-        backgroundColor: "#94AF9F",
-        height: 1,
-        justifyContent: "space-between",
+        backgroundColor: "#f5f5f5",
       }}
     >
       <Container
         sx={{
-          backgroundColor: "#94AF9F",
+          backgroundColor: "#f5f5f5",
+          ml: 30,
         }}
       >
-        <Box sx={{ mt: 7, mb: 12, backgroundColor: "#94AF9F" }}>
-          <Paper
-            sx={{
-              backgroundColor: "#94AF9F",
-              borderRadius: 2,
-            }}
-          >
-            {children}
-          </Paper>
+        <Box
+          sx={{
+            backgroundColor: "#f5f5f5",
+          }}
+        >
+          {children}
         </Box>
       </Container>
     </Box>

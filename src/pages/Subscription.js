@@ -157,7 +157,7 @@ function Subcription() {
         ` ${subcriptionPlan[1].maxNumProject} Projects`,
         `  ${subcriptionPlan[1].maxNumNode}  Nodes `,
       ],
-      buttonText: "Get started",
+      buttonText: "Coming Soon",
       // buttonVariant: 'contained',
       buttonVariant: "disabled",
 
@@ -240,7 +240,7 @@ function Subcription() {
                         color="text.secondary"
                         sx={{ mb: 2 }}
                       >
-                        /mo
+                        /6mo
                       </Typography>
                     </Box>
                     <ul>

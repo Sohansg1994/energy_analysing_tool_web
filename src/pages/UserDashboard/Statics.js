@@ -4,6 +4,7 @@ import AdminDashboard from "./components/AdminDashboard";
 import StaticsSummary from "./components/StaticsSummary";
 import StaticForm from "../modules/views/StaticForm";
 import { Dashboard } from "@mui/icons-material";
+import Settings from "./components/Settings";
 
 function Statics() {
   return (
@@ -12,6 +13,7 @@ function Statics() {
 
       <StaticForm>
         <StaticsSummary />
+        <Settings />
       </StaticForm>
     </React.Fragment>
   );

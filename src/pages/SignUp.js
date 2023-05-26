@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { Alert, Stack } from "@mui/material";
 
 import axios from "axios";
+import Footer from "./modules/views/Footer";
 
 function SignUp() {
   const [sent, setSent] = React.useState(false);
@@ -188,6 +189,7 @@ function SignUp() {
           )}
         </Form>
       </AppForm>
+      <Footer />
     </React.Fragment>
   );
 }

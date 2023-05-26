@@ -36,19 +36,19 @@ export const mainListItems = (
     <NavLink to="/statics" style={{ textDecoration: "none", color: "#424242" }}>
       <ListItemButton>
         <ListItemIcon>
-          <QueryStatsIcon />
+          <SettingsIcon />
         </ListItemIcon>
-        <ListItemText primary="Statics" />
+        <ListItemText primary="Settings " />
       </ListItemButton>
     </NavLink>
-    <NavLink to="/statics" style={{ textDecoration: "none", color: "#424242" }}>
+    {/*<NavLink to="/statics" style={{ textDecoration: "none", color: "#424242" }}>
       <ListItemButton>
         <ListItemIcon>
           <SettingsIcon />
         </ListItemIcon>
         <ListItemText primary="Settings" />
       </ListItemButton>
-    </NavLink>
+</NavLink>*/}
 
     {/*<ListItemButton>
       <ListItemIcon>

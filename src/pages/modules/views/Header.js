@@ -147,11 +147,18 @@ function Header() {
           <Link
             variant="h6"
             underline="none"
-            color="inherit"
             href="/"
-            sx={{ fontSize: 24, fontFamily: "Montserrat" }}
+            sx={{
+              fontSize: 24,
+              fontFamily: "Montserrat",
+              color: "inherit",
+              "& .green-letter": {
+                color: "green",
+                fontSize: 35,
+              },
+            }}
           >
-            {"GreenBill"}
+            <span className="green-letter">G</span>reenBill
           </Link>
           {!isTokenValid && (
             <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>

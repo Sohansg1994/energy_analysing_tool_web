@@ -89,7 +89,7 @@ function SectionComponents(props) {
     return () => {
       setIsSection(false);
     };
-  }, [props.isSection, props.selectedNode]);
+  }, [props.isSection, props.selectedNode, props.isAddClick]);
   return (
     <>
       {

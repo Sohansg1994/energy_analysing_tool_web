@@ -82,6 +82,9 @@ function ProjectDetails() {
   const [isError, setIsError] = useState(false);
   const [isTypeError, setIsTypeError] = useState(false);
   const [isSectionError, setIsSectionError] = useState(false);
+  const [isWattRateError, setIsWattRateError] = useState(false);
+  const [isHourError, setIsHourError] = useState(false);
+  const [isQuantityError, setIsQuantityError] = useState(false);
 
   const isOptionEqualToValue = (option, value) => option.id === value.id;
 
@@ -93,7 +96,13 @@ function ProjectDetails() {
   const applianceType = [
     { label: "Fan", id: 1 },
     { label: "Light", id: 2 },
-    { label: "Kitchen Appliance", id: 3 },
+    { label: "Refrigerator", id: 3 },
+    { label: "Kitchen Appliance", id: 4 },
+    { label: "AC", id: 5 },
+    { label: "TV", id: 6 },
+    { label: "Laptop", id: 7 },
+    { label: "PC", id: 8 },
+    { label: "Other", id: 9 },
   ];
 
   //to generate custom node id
@@ -114,6 +123,9 @@ function ProjectDetails() {
       setIsError(false);
       setIsTypeError(false);
       setIsSectionError(false);
+      setIsWattRateError(false);
+      setIsHourError(false);
+      setIsQuantityError(false);
     } else if (nodetype === "Section") {
       setIsAppliance(false);
       setIsProject(false);
@@ -121,6 +133,9 @@ function ProjectDetails() {
       setIsError(false);
       setIsTypeError(false);
       setIsSectionError(false);
+      setIsWattRateError(false);
+      setIsHourError(false);
+      setIsQuantityError(false);
     } else {
       setIsAppliance(true);
       setIsProject(false);
@@ -128,7 +143,10 @@ function ProjectDetails() {
       setIsError(false);
       setIsTypeError(false);
       setIsSectionError(false);
-      console.log(data.name);
+      setIsWattRateError(false);
+      setIsHourError(false);
+      setIsQuantityError(false);
+
       // Check if selected node is an appliance node
 
       setApplianceData({
@@ -214,8 +232,7 @@ function ProjectDetails() {
       try {
         const response = await axios.post("/node/add", nodeSectionData, config);
         if (response.status === 200) {
-          getData();
-
+          setIsAddClick(!isAddClick);
           setInputName("");
           setSelectedType(0);
         }
@@ -259,6 +276,8 @@ function ProjectDetails() {
         isNaN(quantity)
       ) {
         setIsError(true);
+        setIsWattRateError(true);
+
         return;
       }
 
@@ -269,7 +288,7 @@ function ProjectDetails() {
           config
         );
         if (response.status === 200) {
-          getData();
+          setIsAddClick(!isAddClick);
           setHours("");
           setQuantity("");
           setWattCapacity("");
@@ -286,19 +305,9 @@ function ProjectDetails() {
   const updateNode = async () => {
     setIsError(false);
     setIsTypeError(false);
-
-    if (
-      inputName.length <= 0 ||
-      wattCapacity.length <= 0 ||
-      isNaN(wattCapacity) ||
-      hours.length <= 0 ||
-      isNaN(hours) ||
-      quantity.length <= 0 ||
-      isNaN(quantity)
-    ) {
-      setIsError(true);
-      return;
-    }
+    setIsWattRateError(false);
+    setIsHourError(false);
+    setIsQuantityError(false);
 
     const accessToken = localStorage.getItem("accessToken");
     const config = {
@@ -306,28 +315,68 @@ function ProjectDetails() {
         Authorization: `Bearer ${accessToken}`,
       },
     };
-    let label = inputName;
+
     let type = `Appliance`;
     let applianceCategory = applianceData.applianceType;
 
     let frontEndId = selectedNode;
 
-    let applianceHours = hours;
+    let label;
+    if (inputName.length > 0) {
+      label = inputName;
+    } else {
+      label = `${applianceData.name}`;
+    }
 
-    let wattRate = wattCapacity;
+    let applianceHours;
+    if (hours.length > 0) {
+      if (isNaN(hours)) {
+        setIsHourError(true);
 
-    let applianceQuantity = quantity;
+        return;
+      } else {
+        applianceHours = hours;
+      }
+    } else {
+      applianceHours = `${applianceData.hours}`;
+    }
+
+    let wattRate;
+    if (wattCapacity.length > 0) {
+      if (isNaN(wattCapacity)) {
+        setIsWattRateError(true);
+
+        return;
+      } else {
+        wattRate = wattCapacity;
+      }
+    } else {
+      wattRate = `${applianceData.wattRate}`;
+    }
+
+    let applianceQuantity;
+    if (quantity.length > 0) {
+      if (isNaN(quantity)) {
+        setIsQuantityError(true);
+
+        return;
+      } else {
+        applianceQuantity = quantity;
+      }
+    } else {
+      applianceQuantity = `${applianceData.quantity}`;
+    }
 
     const nodeApplianceData = {
       frontEndId: frontEndId,
       nodeType: type,
-
       name: label,
       wattRate: wattRate,
       hours: applianceHours,
       quantity: applianceQuantity,
       applianceType: applianceCategory,
     };
+    console.log(nodeApplianceData);
 
     try {
       const response = await axios.put(
@@ -337,6 +386,13 @@ function ProjectDetails() {
       );
       if (response.status === 200) {
         getData();
+        setApplianceData({
+          name: nodeApplianceData.name,
+          wattRate: nodeApplianceData.wattRate,
+          hours: nodeApplianceData.hours,
+          applianceType: nodeApplianceData.applianceType,
+          quantity: nodeApplianceData.quantity,
+        });
         setSelectedApplianceType(0);
         setSelectedType(0);
         setHours("");
@@ -360,7 +416,7 @@ function ProjectDetails() {
     try {
       const response = await axios.delete(`/node?frontEndId=${nodeId}`, config);
       if (response.status === 200) {
-        getData();
+        setIsAddClick(!isAddClick);
       }
     } catch {}
   };
@@ -421,7 +477,6 @@ function ProjectDetails() {
 
   useEffect(() => {
     getData();
-    return () => setIsAddClick(false);
   }, [isAddClick]);
 
   const handleAddClick = () => {
@@ -520,6 +575,7 @@ function ProjectDetails() {
                   selectedNode={selectedNode}
                   isSection={isSection}
                   handleAddClick={handleAddClick}
+                  isAddClick={isAddClick}
                 />
               </Box>
             )}
@@ -663,14 +719,16 @@ function ProjectDetails() {
                       ),
                     }}
                     error={
-                      isError &&
-                      (wattCapacity.length <= 0 || isNaN(wattCapacity))
+                      (isError &&
+                        (wattCapacity.length <= 0 || isNaN(wattCapacity))) ||
+                      (isWattRateError && isNaN(wattCapacity))
                         ? true
                         : false
                     }
                     helperText={
-                      isError &&
-                      (wattCapacity.length <= 0 || isNaN(wattCapacity))
+                      (isError &&
+                        (wattCapacity.length <= 0 || isNaN(wattCapacity))) ||
+                      (isWattRateError && isNaN(wattCapacity))
                         ? wattCapacity.length <= 0
                           ? "Please fill all the feilds"
                           : "Invalid input"
@@ -705,12 +763,14 @@ function ProjectDetails() {
                       ),
                     }}
                     error={
-                      isError && (hours.length <= 0 || isNaN(hours))
+                      (isError && (hours.length <= 0 || isNaN(hours))) ||
+                      (isHourError && isNaN(hours))
                         ? true
                         : false
                     }
                     helperText={
-                      isError && (hours.length <= 0 || isNaN(hours))
+                      (isError && (hours.length <= 0 || isNaN(hours))) ||
+                      (isHourError && isNaN(hours))
                         ? hours.length <= 0
                           ? "Please fill all the feilds"
                           : "Invalid input"
@@ -746,12 +806,14 @@ function ProjectDetails() {
                     variant="outlined"
                     disabled={selectedType.id !== 2 && !isAppliance}
                     error={
-                      isError && (quantity.length <= 0 || isNaN(quantity))
+                      (isError && (quantity.length <= 0 || isNaN(quantity))) ||
+                      (isQuantityError && isNaN(quantity))
                         ? true
                         : false
                     }
                     helperText={
-                      isError && (quantity.length <= 0 || isNaN(quantity))
+                      (isError && (quantity.length <= 0 || isNaN(quantity))) ||
+                      (isQuantityError && isNaN(quantity))
                         ? quantity.length <= 0
                           ? "Please fill all the feilds"
                           : "Invalid input"
@@ -846,7 +908,7 @@ function ProjectDetails() {
                 handleCalculation={handleCalculation}
               />
             </Paper>
-            <Paper>
+            <Paper sx={{ display: "flex", justifyContent: "space-around" }}>
               {<Graph projectId={projectId} isCalculated={isCalculated} />}
             </Paper>
             <Paper sx={{ mb: 10 }}></Paper>

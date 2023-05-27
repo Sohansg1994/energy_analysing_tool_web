@@ -27,8 +27,8 @@ export default function Graph(props) {
   const { projectId } = props;
   const { isCalculated } = props;
   const pieWidth = 100 / dataSets.length;
-  const maxRadius = 225;
-  const minRadius = 100;
+  const maxRadius = 200;
+  const minRadius = 75;
   const radiusStep = (maxRadius - minRadius) / dataSets.length;
 
   const getGraphData = async () => {
@@ -97,7 +97,7 @@ export default function Graph(props) {
                   fill="#000"
                   textAnchor={x > cx ? "start" : "end"}
                   dominantBaseline="central"
-                  style={{ fontSize: 14 }}
+                  style={{ fontSize: 12 }}
                 >
                   {`${name} ${unitPercentageOfProject.toFixed(2)}%`}
                 </text>

@@ -97,7 +97,7 @@ function ProjectDetails() {
     { label: "Fan", id: 1 },
     { label: "Light", id: 2 },
     { label: "Refrigerator", id: 3 },
-    { label: "Kitchen Appliance", id: 4 },
+    { label: "Kitchen_Appliance", id: 4 },
     { label: "AC", id: 5 },
     { label: "TV", id: 6 },
     { label: "Laptop", id: 7 },

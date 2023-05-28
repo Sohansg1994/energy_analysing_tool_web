@@ -71,7 +71,7 @@ const ResultCalculation = (props) => {
 
   const handleCalculation = async () => {
     const accessToken = localStorage.getItem("accessToken");
-    console.log(accessToken);
+
     try {
       const response = await axios.get(
         `/playground/bill?projectId=${projectId}`,
@@ -103,6 +103,33 @@ const ResultCalculation = (props) => {
     }
   };
 
+  const pdfDownload = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    try {
+      const response = await axios.get(`/report/pdf`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      const link = document.createElement("a");
+      link.href = url;
+
+      link.setAttribute("download", "results.pdf");
+
+      document.body.appendChild(link);
+      link.click();
+
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Box
       sx={{
@@ -231,6 +258,7 @@ const ResultCalculation = (props) => {
                 variant="contained"
                 color="info"
                 startIcon={<FiDownload />}
+                onClick={pdfDownload}
               >
                 Download
               </Button>

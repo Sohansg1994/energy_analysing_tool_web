@@ -59,6 +59,7 @@ const ResultCalculation = (props) => {
   const [rows, setRows] = useState([
     createData("Total Units", ""),
     createData("Usage Charge", ""),
+    createData("Fixed Charge", ""),
     createData("Total Charge", ""),
     createData("Tax", ""),
     createData("Bill Amount", ""),
@@ -87,6 +88,7 @@ const ResultCalculation = (props) => {
         setUnits(response.data.data[0].totalUnits);
         const updatedRows = [
           createData("Usage Charge", response.data.data[0].usageCharge),
+          createData("Fixed Charge", response.data.data[0].fixedCharge),
           createData("Total Charge", response.data.data[0].totalCharge),
           createData("Tax", response.data.data[0].levy),
 

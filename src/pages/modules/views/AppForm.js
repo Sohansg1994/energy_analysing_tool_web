@@ -12,6 +12,7 @@ function AppForm(props) {
       sx={{
         display: "flex",
         backgroundColor: "rgb(148, 175, 159)",
+        minHeight: "100vh",
       }}
     >
       <Container maxWidth="sm">

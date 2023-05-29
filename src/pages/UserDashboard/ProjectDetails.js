@@ -126,6 +126,7 @@ function ProjectDetails() {
       setIsWattRateError(false);
       setIsHourError(false);
       setIsQuantityError(false);
+      setisNodeNumberExceed(false);
     } else if (nodetype === "Section") {
       setIsAppliance(false);
       setIsProject(false);
@@ -136,6 +137,7 @@ function ProjectDetails() {
       setIsWattRateError(false);
       setIsHourError(false);
       setIsQuantityError(false);
+      setisNodeNumberExceed(false);
     } else {
       setIsAppliance(true);
       setIsProject(false);
@@ -146,6 +148,7 @@ function ProjectDetails() {
       setIsWattRateError(false);
       setIsHourError(false);
       setIsQuantityError(false);
+      setisNodeNumberExceed(false);
 
       // Check if selected node is an appliance node
 
@@ -194,6 +197,8 @@ function ProjectDetails() {
     setData(backEndData);
   };
 
+  //Node Add function
+
   const addNode = async () => {
     setIsError(false);
     setIsSectionError(false);
@@ -237,7 +242,12 @@ function ProjectDetails() {
           setSelectedType(0);
         }
       } catch (error) {
-        console.log(error);
+        if (
+          error.response.data ===
+          "409 Sorry You had reach your subscription limitations upgrade your plan for more benefits"
+        ) {
+          setisNodeNumberExceed(true);
+        }
       }
     } else if (selectedType.id === 2) {
       let label = `${inputName} `;
@@ -490,8 +500,8 @@ function ProjectDetails() {
 
   return (
     <React.Fragment>
-      {role === "USER" && <AdminDashboard />}
-      {role === "ADMIN" && <Dashboard />}
+      {role === "ADMIN" && <AdminDashboard />}
+      {role === "USER" && <Dashboard />}
       <Container>
         <Box
           sx={{

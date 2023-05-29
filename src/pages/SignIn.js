@@ -15,8 +15,6 @@ import axios from "axios";
 import { Alert, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-//setAccessToken("lahiru")
-
 function SignIn() {
   const [sent, setSent] = React.useState(false);
   const [warning, setWarning] = React.useState(false);
@@ -73,8 +71,14 @@ function SignIn() {
       }
     } catch (error) {
       console.log(error.response.data.message);
-      setWarningMessage(error.response.data.message);
-      setWarning(true);
+      if (
+        error.response.data.message ===
+          "406 Wrong Password:Enter Correct Password" ||
+        error.response.data.message === "404 Wrong Email:User not found"
+      ) {
+        setWarningMessage("Invalid Email or Password");
+        setWarning(true);
+      }
     }
   };
 

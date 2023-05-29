@@ -9,8 +9,8 @@ function Projects() {
 
   return (
     <React.Fragment>
-      {role === "USER" && <AdminDashboard />}
-      {role === "ADMIN" && <Dashboard />}
+      {role === "ADMIN" && <AdminDashboard />}
+      {role === "USER" && <Dashboard />}
       <ProjectView />
     </React.Fragment>
   );

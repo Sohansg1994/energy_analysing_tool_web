@@ -10,8 +10,8 @@ function TarifficData() {
   const role = localStorage.getItem("role");
   return (
     <>
-      {role === "USER" && <AdminDashboard />}
-      {role === "ADMIN" && <Dashboard />}
+      {role === "ADMIN" && <AdminDashboard />}
+      {role === "USER" && <Dashboard />}
 
       <TariffDataTable />
     </>

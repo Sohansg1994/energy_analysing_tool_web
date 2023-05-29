@@ -23,7 +23,7 @@ export default function Graph(props) {
     ],
   ];
   const [dataSets, setDataSets] = useState([]);
-  const [projectTotalUnits, setProjectTotalUnits] = useState(null);
+  const [projectLevelNumbers, setProjectLevelNumbers] = useState(0);
   const { projectId } = props;
   const { isCalculated } = props;
   const pieWidth = 100 / dataSets.length;
@@ -43,7 +43,13 @@ export default function Graph(props) {
       }
     );
 
-    console.log(response.data.data);
+    console.log(response.data.data.length);
+    if (response.data.data.length === 2) {
+      setProjectLevelNumbers(0);
+    } else if (response.data.data.length === 3) {
+      setProjectLevelNumbers(15);
+    }
+
     setDataSets(response.data.data);
   };
 
@@ -71,7 +77,7 @@ export default function Graph(props) {
             key={i}
             data={data}
             dataKey="totalUnits"
-            cx={`${pieWidth + 15}%`}
+            cx={`${pieWidth + projectLevelNumbers}%`}
             cy="50%"
             innerRadius={minRadius + i * radiusStep}
             outerRadius={minRadius + (i + 1) * radiusStep}

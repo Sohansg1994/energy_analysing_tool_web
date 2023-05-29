@@ -105,6 +105,8 @@ function ProjectDetails() {
     { label: "Other", id: 9 },
   ];
 
+  const [refreshKey, setRefreshKey] = useState(0);
+
   //to generate custom node id
   const generateNodeId = () => {
     setCounter((prevCounter) => prevCounter + 1);
@@ -237,9 +239,10 @@ function ProjectDetails() {
       try {
         const response = await axios.post("/node/add", nodeSectionData, config);
         if (response.status === 200) {
-          setIsAddClick(!isAddClick);
           setInputName("");
           setSelectedType(0);
+          setIsAddClick(!isAddClick);
+          setRefreshKey(refreshKey + 1);
         }
       } catch (error) {
         if (
@@ -298,13 +301,13 @@ function ProjectDetails() {
           config
         );
         if (response.status === 200) {
-          setIsAddClick(!isAddClick);
           setHours("");
           setQuantity("");
           setWattCapacity("");
           setInputName("");
-          setSelectedType(0);
-          setSelectedApplianceType(0);
+          setSelectedApplianceType("");
+          setIsAddClick(!isAddClick);
+          setRefreshKey(refreshKey + 1);
         }
       } catch (error) {
         console.log(error);
@@ -625,6 +628,7 @@ function ProjectDetails() {
                   } // Display error message if any
                 />
                 <Autocomplete
+                  key={refreshKey}
                   options={type}
                   getOptionLabel={(option) => option.label}
                   style={{ width: "100%", marginTop: 16 }}
@@ -666,6 +670,7 @@ function ProjectDetails() {
                   sx={{ mt: 3, display: "flex", columnGap: 3, width: "100%" }}
                 >
                   <Autocomplete
+                    key={refreshKey}
                     options={applianceType}
                     getOptionLabel={(option) => option.label}
                     style={{ width: "100%" }}

@@ -37,6 +37,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function ProjectList() {
   const accessToken = localStorage.getItem("accessToken");
   const [projects, setProjects] = useState([]);
+  const [isDelete, setIsDelete] = useState(false);
 
   useEffect(() => {
     console.log(projects);
@@ -62,6 +63,7 @@ export default function ProjectList() {
         },
       });
       getProjectList();
+      setIsDelete(!isDelete);
     } catch (error) {
       console.log(error.message);
     }
@@ -86,7 +88,9 @@ export default function ProjectList() {
                   {project.name}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {project.projectType}
+                  {project.projectType === "ReligiousAndCharitable"
+                    ? "Religious & Charitable"
+                    : project.projectType}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {project.lastUpdated}
@@ -138,7 +142,7 @@ export default function ProjectList() {
         </Table>
       </TableContainer>
       <div sx={{ mt: 4, mb: 4 }}>
-        <ProjectCreate getProjectList={getProjectList} />
+        <ProjectCreate getProjectList={getProjectList} isDelete={isDelete} />
       </div>
     </React.Fragment>
   );

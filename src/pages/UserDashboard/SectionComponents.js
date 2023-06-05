@@ -11,6 +11,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import { useNavigate } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -39,6 +40,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 function SectionComponents(props) {
+  let navigate = useNavigate();
   const { selectedNode } = props;
   const [isSection, setIsSection] = useState(false);
   const [sectionComponents, setSectionComponents] = useState([]);
@@ -76,7 +78,7 @@ function SectionComponents(props) {
         getSectionComponents();
       }
     } catch (error) {
-      console.log(error.message);
+      navigate("/error");
     }
   };
   useEffect(() => {

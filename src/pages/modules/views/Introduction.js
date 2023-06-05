@@ -39,7 +39,8 @@ export default function Introduction() {
       >
         Calculate your GREEN BILL
       </Typography>
-      <Button id="build-project-component"
+      <Button
+        id="build-project-component"
         variant="contained"
         size="large"
         component="a"

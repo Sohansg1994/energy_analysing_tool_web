@@ -141,7 +141,7 @@ function Header() {
   };
 
   return (
-    <div>
+    <div id="introduction-component" component="section">
       <AppBar position="fixed">
         <Toolbar sx={{ justifyContent: "space-between" }}>
           <Link

@@ -101,8 +101,8 @@ function Subcription() {
         // handle error
       }
     } catch (error) {
-      console.error(error);
-      // handle error
+      console.log(error);
+      navigate("/error");
     }
   };
 

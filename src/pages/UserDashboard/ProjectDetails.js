@@ -23,9 +23,10 @@ import axios from "axios";
 import ResultCalculation from "./ResultCalculation.js";
 import SectionComponents from "./SectionComponents";
 import Graph from "./Graph";
-
+import { useNavigate } from "react-router-dom";
 function ProjectDetails() {
   //get project name from Project page
+  let navigate = useNavigate();
   const location = useLocation();
   const projectName = new URLSearchParams(location.search).get("projectName");
   const projectId = new URLSearchParams(location.search).get("projectId");
@@ -250,6 +251,8 @@ function ProjectDetails() {
           "409 Sorry You had reach your subscription limitations upgrade your plan for more benefits"
         ) {
           setisNodeNumberExceed(true);
+        } else {
+          navigate("/error");
         }
       }
     } else if (selectedType.id === 2) {
@@ -310,7 +313,14 @@ function ProjectDetails() {
           setRefreshKey(refreshKey + 1);
         }
       } catch (error) {
-        console.log(error);
+        if (
+          error.response.data ===
+          "409 Sorry You had reach your subscription limitations upgrade your plan for more benefits"
+        ) {
+          setisNodeNumberExceed(true);
+        } else {
+          navigate("/error");
+        }
       }
     }
   };
@@ -414,7 +424,7 @@ function ProjectDetails() {
         setInputName("");
       }
     } catch (error) {
-      console.log(error);
+      navigate("/error");
     }
   };
 
@@ -431,7 +441,9 @@ function ProjectDetails() {
       if (response.status === 200) {
         setIsAddClick(!isAddClick);
       }
-    } catch {}
+    } catch (error) {
+      navigate("/error");
+    }
   };
 
   //Node find function

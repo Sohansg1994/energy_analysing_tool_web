@@ -9,6 +9,8 @@ import Projects from "./pages/UserDashboard/Projects";
 import TariffData from "./pages/UserDashboard/TariffData";
 import ProjectDetails from "./pages/UserDashboard/ProjectDetails";
 import Statics from "./pages/UserDashboard/Statics";
+import HomeVisitForm from "./pages/HomeVisitForm";
+import Error from "./pages/Error";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
           <Route path="/tarifficdata" element={<TariffData />} />
           <Route path="/projectdetails" element={<ProjectDetails />} />
           <Route path="/statics" element={<Statics />} />
+          <Route path="/homevisit" element={<HomeVisitForm />} />
+          <Route path="/error" element={<Error />} />
         </Routes>
       </BrowserRouter>
     </div>

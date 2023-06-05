@@ -107,7 +107,7 @@ const ResultCalculation = (props) => {
     const accessToken = localStorage.getItem("accessToken");
 
     try {
-      const response = await axios.get(`/report/pdf`, {
+      const response = await axios.get(`/report/pdf?projectId=${projectId}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

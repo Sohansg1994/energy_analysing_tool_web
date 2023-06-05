@@ -73,10 +73,12 @@ function SignUp() {
         navigate("/subcription");
       }
     } catch (error) {
-      setWarningMessage(error.response.data.message);
-      setWarning(true);
-
-      // handle error
+      if (error.response.data.message === "406 Email already registered") {
+        setWarningMessage("Email is already registered");
+        setWarning(true);
+      } else {
+        navigate("/error");
+      }
     }
   };
 

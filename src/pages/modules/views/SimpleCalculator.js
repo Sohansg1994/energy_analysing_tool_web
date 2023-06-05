@@ -9,8 +9,10 @@ import Paper from "@mui/material/Paper";
 import Snackbar from "../components/Snackbar";
 import { Button, Card, CardActionArea } from "@mui/material";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function SimpleCalculator() {
+  let navigate = useNavigate();
   const [units, setUnits] = useState(null);
   const [result, setResult] = useState({
     monthlyFixedCharge: 0,
@@ -33,7 +35,9 @@ function SimpleCalculator() {
         setResult(response.data.data[0]);
         setIsValid(true);
       }
-    } catch (error) {}
+    } catch (error) {
+      navigate("/error");
+    }
   };
 
   return (

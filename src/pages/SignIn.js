@@ -40,6 +40,7 @@ function SignIn() {
   const handleSubmit = async (values) => {
     try {
       const response = await axios.post("/user/login", values);
+      console.log(response.data.data[0]);
       if (response.status === 200) {
         //const { accessToken, refreshToken } = response.data;
         const accessToken = response.data.data[0].accessToken;
@@ -48,6 +49,7 @@ function SignIn() {
         const role = response.data.data[0].role;
         const accessTokenET = response.data.data[0].accessTokenExpireTime;
         const userId = response.data.data[0].userId;
+        const subcriptionPlan = response.data.data[0].subscriptionPlanName;
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
         setFirstName(firstName);
@@ -65,12 +67,15 @@ function SignIn() {
         console.log(firstName);
 
         setSent(true);
-        navigate("/projects");
+        if (subcriptionPlan === "UnSubscribe") {
+          navigate("/subcription");
+        } else {
+          navigate("/projects");
+        }
       } else {
         console.log(response.status);
       }
     } catch (error) {
-      console.log(error.response.data.message);
       if (
         error.response.data.message ===
           "406 Wrong Password:Enter Correct Password" ||
@@ -78,6 +83,8 @@ function SignIn() {
       ) {
         setWarningMessage("Invalid Email or Password");
         setWarning(true);
+      } else {
+        navigate("/error");
       }
     }
   };

@@ -40,13 +40,27 @@ function SimpleCalculator() {
     }
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSubmit();
+    }
+  };
+
   return (
     <Container
       id="bill-calculator-component"
       component="section"
       sx={{ mt: 10, display: "flex", mb: 10 }}
     >
-      <Grid container sx={{ bgcolor: "warning.main" }}>
+      <Grid
+        container
+        sx={{
+          bgcolor: "warning.main",
+          backgroundImage: "url('/calaculator_cover_photo.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         <Grid item xs={10} md={5} sx={{ zIndex: 1 }}>
           <Box
             sx={{
@@ -60,18 +74,27 @@ function SimpleCalculator() {
               <Typography
                 variant="h4"
                 gutterBottom
-                sx={{ fontFamily: "Montserrat" }}
+                sx={{
+                  fontFamily: "Montserrat",
+                  color: "white",
+                  fontWeight: "bold",
+                }}
               >
                 Calculate Now
               </Typography>
-              <Typography>
+              <Typography
+                sx={{
+                  color: "#cfd8dc",
+                }}
+              >
                 Please enter the number of electricity units you have consumed,
-                to calculate the price.
+                to calculate your monthly bill.
               </Typography>
               <TextField
                 id="outlined-basic"
                 value={units}
                 onChange={(e) => setUnits(e.target.value)}
+                onKeyPress={handleKeyPress}
                 noBorder
                 placeholder="No of units"
                 variant="standard"
@@ -128,7 +151,7 @@ function SimpleCalculator() {
               sx={{
                 width: "90%",
                 height: "90%",
-                background: "rgba(255, 255, 255, 0.1) ",
+                background: "rgba(255, 255, 255, 0.4) ",
                 /* background:
                   "linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.8) 100%)",*/
                 borderRadius: 5,
@@ -144,8 +167,25 @@ function SimpleCalculator() {
               >
                 <Box component="div">
                   <Grid container spacing={2}>
-                    <Grid item xs={5} sx={{ px: 1, py: 1, textAlign: "right" }}>
-                      <Typography align="right">Consumed units</Typography>
+                    <Grid
+                      item
+                      xs={5}
+                      sx={{
+                        px: 1,
+                        py: 1,
+                        textAlign: "right",
+                        alignContent: "center",
+                      }}
+                    >
+                      <Typography
+                        align="right"
+                        sx={{
+                          fontWeight: "bold",
+                          pt: 1,
+                        }}
+                      >
+                        Consumed units
+                      </Typography>
                     </Grid>
                     <Grid item xs={7} sx={{ px: 0, py: 0, textAlign: "left" }}>
                       <Paper
@@ -169,7 +209,13 @@ function SimpleCalculator() {
                     </Grid>
 
                     <Grid item xs={5} sx={{ px: 1, py: 1, textAlign: "right" }}>
-                      <Typography align="right">
+                      <Typography
+                        align="right"
+                        sx={{
+                          fontWeight: "bold",
+                          pt: 1,
+                        }}
+                      >
                         Monthly fixed charge
                       </Typography>
                     </Grid>
@@ -195,7 +241,13 @@ function SimpleCalculator() {
                     </Grid>
 
                     <Grid item xs={5} sx={{ px: 1, py: 1, textAlign: "right" }}>
-                      <Typography align="right">
+                      <Typography
+                        align="right"
+                        sx={{
+                          fontWeight: "bold",
+                          pt: 1,
+                        }}
+                      >
                         Charge for consumption
                       </Typography>
                     </Grid>
@@ -221,7 +273,15 @@ function SimpleCalculator() {
                     </Grid>
 
                     <Grid item xs={5} sx={{ px: 1, py: 1, textAlign: "right" }}>
-                      <Typography align="right">Levy</Typography>
+                      <Typography
+                        align="right"
+                        sx={{
+                          fontWeight: "bold",
+                          pt: 1,
+                        }}
+                      >
+                        Levy
+                      </Typography>
                     </Grid>
                     <Grid item xs={7} sx={{ px: 0, py: 0, textAlign: "left" }}>
                       <Paper
@@ -245,7 +305,15 @@ function SimpleCalculator() {
                     </Grid>
 
                     <Grid item xs={5} sx={{ px: 1, py: 1, textAlign: "right" }}>
-                      <Typography align="right">Total charge</Typography>
+                      <Typography
+                        align="right"
+                        sx={{
+                          fontWeight: "bold",
+                          pt: 1,
+                        }}
+                      >
+                        Total charge
+                      </Typography>
                     </Grid>
                     <Grid item xs={7} sx={{ px: 0, py: 0, textAlign: "left" }}>
                       <Paper

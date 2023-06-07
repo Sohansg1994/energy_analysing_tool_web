@@ -517,7 +517,13 @@ function ProjectDetails() {
     <React.Fragment>
       {role === "ADMIN" && <AdminDashboard />}
       {role === "USER" && <Dashboard />}
-      <Container>
+      <Container
+        sx={{
+          ml: 38,
+          display: "flex",
+          justifyContent: "space-around",
+        }}
+      >
         <Box
           sx={{
             mt: 15,
@@ -935,9 +941,11 @@ function ProjectDetails() {
                 handleCalculation={handleCalculation}
               />
             </Paper>
-            <Paper sx={{ display: "flex", justifyContent: "space-around" }}>
-              {<Graph projectId={projectId} isCalculated={isCalculated} />}
-            </Paper>
+            {isCalculated && (
+              <Paper sx={{ display: "flex", justifyContent: "space-around" }}>
+                {<Graph projectId={projectId} isCalculated={isCalculated} />}
+              </Paper>
+            )}
             <Paper sx={{ mb: 10 }}></Paper>
           </Box>
         </Box>

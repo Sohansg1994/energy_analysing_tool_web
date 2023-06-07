@@ -7,7 +7,7 @@ function TarifficDataTable() {
       <Container
         sx={{
           mt: 15,
-          ml: 30,
+          ml: 38,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",

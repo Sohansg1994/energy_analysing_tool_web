@@ -79,7 +79,7 @@ function ProjectCreate(props) {
   }, [isDelete]);
 
   return (
-    <Container sx={{ p: 0 }}>
+    <>
       <Container
         component={Paper}
         sx={{
@@ -87,6 +87,8 @@ function ProjectCreate(props) {
           mb: 4,
           pb: 4,
           pt: 4,
+          pl: 0,
+          pr: 0,
           display: "flex",
           alignItems: "start",
           justifyContent: "space-between",
@@ -163,7 +165,7 @@ function ProjectCreate(props) {
           </Stack>
         </Container>
       )}
-    </Container>
+    </>
   );
 }
 

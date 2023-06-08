@@ -2,9 +2,21 @@ import * as React from "react";
 import Button from "../components/Button";
 import Typography from "../components/Typography";
 import IntroductionLayout from "./IntroductionLayout";
+import { useNavigate } from "react-router-dom";
 
 export default function Introduction() {
   const imageUrl = "/background_pic.jpg";
+  let navigate = useNavigate();
+
+  const nevigatePage = () => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (accessToken === null) {
+      navigate("/signup");
+    } else {
+      navigate("/projects");
+    }
+  };
 
   return (
     <IntroductionLayout
@@ -44,7 +56,7 @@ export default function Introduction() {
         variant="contained"
         size="large"
         component="a"
-        href="/signup"
+        onClick={nevigatePage}
         sx={{
           minWidth: 200,
           backgroundColor: "#1F8A70",

@@ -879,7 +879,7 @@ function ProjectDetails() {
                       variant="contained"
                       color="primary"
                       onClick={addNode}
-                      disabled={isAppliance === true}
+                      disabled={isProject && selectedType.id == 2}
                       sx={{
                         width: "25%",
                         backgroundColor: "#1F8A70",

@@ -891,7 +891,6 @@ function ProjectDetails() {
                       Add
                     </Button>
                   )}
-
                   {isAppliance && (
                     <Button
                       variant="contained"
@@ -913,6 +912,7 @@ function ProjectDetails() {
                     variant="contained"
                     color="error"
                     onClick={deleteNode}
+                    disabled={isProject}
                     sx={{ width: "25%" }}
                   >
                     Delete

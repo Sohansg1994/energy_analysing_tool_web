@@ -97,10 +97,14 @@ function SectionComponents(props) {
       {
         <TableContainer component={Paper}>
           <Table
-            sx={{ minWidth: 700, width: "93%", margin: "auto" }}
+            sx={{
+              minWidth: 650,
+              width: "90%",
+              margin: "auto",
+            }}
             aria-label="customized table"
           >
-            <TableHead>
+            <TableHead s>
               <TableRow>
                 <StyledTableCell>Component</StyledTableCell>
                 <StyledTableCell align="center">Type</StyledTableCell>

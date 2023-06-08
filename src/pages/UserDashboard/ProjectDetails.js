@@ -535,7 +535,7 @@ function ProjectDetails() {
         >
           <Box
             sx={{
-              width: "35%",
+              width: "33%",
               boxShadow: 2,
               height: "100%",
               overflowY: "hidden",
@@ -576,7 +576,7 @@ function ProjectDetails() {
           </Box>
           <Box
             sx={{
-              width: "65%",
+              width: "67%",
               boxShadow: 2,
               height: "100%",
               overflowY: "auto",

@@ -6,12 +6,40 @@ import {
   Container,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CountUp from "react-countup";
 import { IoPeople } from "react-icons/io5";
 import { MdWork } from "react-icons/md";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function StaticsSummary() {
+  let navigate = useNavigate();
+  const [userCount, setUserCount] = useState(0);
+  const [projectCount, setProjectCount] = useState(0);
+
+  const handleGetStatics = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.get(`/sudo/statistic`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.status === 200) {
+        console.log(response.data);
+        setUserCount(response.data.totalUsers);
+        setProjectCount(response.data.totalProjects);
+      }
+    } catch (error) {
+      navigate("/error");
+    }
+  };
+
+  useEffect(() => {
+    handleGetStatics();
+  }, []);
+
   return (
     <>
       <Box
@@ -55,7 +83,13 @@ function StaticsSummary() {
                 mb: 1.5,
               }}
             >
-              <CountUp start={0} end={10} duration={10 / 5} delay={0.5} />+
+              <CountUp
+                start={0}
+                end={userCount}
+                duration={10 / 5}
+                delay={0.5}
+              />
+              +
             </Typography>
             <Typography
               sx={{
@@ -95,7 +129,7 @@ function StaticsSummary() {
                 mb: 1.5,
               }}
             >
-              <CountUp start={0} end={40} duration={5} delay={0.5} />+
+              <CountUp start={0} end={projectCount} duration={5} delay={0.5} />+
             </Typography>
             <Typography
               sx={{

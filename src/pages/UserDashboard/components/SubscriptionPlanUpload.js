@@ -39,7 +39,6 @@ function SubscriptionPlanUpload() {
         Authorization: `Bearer ${accessToken}`,
       },
     };
-    console.log(accessToken);
 
     try {
       const response = await axios.post(
@@ -52,6 +51,7 @@ function SubscriptionPlanUpload() {
         setIsSuccess(true);
       }
     } catch (error) {
+      console.log(error.response.data.message);
       setIsError(true);
     }
   };
@@ -62,7 +62,7 @@ function SubscriptionPlanUpload() {
         <Paper elevation={3} sx={{ p: 5 }}>
           <Divider textAlign="center">
             <Typography sx={{ fontSize: 16, fontFamily: "Montserrat" }}>
-              Tariffic Data Upload
+              Subscription Plan Upload
             </Typography>
           </Divider>
           <Typography sx={{ fontSize: 15, mt: 5 }}>

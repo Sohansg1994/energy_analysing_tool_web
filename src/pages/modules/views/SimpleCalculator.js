@@ -180,7 +180,6 @@ function SimpleCalculator() {
                       <Typography
                         align="right"
                         sx={{
-                          fontWeight: "bold",
                           pt: 1,
                         }}
                       >
@@ -212,7 +211,6 @@ function SimpleCalculator() {
                       <Typography
                         align="right"
                         sx={{
-                          fontWeight: "bold",
                           pt: 1,
                         }}
                       >
@@ -244,7 +242,6 @@ function SimpleCalculator() {
                       <Typography
                         align="right"
                         sx={{
-                          fontWeight: "bold",
                           pt: 1,
                         }}
                       >
@@ -276,7 +273,6 @@ function SimpleCalculator() {
                       <Typography
                         align="right"
                         sx={{
-                          fontWeight: "bold",
                           pt: 1,
                         }}
                       >
@@ -308,7 +304,6 @@ function SimpleCalculator() {
                       <Typography
                         align="right"
                         sx={{
-                          fontWeight: "bold",
                           pt: 1,
                         }}
                       >

@@ -61,7 +61,7 @@ const ResultCalculation = (props) => {
     createData("Usage Charge", ""),
     createData("Fixed Charge", ""),
     createData("Total Charge", ""),
-    createData("Tax", ""),
+    createData("Levy", ""),
     createData("Bill Amount", ""),
   ]);
 
@@ -90,7 +90,7 @@ const ResultCalculation = (props) => {
           createData("Usage Charge", response.data.data[0].usageCharge),
           createData("Fixed Charge", response.data.data[0].fixedCharge),
           createData("Total Charge", response.data.data[0].totalCharge),
-          createData("Tax", response.data.data[0].levy),
+          createData("Levy", response.data.data[0].levy),
 
           createData("Bill Amount", response.data.data[0].billAmount),
         ];

@@ -8,7 +8,7 @@ function TarifficDataTable() {
     console.log(fileUrl);
     const link = document.createElement("a");
     link.href = fileUrl;
-    link.setAttribute("download", "results.pdf");
+    link.setAttribute("download", "tariffData.pdf");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

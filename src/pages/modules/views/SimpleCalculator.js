@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import {useState} from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
@@ -7,9 +7,9 @@ import Typography from "../components/Typography";
 import TextField from "../components/TextField";
 import Paper from "@mui/material/Paper";
 import Snackbar from "../components/Snackbar";
-import { Button, Card, CardActionArea } from "@mui/material";
+import {Button, Card} from "@mui/material";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 function SimpleCalculator() {
   let navigate = useNavigate();
@@ -19,10 +19,10 @@ function SimpleCalculator() {
     chargeForConsumption: 0,
     totalCharge: 0,
   });
-
+  
   const [isValid, setIsValid] = useState(false);
   const [isError, setIsError] = useState(false);
-
+  
   const handleSubmit = async () => {
     if (units.length <= 0 || isNaN(units)) {
       setIsError(true);
@@ -39,18 +39,18 @@ function SimpleCalculator() {
       navigate("/error");
     }
   };
-
+  
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleSubmit();
     }
   };
-
+  
   return (
     <Container
       id="bill-calculator-component"
       component="section"
-      sx={{ mt: 10, display: "flex", mb: 10 }}
+      sx={{mt: 10, display: "flex", mb: 10}}
     >
       <Grid
         container
@@ -61,7 +61,7 @@ function SimpleCalculator() {
           backgroundPosition: "center",
         }}
       >
-        <Grid item xs={10} md={5} sx={{ zIndex: 1 }}>
+        <Grid item xs={10} md={5} sx={{zIndex: 1}}>
           <Box
             sx={{
               display: "flex",
@@ -70,7 +70,7 @@ function SimpleCalculator() {
               px: 3,
             }}
           >
-            <Box sx={{ maxWidth: 400, fontFamily: "Montserrat" }}>
+            <Box sx={{maxWidth: 400, fontFamily: "Montserrat"}}>
               <Typography
                 variant="h4"
                 gutterBottom
@@ -98,7 +98,7 @@ function SimpleCalculator() {
                 noBorder
                 placeholder="No of units"
                 variant="standard"
-                sx={{ width: "100%", mt: 3, mb: 2 }}
+                sx={{width: "100%", mt: 3, mb: 2}}
                 error={
                   isError === true && (units.length <= 0 || isNaN(units))
                     ? true
@@ -120,7 +120,7 @@ function SimpleCalculator() {
                   width: "100%",
                   mt: 3,
                   mb: 2,
-
+                  
                   fontFamily: "Montserrat",
                   backgroundColor: "#1F8A70",
                   "&:hover": {
@@ -186,7 +186,7 @@ function SimpleCalculator() {
                         Consumed units
                       </Typography>
                     </Grid>
-                    <Grid item xs={7} sx={{ px: 0, py: 0, textAlign: "left" }}>
+                    <Grid item xs={7} sx={{px: 0, py: 0, textAlign: "left"}}>
                       <Paper
                         variant="outlined"
                         sx={{
@@ -200,14 +200,14 @@ function SimpleCalculator() {
                       >
                         <Typography
                           align="left"
-                          sx={{ backgroundColor: "#fff" }}
+                          sx={{backgroundColor: "#fff"}}
                         >
                           {result.totalUnits}
                         </Typography>
                       </Paper>
                     </Grid>
-
-                    <Grid item xs={5} sx={{ px: 1, py: 1, textAlign: "right" }}>
+                    
+                    <Grid item xs={5} sx={{px: 1, py: 1, textAlign: "right"}}>
                       <Typography
                         align="right"
                         sx={{
@@ -217,7 +217,7 @@ function SimpleCalculator() {
                         Monthly fixed charge
                       </Typography>
                     </Grid>
-                    <Grid item xs={7} sx={{ px: 0, py: 0, textAlign: "left" }}>
+                    <Grid item xs={7} sx={{px: 0, py: 0, textAlign: "left"}}>
                       <Paper
                         variant="outlined"
                         sx={{
@@ -231,14 +231,14 @@ function SimpleCalculator() {
                       >
                         <Typography
                           align="left"
-                          sx={{ backgroundColor: "#fff" }}
+                          sx={{backgroundColor: "#fff"}}
                         >
                           {result.fixedCharge}
                         </Typography>
                       </Paper>
                     </Grid>
-
-                    <Grid item xs={5} sx={{ px: 1, py: 1, textAlign: "right" }}>
+                    
+                    <Grid item xs={5} sx={{px: 1, py: 1, textAlign: "right"}}>
                       <Typography
                         align="right"
                         sx={{
@@ -248,7 +248,7 @@ function SimpleCalculator() {
                         Charge for consumption
                       </Typography>
                     </Grid>
-                    <Grid item xs={7} sx={{ px: 0, py: 0, textAlign: "left" }}>
+                    <Grid item xs={7} sx={{px: 0, py: 0, textAlign: "left"}}>
                       <Paper
                         variant="outlined"
                         sx={{
@@ -262,14 +262,14 @@ function SimpleCalculator() {
                       >
                         <Typography
                           align="left"
-                          sx={{ backgroundColor: "#fff" }}
+                          sx={{backgroundColor: "#fff"}}
                         >
                           {result.usageCharge}
                         </Typography>
                       </Paper>
                     </Grid>
-
-                    <Grid item xs={5} sx={{ px: 1, py: 1, textAlign: "right" }}>
+                    
+                    <Grid item xs={5} sx={{px: 1, py: 1, textAlign: "right"}}>
                       <Typography
                         align="right"
                         sx={{
@@ -279,7 +279,7 @@ function SimpleCalculator() {
                         Levy
                       </Typography>
                     </Grid>
-                    <Grid item xs={7} sx={{ px: 0, py: 0, textAlign: "left" }}>
+                    <Grid item xs={7} sx={{px: 0, py: 0, textAlign: "left"}}>
                       <Paper
                         variant="outlined"
                         sx={{
@@ -293,14 +293,14 @@ function SimpleCalculator() {
                       >
                         <Typography
                           align="left"
-                          sx={{ backgroundColor: "#fff" }}
+                          sx={{backgroundColor: "#fff"}}
                         >
                           {result.levy}
                         </Typography>
                       </Paper>
                     </Grid>
-
-                    <Grid item xs={5} sx={{ px: 1, py: 1, textAlign: "right" }}>
+                    
+                    <Grid item xs={5} sx={{px: 1, py: 1, textAlign: "right"}}>
                       <Typography
                         align="right"
                         sx={{
@@ -310,7 +310,7 @@ function SimpleCalculator() {
                         Total charge
                       </Typography>
                     </Grid>
-                    <Grid item xs={7} sx={{ px: 0, py: 0, textAlign: "left" }}>
+                    <Grid item xs={7} sx={{px: 0, py: 0, textAlign: "left"}}>
                       <Paper
                         variant="outlined"
                         sx={{
@@ -324,7 +324,7 @@ function SimpleCalculator() {
                       >
                         <Typography
                           align="left"
-                          sx={{ backgroundColor: "#fff" }}
+                          sx={{backgroundColor: "#fff"}}
                         >
                           {result.billAmount}
                         </Typography>

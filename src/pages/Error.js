@@ -1,8 +1,6 @@
 import React from "react";
-import Header from "./modules/views/Header";
-import Footer from "./modules/views/Footer";
 import withRoot from "./modules/withRoot";
-import { Box, Container, Typography } from "@mui/material";
+import {Box, Container, Typography} from "@mui/material";
 
 function Error() {
   return (
@@ -26,9 +24,9 @@ function Error() {
           alt="The house from the offer."
           src="https://cdn.staticcrate.com/stock-hd/effects/footagecrate-red-error-icon-prev-full.png"
         />
-
-        <Typography sx={{ fontSize: 75 }}>Oops !</Typography>
-        <Typography sx={{ fontSize: 40 }}>Something went wrong</Typography>
+        
+        <Typography sx={{fontSize: 75}}>Oops !</Typography>
+        <Typography sx={{fontSize: 40}}>Something went wrong</Typography>
       </Container>
     </>
   );

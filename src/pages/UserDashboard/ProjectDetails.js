@@ -1,13 +1,13 @@
-import { Container } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import {Container} from "@mui/system";
+import React, {useEffect, useState} from "react";
 import Dashboard from "./components/Dashboard";
 import withRoot from "../modules/withRoot";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { useLocation } from "react-router-dom";
-import { TreeItem, TreeView } from "@mui/lab";
+import {useLocation, useNavigate} from "react-router-dom";
+import {TreeItem, TreeView} from "@mui/lab";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -18,12 +18,12 @@ import AdminDashboard from "./components/AdminDashboard";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import AlertTitle from "@mui/material/AlertTitle";
-import { Typography, makeStyles } from "@mui/material";
+import {Typography} from "@mui/material";
 import axios from "axios";
 import ResultCalculation from "./ResultCalculation.js";
 import SectionComponents from "./SectionComponents";
 import Graph from "./Graph";
-import { useNavigate } from "react-router-dom";
+
 function ProjectDetails() {
   //get project name from Project page
   let navigate = useNavigate();
@@ -32,28 +32,28 @@ function ProjectDetails() {
   const projectId = new URLSearchParams(location.search).get("projectId");
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
-
+  
   const [inputName, setInputName] = useState("");
-
+  
   const [selectedType, setSelectedType] = useState(0);
-
+  
   const [selectedApplianceType, setSelectedApplianceType] = useState(0);
-
+  
   const [wattCapacity, setWattCapacity] = useState("");
-
+  
   const [quantity, setQuantity] = useState("");
-
+  
   const [hours, setHours] = useState("");
-
+  
   const [isNodeNumberExceed, setisNodeNumberExceed] = useState(false);
-
+  
   const [data, setData] = useState({
     frontEndId: "root",
     name: projectName,
     nodeType: "Root",
     children: [],
   });
-
+  
   // Appliance data contain
   const [applianceData, setApplianceData] = useState({
     name: "",
@@ -62,62 +62,62 @@ function ProjectDetails() {
     applianceType: "",
     quantity: "",
   });
-
+  
   const [selectedNode, setSelectedNode] = useState("root");
-
+  
   const [counter, setCounter] = useState(0);
-
+  
   //Appliance or not
-
+  
   const [isAppliance, setIsAppliance] = useState(false);
-
+  
   //Project or not
   const [isProject, setIsProject] = useState(false);
-
+  
   const [isSection, setIsSection] = useState(false);
-
+  
   const [isAddClick, setIsAddClick] = useState(false);
-
+  
   const [isCalculated, setIsCalculated] = useState(false);
-
+  
   const [isError, setIsError] = useState(false);
   const [isTypeError, setIsTypeError] = useState(false);
   const [isSectionError, setIsSectionError] = useState(false);
   const [isWattRateError, setIsWattRateError] = useState(false);
   const [isHourError, setIsHourError] = useState(false);
   const [isQuantityError, setIsQuantityError] = useState(false);
-
+  
   const isOptionEqualToValue = (option, value) => option.id === value.id;
-
+  
   const type = [
-    { label: "Section", id: 1 },
-    { label: "Appliance", id: 2 },
+    {label: "Section", id: 1},
+    {label: "Appliance", id: 2},
   ];
-
+  
   const applianceType = [
-    { label: "Fan", id: 1 },
-    { label: "Light", id: 2 },
-    { label: "Refrigerator", id: 3 },
-    { label: "Kitchen_Appliance", id: 4 },
-    { label: "AC", id: 5 },
-    { label: "TV", id: 6 },
-    { label: "Laptop", id: 7 },
-    { label: "PC", id: 8 },
-    { label: "Other", id: 9 },
+    {label: "Fan", id: 1},
+    {label: "Light", id: 2},
+    {label: "Refrigerator", id: 3},
+    {label: "Kitchen_Appliance", id: 4},
+    {label: "AC", id: 5},
+    {label: "TV", id: 6},
+    {label: "Laptop", id: 7},
+    {label: "PC", id: 8},
+    {label: "Other", id: 9},
   ];
-
+  
   const [refreshKey, setRefreshKey] = useState(0);
-
+  
   //to generate custom node id
   const generateNodeId = () => {
     setCounter((prevCounter) => prevCounter + 1);
     return `${userId}_${projectId}_${Date.now()}_${counter}`;
   };
-
+  
   //for select node
   const handleNodeSelect = (event, nodeId, nodetype, data) => {
     event.preventDefault();
-
+    
     //to disable the add button if node type is appliance
     if (nodetype === "Root") {
       setIsAppliance(false);
@@ -152,9 +152,9 @@ function ProjectDetails() {
       setIsHourError(false);
       setIsQuantityError(false);
       setisNodeNumberExceed(false);
-
+      
       // Check if selected node is an appliance node
-
+      
       setApplianceData({
         name: data.name,
         wattRate: data.wattRate,
@@ -163,7 +163,7 @@ function ProjectDetails() {
         quantity: data.quantity,
       });
     }
-
+    
     setSelectedNode(nodeId);
   };
   //For render Treeview
@@ -186,7 +186,7 @@ function ProjectDetails() {
         : null}
     </TreeItem>
   );
-
+  
   const getData = async () => {
     const accessToken = localStorage.getItem("accessToken");
     const config = {
@@ -194,49 +194,49 @@ function ProjectDetails() {
         Authorization: `Bearer ${accessToken}`,
       },
     };
-
+    
     const response = await axios.get(`/project?projectId=${projectId}`, config);
     const backEndData = response.data.root;
     setData(backEndData);
   };
-
+  
   //Node Add function
-
+  
   const addNode = async () => {
     setIsError(false);
     setIsSectionError(false);
     setIsTypeError(false);
-
+    
     if (selectedType.id === 0 || selectedType.id === undefined) {
       console.log(selectedType.id === 0 || selectedType.id === undefined);
       setIsTypeError(true);
       return;
     }
-
+    
     const accessToken = localStorage.getItem("accessToken");
     const config = {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     };
-
+    
     if (selectedType.id === 1) {
       let label = `${inputName} (${selectedType.label})`;
       let type = `${selectedType.label}`;
       let frontEndId = generateNodeId();
-
+      
       const nodeSectionData = {
         frontEndId: frontEndId,
         nodeType: type,
         parentFrontEndId: selectedNode,
         name: label,
       };
-
+      
       if (inputName.length <= 0) {
         setIsSectionError(true);
         return;
       }
-
+      
       try {
         const response = await axios.post("/node/add", nodeSectionData, config);
         if (response.status === 200) {
@@ -259,15 +259,15 @@ function ProjectDetails() {
       let label = `${inputName} `;
       let type = `${selectedType.label}`;
       let applianceCategory = `${selectedApplianceType.label}`;
-
+      
       let frontEndId = generateNodeId();
-
+      
       let applianceHours = hours;
-
+      
       let wattRate = wattCapacity;
-
+      
       let applianceQuantity = quantity;
-
+      
       const nodeApplianceData = {
         frontEndId: frontEndId,
         nodeType: type,
@@ -279,7 +279,7 @@ function ProjectDetails() {
         applianceType: applianceCategory,
       };
       console.log(nodeApplianceData);
-
+      
       if (
         inputName.length <= 0 ||
         selectedApplianceType.id === 0 ||
@@ -293,10 +293,10 @@ function ProjectDetails() {
       ) {
         setIsError(true);
         setIsWattRateError(true);
-
+        
         return;
       }
-
+      
       try {
         const response = await axios.post(
           "/node/add",
@@ -324,38 +324,38 @@ function ProjectDetails() {
       }
     }
   };
-
+  
   const updateNode = async () => {
     setIsError(false);
     setIsTypeError(false);
     setIsWattRateError(false);
     setIsHourError(false);
     setIsQuantityError(false);
-
+    
     const accessToken = localStorage.getItem("accessToken");
     const config = {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     };
-
+    
     let type = `Appliance`;
     let applianceCategory = applianceData.applianceType;
-
+    
     let frontEndId = selectedNode;
-
+    
     let label;
     if (inputName.length > 0) {
       label = inputName;
     } else {
       label = `${applianceData.name}`;
     }
-
+    
     let applianceHours;
     if (hours.length > 0) {
       if (isNaN(hours)) {
         setIsHourError(true);
-
+        
         return;
       } else {
         applianceHours = hours;
@@ -363,12 +363,12 @@ function ProjectDetails() {
     } else {
       applianceHours = `${applianceData.hours}`;
     }
-
+    
     let wattRate;
     if (wattCapacity.length > 0) {
       if (isNaN(wattCapacity)) {
         setIsWattRateError(true);
-
+        
         return;
       } else {
         wattRate = wattCapacity;
@@ -376,12 +376,12 @@ function ProjectDetails() {
     } else {
       wattRate = `${applianceData.wattRate}`;
     }
-
+    
     let applianceQuantity;
     if (quantity.length > 0) {
       if (isNaN(quantity)) {
         setIsQuantityError(true);
-
+        
         return;
       } else {
         applianceQuantity = quantity;
@@ -389,7 +389,7 @@ function ProjectDetails() {
     } else {
       applianceQuantity = `${applianceData.quantity}`;
     }
-
+    
     const nodeApplianceData = {
       frontEndId: frontEndId,
       nodeType: type,
@@ -400,7 +400,7 @@ function ProjectDetails() {
       applianceType: applianceCategory,
     };
     console.log(nodeApplianceData);
-
+    
     try {
       const response = await axios.put(
         "/node/update",
@@ -427,7 +427,7 @@ function ProjectDetails() {
       navigate("/error");
     }
   };
-
+  
   const deleteNode = async () => {
     const accessToken = localStorage.getItem("accessToken");
     const config = {
@@ -445,7 +445,7 @@ function ProjectDetails() {
       navigate("/error");
     }
   };
-
+  
   //Node find function
   const findNode = (data, nodeId) => {
     if (data.frontEndId === nodeId) {
@@ -453,14 +453,14 @@ function ProjectDetails() {
     }
     for (let i = 0; i < data.children.length; i++) {
       let node = findNode(data.children[i], nodeId);
-
+      
       if (node) {
         return node;
       }
     }
     return null;
   };
-
+  
   //find Parent node
   const findParentNode = (data, nodeId) => {
     if (data.children) {
@@ -476,7 +476,7 @@ function ProjectDetails() {
     }
     return null;
   };
-
+  
   const convertToJSON = (nodes) => {
     //convert to Jason for Appliance
     if (nodes.nodeType === "Appliance") {
@@ -499,24 +499,24 @@ function ProjectDetails() {
       };
     }
   };
-
+  
   useEffect(() => {
     getData();
   }, [isAddClick]);
-
+  
   const handleAddClick = () => {
     getData();
   };
-
+  
   const handleCalculation = () => {
     setIsCalculated(!isCalculated);
     console.log(isCalculated);
   };
-
+  
   return (
     <React.Fragment>
-      {role === "ADMIN" && <AdminDashboard />}
-      {role === "USER" && <Dashboard />}
+      {role === "ADMIN" && <AdminDashboard/>}
+      {role === "USER" && <Dashboard/>}
       <Container
         sx={{
           ml: 38,
@@ -558,9 +558,9 @@ function ProjectDetails() {
                 </Typography>
                 <TreeView
                   aria-label="rich object"
-                  defaultCollapseIcon={<ExpandMoreIcon />}
+                  defaultCollapseIcon={<ExpandMoreIcon/>}
                   defaultExpanded={["root"]}
-                  defaultExpandIcon={<ChevronRightIcon />}
+                  defaultExpandIcon={<ChevronRightIcon/>}
                   sx={{
                     height: "100%",
                     flexGrow: 1,
@@ -649,7 +649,7 @@ function ProjectDetails() {
                   key={refreshKey}
                   options={type}
                   getOptionLabel={(option) => option.label}
-                  style={{ width: "100%", marginTop: 16 }}
+                  style={{width: "100%", marginTop: 16}}
                   id="disable-clearable"
                   disableClearable
                   disabled={isAppliance}
@@ -682,16 +682,16 @@ function ProjectDetails() {
                     />
                   )}
                 />
-
-                <Divider style={{ marginTop: 16, marginBottom: 16 }} />
+                
+                <Divider style={{marginTop: 16, marginBottom: 16}}/>
                 <Box
-                  sx={{ mt: 3, display: "flex", columnGap: 3, width: "100%" }}
+                  sx={{mt: 3, display: "flex", columnGap: 3, width: "100%"}}
                 >
                   <Autocomplete
                     key={refreshKey}
                     options={applianceType}
                     getOptionLabel={(option) => option.label}
-                    style={{ width: "100%" }}
+                    style={{width: "100%"}}
                     disabled={selectedType.id !== 2 || isAppliance}
                     onChange={(event, newValue) => {
                       setSelectedApplianceType(newValue);
@@ -728,7 +728,7 @@ function ProjectDetails() {
                       />
                     )}
                   />
-
+                  
                   <TextField
                     sx={{
                       "& .MuiInputBase-input::placeholder": {
@@ -769,9 +769,9 @@ function ProjectDetails() {
                     } // Display error message if any
                   />
                 </Box>
-
+                
                 <Box
-                  sx={{ mt: 3, display: "flex", columnGap: 3, width: "100%" }}
+                  sx={{mt: 3, display: "flex", columnGap: 3, width: "100%"}}
                 >
                   <TextField
                     sx={{
@@ -810,7 +810,7 @@ function ProjectDetails() {
                         : ""
                     } // Display error message if any
                   />
-
+                  
                   {/*<TextField
                     label="Quantity"
                     variant="outlined"
@@ -820,7 +820,7 @@ function ProjectDetails() {
                     disabled={selectedType.id !== 2 && !isAppliance}
                     onChange={(e) => setQuantity(e.target.value)}
                   />*/}
-
+                  
                   <TextField
                     sx={{
                       "& .MuiInputBase-input::placeholder": {
@@ -854,24 +854,24 @@ function ProjectDetails() {
                     } // Display error message if any
                   />
                 </Box>
-
+                
                 <Box
                   sx={
                     !isAppliance
                       ? {
-                          mt: 3,
-                          display: "flex",
-                          columnGap: 3,
-                          width: "100%",
-                          justifyContent: "space-evenly",
-                        }
+                        mt: 3,
+                        display: "flex",
+                        columnGap: 3,
+                        width: "100%",
+                        justifyContent: "space-evenly",
+                      }
                       : {
-                          mt: 3,
-                          display: "flex",
-                          columnGap: 3,
-                          width: "100%",
-                          justifyContent: "space-evenly",
-                        }
+                        mt: 3,
+                        display: "flex",
+                        columnGap: 3,
+                        width: "100%",
+                        justifyContent: "space-evenly",
+                      }
                   }
                 >
                   {!isAppliance && (
@@ -907,25 +907,25 @@ function ProjectDetails() {
                       Update
                     </Button>
                   )}
-
+                  
                   <Button
                     variant="contained"
                     color="error"
                     onClick={deleteNode}
                     disabled={isProject}
-                    sx={{ width: "25%" }}
+                    sx={{width: "25%"}}
                   >
                     Delete
                   </Button>
                 </Box>
                 {isNodeNumberExceed && (
-                  <Box sx={{ mt: 5 }}>
-                    <Stack sx={{ width: "100%" }} spacing={2}>
+                  <Box sx={{mt: 5}}>
+                    <Stack sx={{width: "100%"}} spacing={2}>
                       <Alert
                         severity="warning"
-                        sx={{ fontSize: 16, backgroundColor: "#fff3e0" }}
+                        sx={{fontSize: 16, backgroundColor: "#fff3e0"}}
                       >
-                        <AlertTitle sx={{ fontSize: 20 }}>Warning</AlertTitle>
+                        <AlertTitle sx={{fontSize: 20}}>Warning</AlertTitle>
                         You Reached to your Maximum Section Numbers or
                         Aplliances number <strong> Upgrade Your Plan!</strong>
                       </Alert>
@@ -942,11 +942,11 @@ function ProjectDetails() {
               />
             </Paper>
             {isCalculated && (
-              <Paper sx={{ display: "flex", justifyContent: "space-around" }}>
-                {<Graph projectId={projectId} isCalculated={isCalculated} />}
+              <Paper sx={{display: "flex", justifyContent: "space-around"}}>
+                {<Graph projectId={projectId} isCalculated={isCalculated}/>}
               </Paper>
             )}
-            <Paper sx={{ mb: 10 }}></Paper>
+            <Paper sx={{mb: 10}}></Paper>
           </Box>
         </Box>
       </Container>

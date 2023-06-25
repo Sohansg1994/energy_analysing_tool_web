@@ -1,16 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
-import { Field, Form, FormSpy } from "react-final-form";
 import Typography from "./modules/components/Typography";
 import Footer from "./modules/views/Footer";
 import Header from "./modules/views/Header";
 import AppFormSub from "./modules/views/AppFormSub";
-import { email, required } from "./modules/form/validation";
-import RFTextField from "./modules/form/RFTextField";
-import FormButton from "./modules/form/FormButton";
-import FormFeedback from "./modules/form/FormFeedback";
 import withRoot from "./modules/withRoot";
 import axios from "axios";
 
@@ -21,14 +15,10 @@ import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 
 import StarIcon from "@mui/icons-material/StarBorder";
-import Toolbar from "@mui/material/Toolbar";
-
-import GlobalStyles from "@mui/material/GlobalStyles";
 import Container from "@mui/material/Container";
-import { DisabledByDefault } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
-function Subcription() {
+function Subscription() {
   let navigate = useNavigate();
   const [sent, setSent] = useState(false);
   const [subcriptionPlan, setSubcriptionPlan] = useState([
@@ -57,7 +47,7 @@ function Subcription() {
       rate: 0,
     },
   ]);
-
+  
   /*const validate = (values) => {
     const errors = required(
       ["firstName", "lastName", "email", "password"],
@@ -74,15 +64,15 @@ function Subcription() {
 
     return errors;
   };*/
-
+  
   const handleSubmit = async (plan) => {
     const accessToken = localStorage.getItem("accessToken");
-
+    
     const data = {
       userEmail: "",
       subscriptionPlanName: plan,
     };
-
+    
     const config = {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -90,7 +80,7 @@ function Subcription() {
     };
     console.log(data);
     console.log(config);
-
+    
     try {
       const response = await axios.post("/subscription", data, config);
       console.log(response);
@@ -105,10 +95,10 @@ function Subcription() {
       navigate("/error");
     }
   };
-
+  
   const getSubcriptionPlans = async () => {
     const accessToken = localStorage.getItem("accessToken");
-
+    
     try {
       const response = await axios.get(`/subscription/plans`, {
         headers: {
@@ -132,7 +122,7 @@ function Subcription() {
   useEffect(() => {
     console.log(subcriptionPlan);
   });
-
+  
   const tiers = [
     {
       title: "Free",
@@ -145,7 +135,7 @@ function Subcription() {
       buttonText: "Get started",
       buttonVariant: "outlined",
       plan: "FREE",
-
+      
       path: "/projects",
     },
     {
@@ -160,19 +150,19 @@ function Subcription() {
       buttonText: "Coming Soon",
       // buttonVariant: 'contained',
       buttonVariant: "disabled",
-
+      
       path: "/projects",
     },
   ];
-
+  
   return (
     <React.Fragment>
-      <Header />
+      <Header/>
       <AppFormSub>
         <Container
           maxWidth="md"
           component="main"
-          sx={{ backgroundColor: "#c1decd" }}
+          sx={{backgroundColor: "#c1decd"}}
         >
           <Grid
             container
@@ -204,9 +194,9 @@ function Subcription() {
                   <CardHeader
                     title={tier.title}
                     subheader={tier.subheader}
-                    titleTypographyProps={{ align: "center", fontSize: 30 }}
+                    titleTypographyProps={{align: "center", fontSize: 30}}
                     action={
-                      tier.title === "Domestic Lite" ? <StarIcon /> : null
+                      tier.title === "Domestic Lite" ? <StarIcon/> : null
                     }
                     subheaderTypographyProps={{
                       align: "center",
@@ -238,7 +228,7 @@ function Subcription() {
                       <Typography
                         variant="h6"
                         color="text.secondary"
-                        sx={{ mb: 2 }}
+                        sx={{mb: 2}}
                       >
                         /6mo
                       </Typography>
@@ -250,7 +240,7 @@ function Subcription() {
                           variant="h5"
                           align="center"
                           key={line}
-                          sx={{ mb: 1.5 }}
+                          sx={{mb: 1.5}}
                         >
                           {line}
                         </Typography>
@@ -279,9 +269,9 @@ function Subcription() {
           </Grid>
         </Container>
       </AppFormSub>
-      <Footer />
+      <Footer/>
     </React.Fragment>
   );
 }
 
-export default withRoot(Subcription);
+export default withRoot(Subscription);

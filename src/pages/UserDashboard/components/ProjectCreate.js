@@ -1,58 +1,56 @@
-import { Alert, AlertTitle, Container, Stack } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import {Alert, AlertTitle, Autocomplete, Container, Stack} from "@mui/material";
+import React, {useEffect, useState} from "react";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
-import { Autocomplete } from "@mui/material";
 import Button from "@mui/material/Button";
-import { ProjectListUpdate } from "./ProjectList";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 import axios from "axios";
 
 function ProjectCreate(props) {
   let navigate = useNavigate();
-  const { getProjectList } = props;
-  const { isDelete } = props;
+  const {getProjectList} = props;
+  const {isDelete} = props;
   const Type = [
-    { label: "Domestic", id: 1 },
-    { label: "Religious & Charitable", id: 2 },
+    {label: "Domestic", id: 1},
+    {label: "Religious & Charitable", id: 2},
   ];
-
+  
   const [projectName, setProjectName] = useState("");
   const [projectType, setProjectType] = useState("");
   const [isProjectNumberExceed, setIsProjectNumberExceed] = useState(false);
   const [isError, setIsError] = useState(false);
-
+  
   const handleSubmit = async () => {
     setIsError(false);
     if (projectName.length <= 0 || projectType.length <= 0) {
       setIsError(true);
       return;
     }
-
+    
     const accessToken = localStorage.getItem("accessToken");
     console.log(accessToken);
-
+    
     let selectProjectType;
-
+    
     if (projectType === "Religious & Charitable") {
       selectProjectType = "ReligiousAndCharitable";
     } else {
       selectProjectType = projectType;
     }
-
+    
     const data = {
       name: projectName,
       projectType: selectProjectType,
     };
     console.log(data);
-
+    
     const config = {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     };
-
+    
     try {
       const response = await axios.post("/project", data, config);
       console.log(data);
@@ -73,11 +71,11 @@ function ProjectCreate(props) {
       }
     }
   };
-
+  
   useEffect(() => {
     setIsProjectNumberExceed(false);
   }, [isDelete]);
-
+  
   return (
     <>
       <Container
@@ -101,7 +99,7 @@ function ProjectCreate(props) {
           label="Project Name"
           defaultValue="Project Name"
           size="small"
-          sx={{ width: "30%" }}
+          sx={{width: "30%"}}
           value={projectName}
           inputMode="numeric"
           pattern="[0-9]*"
@@ -111,13 +109,13 @@ function ProjectCreate(props) {
             isError && projectName.length <= 0 ? "Please fill project name" : ""
           } // Display error message if any
         />
-
+        
         <Autocomplete
           disablePortal
           id="combo-box-demo"
           options={Type}
           size="small"
-          sx={{ width: "30%" }}
+          sx={{width: "30%"}}
           value={projectType}
           renderInput={(params) => (
             <TextField
@@ -139,7 +137,7 @@ function ProjectCreate(props) {
           variant="contained"
           sx={{
             width: "30%",
-
+            
             fontFamily: "Montserrat",
             backgroundColor: "#1F8A70",
             "&:hover": {
@@ -153,12 +151,12 @@ function ProjectCreate(props) {
       </Container>
       {isProjectNumberExceed && (
         <Container>
-          <Stack sx={{ width: "100%" }} spacing={2}>
+          <Stack sx={{width: "100%"}} spacing={2}>
             <Alert
               severity="warning"
-              sx={{ fontSize: 16, backgroundColor: "#fff3e0" }}
+              sx={{fontSize: 16, backgroundColor: "#fff3e0"}}
             >
-              <AlertTitle sx={{ fontSize: 20 }}>Warning</AlertTitle>
+              <AlertTitle sx={{fontSize: 20}}>Warning</AlertTitle>
               You Reached to your Maximum Project Numbers{" "}
               <strong> Upgrade Your Plan!</strong>
             </Alert>

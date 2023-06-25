@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 
 import axios from "axios";
-import { styled } from "@mui/material/styles";
+import {styled} from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableCell, {tableCellClasses} from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#fff",
     color: theme.palette.common.black,
     fontSize: 15,
     fontFamily: "Montserrat",
-
+    
     padding: 3,
   },
   [`&.${tableCellClasses.body}`]: {
@@ -29,7 +29,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const StyledTableRow = styled(TableRow)(({theme}) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
@@ -41,17 +41,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function SectionComponents(props) {
   let navigate = useNavigate();
-  const { selectedNode } = props;
+  const {selectedNode} = props;
   const [isSection, setIsSection] = useState(false);
   const [sectionComponents, setSectionComponents] = useState([]);
-
+  
   const handleClick = () => {
     props.handleAddClick();
   };
-
+  
   const getSectionComponents = async () => {
     const accessToken = localStorage.getItem("accessToken");
-
+    
     const response = await axios.get(
       `/playground/section?frontEndId=${selectedNode}`,
       {
@@ -60,10 +60,10 @@ function SectionComponents(props) {
         },
       }
     );
-
+    
     setSectionComponents(response.data.children);
   };
-
+  
   const handleDelete = async (nodeId) => {
     const accessToken = localStorage.getItem("accessToken");
     try {
@@ -83,11 +83,11 @@ function SectionComponents(props) {
   };
   useEffect(() => {
     setIsSection(props.isSection);
-
+    
     if (props.isSection) {
       getSectionComponents();
     }
-
+    
     return () => {
       setIsSection(false);
     };
@@ -126,7 +126,7 @@ function SectionComponents(props) {
                   <StyledTableCell align="center">
                     {component.nodeType}
                   </StyledTableCell>
-
+                  
                   <StyledTableCell>
                     <Box
                       sx={{
@@ -153,4 +153,5 @@ function SectionComponents(props) {
     </>
   );
 }
+
 export default SectionComponents;

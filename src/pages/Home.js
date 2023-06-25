@@ -5,7 +5,6 @@ import withRoot from './modules/withRoot';
 import OurServices from "./modules/views/OurServices";
 import SimpleCalculator from "./modules/views/SimpleCalculator";
 import Footer from "./modules/views/Footer";
-import WhatWeDo from "./modules/views/WhatWeDo";
 import HomeVisits from "./modules/views/HomeVisit";
 
 function Index() {
@@ -13,9 +12,9 @@ function Index() {
     <React.Fragment>
       <Header/>
       <Introduction/>
-      <WhatWeDo/>
+      {/*<WhatWeDo/>*/}
       <OurServices/>
-      <HomeVisits />
+      {/*<HomeVisits/>*/}
       <SimpleCalculator/>
       {/*<SubscriptionPlans/>*/}
       

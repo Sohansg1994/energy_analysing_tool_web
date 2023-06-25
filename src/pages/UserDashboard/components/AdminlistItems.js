@@ -2,43 +2,41 @@ import * as React from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import ListSubheader from "@mui/material/ListSubheader";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import { NavLink } from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import ScatterPlotIcon from "@mui/icons-material/ScatterPlot";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import SettingsIcon from "@mui/icons-material/Settings";
 
 export const mainListItems = (
   <React.Fragment>
     <NavLink
       to="/projects"
-      style={{ textDecoration: "none", color: "#424242" }}
+      style={{textDecoration: "none", color: "#424242"}}
     >
       <ListItemButton>
         <ListItemIcon>
-          <DashboardIcon />
+          <DashboardIcon/>
         </ListItemIcon>
-        <ListItemText primary="Projects" />
+        <ListItemText primary="Projects"/>
       </ListItemButton>
     </NavLink>
     <NavLink
       to="/tarifficdata"
-      style={{ textDecoration: "none", color: "#424242" }}
+      style={{textDecoration: "none", color: "#424242"}}
     >
       <ListItemButton>
         <ListItemIcon>
-          <ScatterPlotIcon />
+          <ScatterPlotIcon/>
         </ListItemIcon>
-        <ListItemText primary="Tarrif Data" />
+        <ListItemText primary="Tarrif Data"/>
       </ListItemButton>
     </NavLink>
-    <NavLink to="/statics" style={{ textDecoration: "none", color: "#424242" }}>
+    <NavLink to="/statics" style={{textDecoration: "none", color: "#424242"}}>
       <ListItemButton>
         <ListItemIcon>
-          <SettingsIcon />
+          <SettingsIcon/>
         </ListItemIcon>
-        <ListItemText primary="Settings " />
+        <ListItemText primary="Settings "/>
       </ListItemButton>
     </NavLink>
     {/*<NavLink to="/statics" style={{ textDecoration: "none", color: "#424242" }}>
@@ -49,7 +47,7 @@ export const mainListItems = (
         <ListItemText primary="Settings" />
       </ListItemButton>
 </NavLink>*/}
-
+    
     {/*<ListItemButton>
       <ListItemIcon>
         <PeopleIcon />

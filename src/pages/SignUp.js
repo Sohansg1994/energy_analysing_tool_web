@@ -2,17 +2,17 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
-import { Field, Form, FormSpy } from "react-final-form";
+import {Field, Form, FormSpy} from "react-final-form";
 import Typography from "./modules/components/Typography";
 import Header from "./modules/views/Header";
 import AppForm from "./modules/views/AppForm";
-import { email, required } from "./modules/form/validation";
+import {email, required} from "./modules/form/validation";
 import RFTextField from "./modules/form/RFTextField";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
 import withRoot from "./modules/withRoot";
-import { useNavigate } from "react-router-dom";
-import { Alert, Stack } from "@mui/material";
+import {useNavigate} from "react-router-dom";
+import {Alert, Stack} from "@mui/material";
 
 import axios from "axios";
 import Footer from "./modules/views/Footer";
@@ -25,9 +25,9 @@ function SignUp() {
   const [refreshToken, setRefreshToken] = React.useState(null);
   const [firstName, setFirstName] = React.useState(null);
   const [role, setRole] = React.useState(null);
-
+  
   let navigate = useNavigate();
-
+  
   const validate = (values) => {
     const errors = required(
       ["firstName", "lastName", "email", "password"],
@@ -41,7 +41,7 @@ function SignUp() {
     }
     return errors;
   };
-
+  
   const handleSubmit = async (values) => {
     try {
       const response = await axios.post("/user/register", values);
@@ -68,7 +68,7 @@ function SignUp() {
         console.log(accessTokenET);
         console.log(accessToken);
         console.log(userId);
-
+        
         setSent(true);
         navigate("/subcription");
       }
@@ -81,16 +81,16 @@ function SignUp() {
       }
     }
   };
-
+  
   return (
     <React.Fragment>
-      <Header />
+      <Header/>
       <AppForm>
         <React.Fragment>
           <Typography
             variant="h3"
             align="center"
-            sx={{ fontFamily: "Montserrat" }}
+            sx={{fontFamily: "Montserrat"}}
           >
             Sign Up
           </Typography>
@@ -102,15 +102,15 @@ function SignUp() {
         </React.Fragment>
         <Form
           onSubmit={handleSubmit}
-          subscription={{ submitting: true }}
+          subscription={{submitting: true}}
           validate={validate}
         >
-          {({ handleSubmit: handleSubmit2, submitting }) => (
+          {({handleSubmit: handleSubmit2, submitting}) => (
             <Box
               component="form"
               onSubmit={handleSubmit2}
               noValidate
-              sx={{ mt: 6 }}
+              sx={{mt: 6}}
             >
               <Grid container spacing={1}>
                 <Grid item xs={12} sm={6}>
@@ -158,10 +158,10 @@ function SignUp() {
                 type="password"
                 margin="normal"
               />
-              <FormSpy subscription={{ submitError: true }}>
-                {({ submitError }) =>
+              <FormSpy subscription={{submitError: true}}>
+                {({submitError}) =>
                   submitError ? (
-                    <FormFeedback error sx={{ mt: 2 }}>
+                    <FormFeedback error sx={{mt: 2}}>
                       {submitError}
                     </FormFeedback>
                   ) : null
@@ -191,7 +191,7 @@ function SignUp() {
           )}
         </Form>
       </AppForm>
-      <Footer />
+      <Footer/>
     </React.Fragment>
   );
 }

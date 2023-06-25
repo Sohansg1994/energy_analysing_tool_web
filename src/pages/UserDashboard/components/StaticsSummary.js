@@ -1,23 +1,16 @@
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  Container,
-  Typography,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
+import {Box, Card, CardContent, Typography,} from "@mui/material";
+import React, {useEffect, useState} from "react";
 import CountUp from "react-countup";
-import { IoPeople } from "react-icons/io5";
-import { MdWork } from "react-icons/md";
+import {IoPeople} from "react-icons/io5";
+import {MdWork} from "react-icons/md";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 function StaticsSummary() {
   let navigate = useNavigate();
   const [userCount, setUserCount] = useState(0);
   const [projectCount, setProjectCount] = useState(0);
-
+  
   const handleGetStatics = async () => {
     const accessToken = localStorage.getItem("accessToken");
     try {
@@ -35,11 +28,11 @@ function StaticsSummary() {
       navigate("/error");
     }
   };
-
+  
   useEffect(() => {
     handleGetStatics();
   }, []);
-
+  
   return (
     <>
       <Box
@@ -59,7 +52,7 @@ function StaticsSummary() {
           sx={{
             width: 300,
             height: 200,
-
+            
             //background:
             //  "linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.8) 100%)",
             borderRadius: 5,
@@ -68,18 +61,18 @@ function StaticsSummary() {
         >
           <CardContent>
             <Typography
-              sx={{ textAlign: "center", fontSize: 50, fontWeight: "bold" }}
+              sx={{textAlign: "center", fontSize: 50, fontWeight: "bold"}}
             >
-              <IoPeople />
+              <IoPeople/>
             </Typography>
-
+            
             <Typography
               sx={{
                 textAlign: "center",
                 fontSize: 30,
                 fontWeight: "bold",
                 fontFamily: "Montserrat",
-
+                
                 mb: 1.5,
               }}
             >
@@ -114,22 +107,22 @@ function StaticsSummary() {
         >
           <CardContent>
             <Typography
-              sx={{ textAlign: "center", fontSize: 50, fontWeight: "bold" }}
+              sx={{textAlign: "center", fontSize: 50, fontWeight: "bold"}}
             >
-              <MdWork />
+              <MdWork/>
             </Typography>
-
+            
             <Typography
               sx={{
                 textAlign: "center",
                 fontSize: 30,
                 fontWeight: "bold",
                 fontFamily: "Montserrat",
-
+                
                 mb: 1.5,
               }}
             >
-              <CountUp start={0} end={projectCount} duration={5} delay={0.5} />+
+              <CountUp start={0} end={projectCount} duration={5} delay={0.5}/>+
             </Typography>
             <Typography
               sx={{

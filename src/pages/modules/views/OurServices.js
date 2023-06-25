@@ -62,9 +62,9 @@ const images = [
   },
   {
     url: "/home_visit_pic.jpg",
-    title: "Home Visits",
+    title: "Our Services",
     width: "28%",
-    containerId: "/homevisit",
+    containerId: "/services",
   },
   {
     url: "/bill_calculator_pic.jpg",

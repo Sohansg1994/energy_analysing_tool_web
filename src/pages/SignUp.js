@@ -55,6 +55,7 @@ function SignUp() {
         const role = response.data.data[0].role;
         const accessTokenET = response.data.data[0].accessTokenExpireTime;
         const userId = response.data.data[0].userId;
+        const subscriptionPlanName = response.data.data[0].subscriptionPlanName;
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
         setFirstName(firstName);
@@ -65,6 +66,7 @@ function SignUp() {
         localStorage.setItem("firstName", firstName);
         localStorage.setItem("role", role);
         localStorage.setItem("userId", userId);
+        localStorage.setItem("subscriptionPlanName", subscriptionPlanName);
         console.log(accessTokenET);
         console.log(accessToken);
         console.log(userId);

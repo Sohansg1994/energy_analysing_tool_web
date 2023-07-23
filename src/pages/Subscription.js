@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "./modules/components/Typography";
@@ -16,7 +16,7 @@ import CardHeader from "@mui/material/CardHeader";
 
 import StarIcon from "@mui/icons-material/StarBorder";
 import Container from "@mui/material/Container";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Subscription() {
   let navigate = useNavigate();
@@ -47,7 +47,7 @@ function Subscription() {
       rate: 0,
     },
   ]);
-  
+
   /*const validate = (values) => {
     const errors = required(
       ["firstName", "lastName", "email", "password"],
@@ -64,15 +64,15 @@ function Subscription() {
 
     return errors;
   };*/
-  
+
   const handleSubmit = async (plan) => {
     const accessToken = localStorage.getItem("accessToken");
-    
+
     const data = {
       userEmail: "",
       subscriptionPlanName: plan,
     };
-    
+
     const config = {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -80,7 +80,7 @@ function Subscription() {
     };
     console.log(data);
     console.log(config);
-    
+
     try {
       const response = await axios.post("/subscription", data, config);
       console.log(response);
@@ -95,10 +95,10 @@ function Subscription() {
       navigate("/error");
     }
   };
-  
+
   const getSubcriptionPlans = async () => {
     const accessToken = localStorage.getItem("accessToken");
-    
+
     try {
       const response = await axios.get(`/subscription/plans`, {
         headers: {
@@ -122,7 +122,7 @@ function Subscription() {
   useEffect(() => {
     console.log(subcriptionPlan);
   });
-  
+
   const tiers = [
     {
       title: "Free",
@@ -135,7 +135,7 @@ function Subscription() {
       buttonText: "Get started",
       buttonVariant: "outlined",
       plan: "FREE",
-      
+
       path: "/projects",
     },
     {
@@ -147,22 +147,26 @@ function Subscription() {
         ` ${subcriptionPlan[1].maxNumProject} Projects`,
         `  ${subcriptionPlan[1].maxNumNode}  Nodes `,
       ],
-      buttonText: "Coming Soon",
-      // buttonVariant: 'contained',
-      buttonVariant: "disabled",
-      
-      path: "/projects",
+      buttonText: "Contact Us",
+
+      buttonVariant: "contained",
+
+      path: "/paymentDetails",
     },
   ];
-  
+
+  const handleNavigate = () => {
+    navigate("/paymentDetails");
+  };
+
   return (
     <React.Fragment>
-      <Header/>
+      <Header />
       <AppFormSub>
         <Container
           maxWidth="md"
           component="main"
-          sx={{backgroundColor: "#c1decd"}}
+          sx={{ backgroundColor: "#c1decd" }}
         >
           <Grid
             container
@@ -194,9 +198,9 @@ function Subscription() {
                   <CardHeader
                     title={tier.title}
                     subheader={tier.subheader}
-                    titleTypographyProps={{align: "center", fontSize: 30}}
+                    titleTypographyProps={{ align: "center", fontSize: 30 }}
                     action={
-                      tier.title === "Domestic Lite" ? <StarIcon/> : null
+                      tier.title === "Domestic Lite" ? <StarIcon /> : null
                     }
                     subheaderTypographyProps={{
                       align: "center",
@@ -228,7 +232,7 @@ function Subscription() {
                       <Typography
                         variant="h6"
                         color="text.secondary"
-                        sx={{mb: 2}}
+                        sx={{ mb: 2 }}
                       >
                         /6mo
                       </Typography>
@@ -240,7 +244,7 @@ function Subscription() {
                           variant="h5"
                           align="center"
                           key={line}
-                          sx={{mb: 1.5}}
+                          sx={{ mb: 1.5 }}
                         >
                           {line}
                         </Typography>
@@ -250,9 +254,28 @@ function Subscription() {
                   <CardActions>
                     <Button
                       fullWidth
+                      sx={{
+                        mx: 2,
+
+                        backgroundColor:
+                          tier.title === "Domestic Lite"
+                            ? "#1F8A70"
+                            : "#ffffff",
+
+                        "&:hover": {
+                          backgroundColor:
+                            tier.title === "Domestic Lite"
+                              ? "#1c7861"
+                              : "#f2f2f2",
+                        },
+                      }}
                       variant={tier.buttonVariant}
                       varient={tier.buttonStatus}
-                      onClick={() => handleSubmit(tier.plan)}
+                      onClick={() =>
+                        tier.title === "Free"
+                          ? handleSubmit(tier.plan)
+                          : handleNavigate()
+                      }
                       /*sx={{
                         "&:hover": {
                           backgroundColor: "#1c7861",
@@ -269,7 +292,7 @@ function Subscription() {
           </Grid>
         </Container>
       </AppFormSub>
-      <Footer/>
+      <Footer />
     </React.Fragment>
   );
 }

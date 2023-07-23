@@ -4,7 +4,7 @@ import { FiDownload } from "react-icons/fi";
 
 function TarifficDataTable() {
   const pdfDownload = () => {
-    const fileUrl = process.env.PUBLIC_URL + "/Tariff.pdf";
+    const fileUrl = process.env.PUBLIC_URL + "/Tariff-2023-July.pdf";
     console.log(fileUrl);
     const link = document.createElement("a");
     link.href = fileUrl;
@@ -31,7 +31,7 @@ function TarifficDataTable() {
             justifyContent: "space-evenly",
           }}
         >
-          <img src="/tariffData.jpg" width={"100%"} />
+          <img src="/Tariff-2023-July-image.jpg" width={"100%"} />
         </Box>
         <Box
           sx={{

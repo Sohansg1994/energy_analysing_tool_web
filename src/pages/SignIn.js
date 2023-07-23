@@ -1,19 +1,19 @@
 import * as React from "react";
-import {Field, Form, FormSpy} from "react-final-form";
+import { Field, Form, FormSpy } from "react-final-form";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "./modules/components/Typography";
 import Footer from "./modules/views/Footer";
 import Header from "./modules/views/Header";
 import AppForm from "./modules/views/AppForm";
-import {email, required} from "./modules/form/validation";
+import { email, required } from "./modules/form/validation";
 import RFTextField from "./modules/form/RFTextField";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
 import withRoot from "./modules/withRoot";
 import axios from "axios";
-import {Alert, Stack} from "@mui/material";
-import {useNavigate} from "react-router-dom";
+import { Alert, Stack } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function SignIn() {
   const [sent, setSent] = React.useState(false);
@@ -23,9 +23,9 @@ function SignIn() {
   const [refreshToken, setRefreshToken] = React.useState(null);
   const [firstName, setFirstName] = React.useState(null);
   const [role, setRole] = React.useState(null);
-  
+
   let navigate = useNavigate();
-  
+
   const validate = (values) => {
     const errors = required(["email", "password"], values);
     if (!errors.email) {
@@ -36,7 +36,7 @@ function SignIn() {
     }
     return errors;
   };
-  
+
   const handleSubmit = async (values) => {
     try {
       const response = await axios.post("/user/login", values);
@@ -49,7 +49,7 @@ function SignIn() {
         const role = response.data.data[0].role;
         const accessTokenET = response.data.data[0].accessTokenExpireTime;
         const userId = response.data.data[0].userId;
-        const subcriptionPlan = response.data.data[0].subscriptionPlanName;
+        const subscriptionPlanName = response.data.data[0].subscriptionPlanName;
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
         setFirstName(firstName);
@@ -60,15 +60,16 @@ function SignIn() {
         localStorage.setItem("firstName", firstName);
         localStorage.setItem("role", role);
         localStorage.setItem("userId", userId);
+        localStorage.setItem("subscriptionPlanName", subscriptionPlanName);
         console.log(accessTokenET);
         console.log(accessToken);
         console.log(userId);
-        
+
         console.log(firstName);
-        
+
         setSent(true);
-        if (subcriptionPlan === "UnSubscribe") {
-          navigate("/subcription");
+        if (subscriptionPlanName === "UnSubscribe") {
+          navigate("/subscription");
         } else {
           navigate("/projects");
         }
@@ -78,7 +79,7 @@ function SignIn() {
     } catch (error) {
       if (
         error.response.data.message ===
-        "406 Wrong Password:Enter Correct Password" ||
+          "406 Wrong Password:Enter Correct Password" ||
         error.response.data.message === "404 Wrong Email:User not found"
       ) {
         setWarningMessage("Invalid Email or Password");
@@ -88,16 +89,16 @@ function SignIn() {
       }
     }
   };
-  
+
   return (
     <React.Fragment>
-      <Header/>
+      <Header />
       <AppForm>
         <React.Fragment>
           <Typography
             variant="h3"
             align="center"
-            sx={{fontFamily: "Montserrat"}}
+            sx={{ fontFamily: "Montserrat" }}
           >
             Sign In
           </Typography>
@@ -110,15 +111,15 @@ function SignIn() {
         </React.Fragment>
         <Form
           onSubmit={handleSubmit}
-          subscription={{submitting: true}}
+          subscription={{ submitting: true }}
           validate={validate}
         >
-          {({handleSubmit: handleSubmit2, submitting}) => (
+          {({ handleSubmit: handleSubmit2, submitting }) => (
             <Box
               component="form"
               onSubmit={handleSubmit2}
               noValidate
-              sx={{mt: 6}}
+              sx={{ mt: 6 }}
             >
               <Field
                 autoComplete="email"
@@ -142,10 +143,10 @@ function SignIn() {
                 type="password"
                 margin="normal"
               />
-              <FormSpy subscription={{submitError: true}}>
-                {({submitError}) =>
+              <FormSpy subscription={{ submitError: true }}>
+                {({ submitError }) =>
                   submitError ? (
-                    <FormFeedback error sx={{mt: 2}}>
+                    <FormFeedback error sx={{ mt: 2 }}>
                       {submitError}
                     </FormFeedback>
                   ) : null
@@ -180,7 +181,7 @@ function SignIn() {
               </Link>*/}
         </Typography>
       </AppForm>
-      <Footer/>
+      <Footer />
     </React.Fragment>
   );
 }

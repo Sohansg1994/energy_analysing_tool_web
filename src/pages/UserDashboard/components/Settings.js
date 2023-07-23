@@ -4,6 +4,7 @@ import React from "react";
 import { VscSettings } from "react-icons/vsc";
 import TarifficDataUpload from "./TarifficDataUpload";
 import SubscriptionPlanUpload from "./SubscriptionPlanUpload";
+import UserSubPlanChange from "./UserSubPlanChange";
 function Settings() {
   return (
     <>
@@ -11,6 +12,7 @@ function Settings() {
         <Divider textAlign="left" sx={{ fontSize: 30 }}>
           <VscSettings />
         </Divider>
+        <UserSubPlanChange />
         <TarifficDataUpload />
         <SubscriptionPlanUpload />
       </Box>

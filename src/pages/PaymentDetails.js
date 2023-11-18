@@ -24,7 +24,8 @@ export default function PaymentDetails() {
               fontSize: 18,
             }}
           >
-            Send an SMS or WhatsApp to:Geenbill service hotline - 07522385095
+            Send an SMS or WhatsApp to: Geenbill service hotline -{" "}
+            <b>07522385095</b>
           </Typography>
           <Typography
             sx={{

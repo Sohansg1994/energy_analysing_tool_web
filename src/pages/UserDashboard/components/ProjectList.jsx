@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { styled } from "@mui/material/styles";
+import React, {useEffect, useState} from "react";
+import {styled} from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableCell, {tableCellClasses} from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import ProjectCreate from "./ProjectCreate";
+import NewProject from "../../../app/components/dashboard/NewProject";
 import axios from "axios";
-import { MdDelete } from "react-icons/md";
-import { GrView } from "react-icons/gr";
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+import {MdDelete} from "react-icons/md";
+import {useNavigate} from "react-router-dom";
+
+const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#28282a",
     color: theme.palette.common.white,
@@ -24,7 +25,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const StyledTableRow = styled(TableRow)(({theme}) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
@@ -38,39 +39,42 @@ export default function ProjectList() {
   const accessToken = localStorage.getItem("accessToken");
   const [projects, setProjects] = useState([]);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    console.log(projects);
     getProjectList();
   }, []);
 
   const getProjectList = async () => {
     const accessToken = localStorage.getItem("accessToken");
-    const response = await axios.get("/project/getAll", {
+    await axios.get("/project/getAll", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
+    }).then((response) => {
+      setProjects(response.data.data);
+    }).catch((error) => {
+      console.log(error.message());
+      navigate("/error");
     });
-    console.log(response);
-    setProjects(response.data.data);
   };
 
   const handleDelete = async (projectId) => {
-    try {
-      const response = await axios.delete(`/project?projectId=${projectId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      getProjectList();
-    } catch (error) {
+    await axios.delete(`/project?projectId=${projectId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }).then((response) => {
+      getProjectList()
+    }).catch((error) => {
       console.log(error.message);
-    }
+    })
   };
 
   return (
     <React.Fragment>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+        <Table sx={{minWidth: 700}} aria-label="customized table">
           <TableHead>
             <TableRow>
               <StyledTableCell>Project Name</StyledTableCell>
@@ -102,30 +106,15 @@ export default function ProjectList() {
                     <Button
                       variant="contained"
                       color="info"
-                      sx={{ mr: 2 }}
+                      sx={{mr: 2}}
                       href={`/projectdetails?projectName=${project.name}&projectId=${project.projectId}`}
                     >
                       View
                     </Button>
-                    {/*<Button
-                      variant="contained"
-                      color="info"
-                      endIcon={<GrView color="white" />}
-                    >
-                      View
-                  </Button>*/}
-
-                    {/*<Button
-                      variant="contained"
-                      color="error"
-                      onClick={() => handleDelete(project.projectId)}
-                    >
-                      Delete
-                  </Button>*/}
                     <Button
                       variant="outlined"
                       color="error"
-                      startIcon={<MdDelete />}
+                      startIcon={<MdDelete/>}
                       onClick={() => handleDelete(project.projectId)}
                     >
                       Delete
@@ -137,8 +126,8 @@ export default function ProjectList() {
           </TableBody>
         </Table>
       </TableContainer>
-      <div sx={{ mt: 4, mb: 4 }}>
-        <ProjectCreate getProjectList={getProjectList} />
+      <div sx={{mt: 4, mb: 4}}>
+        <NewProject getProjectList={getProjectList}/>
       </div>
     </React.Fragment>
   );

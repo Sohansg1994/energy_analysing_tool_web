@@ -3,7 +3,7 @@ import { Field, Form, FormSpy } from 'react-final-form';
 import Box from '@mui/material/Box';
 import Typography from './modules/components/Typography';
 import Footer from './modules/views/Footer';
-import Header from './modules/views/Header';
+import Header from '../app/components/common/Header';
 import AppForm from './modules/views/AppForm';
 import { email, required } from './modules/form/validation';
 import RFTextField from './modules/form/RFTextField';

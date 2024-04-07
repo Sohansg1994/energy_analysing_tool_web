@@ -1,19 +1,17 @@
-import { Box } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import {Box} from "@mui/system";
+import React, {useEffect, useState} from "react";
 
 import Button from "@mui/material/Button";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableCell, {tableCellClasses} from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { styled } from "@mui/material/styles";
+import {styled} from "@mui/material/styles";
 import axios from "axios";
-import { TextField } from "@mui/material";
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#ffff",
     color: theme.palette.common.white,
@@ -28,32 +26,21 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-/*const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {},
-  "&:first-child td, &:first-child th": {},
-  "&:last-child td, &:last-child th": {},
-  "& > *": {
-    paddingTop: theme.spacing(0.5),
-    paddingBottom: theme.spacing(0.5),
-  },
-  border: "none",
-}));*/
-
 function createData(description, amount) {
-  return { description, amount };
+  return {description, amount};
 }
 
 const ResultCalculation = (props) => {
   const [isResultUpdated, setIsResultUpdated] = useState(false);
-  const { projectId } = props;
+  const {projectId} = props;
   const [isProject, setIsProject] = useState(false);
   const [calculationSteps, setCalculationSteps] = useState([]);
   const [units, setUnits] = useState("");
-
+  
   const handleClick = () => {
     props.handleCalculation();
   };
-
+  
   const [rows, setRows] = useState([
     createData("Total Units", ""),
     createData("Usage Charge", ""),
@@ -61,11 +48,11 @@ const ResultCalculation = (props) => {
     createData("Tax", ""),
     createData("Bill Amount", ""),
   ]);
-
+  
   useEffect(() => {
     setIsProject(props.isProject);
   });
-
+  
   const handleCalculation = async () => {
     const accessToken = localStorage.getItem("accessToken");
     console.log(accessToken);
@@ -87,10 +74,10 @@ const ResultCalculation = (props) => {
           createData("Usage Charge", response.data.data[0].usageCharge),
           createData("Total Charge", response.data.data[0].totalCharge),
           createData("Tax", response.data.data[0].levy),
-
+          
           createData("Bill Amount", response.data.data[0].billAmount),
         ];
-
+        
         setRows(updatedRows);
         setIsResultUpdated(true);
       }
@@ -98,12 +85,12 @@ const ResultCalculation = (props) => {
       console.log(error.message);
     }
   };
-
+  
   return (
     <Box
       sx={{
         mt: 2,
-
+        
         width: "100%",
         justifyContent: "space-evenly",
       }}
@@ -119,20 +106,19 @@ const ResultCalculation = (props) => {
             alignItems: "center",
             justifyContent: "center",
             width: "100%",
-            justifyContent: "space-evenly",
           }}
         >
           <Button
             variant="contained"
             color="success"
             onClick={handleCalculation}
-            sx={{ width: "60%", justifyItems: "center" }}
+            sx={{width: "60%", justifyItems: "center"}}
           >
             Calculate
           </Button>
-
+          
           {isResultUpdated && (
-            <TableContainer sx={{ mt: 3 }}>
+            <TableContainer sx={{mt: 3}}>
               <Table
                 sx={{
                   minWidth: 500,
@@ -161,10 +147,10 @@ const ResultCalculation = (props) => {
                       <StyledTableCell
                         component="th"
                         scope="row"
-                        sx={{ width: "40%" }}
+                        sx={{width: "40%"}}
                       ></StyledTableCell>
                       <StyledTableCell align="right">
-                        <span style={{ fontWeight: "revert" }}>{steps}</span>
+                        <span style={{fontWeight: "revert"}}>{steps}</span>
                       </StyledTableCell>
                     </TableRow>
                   ))}
@@ -178,13 +164,13 @@ const ResultCalculation = (props) => {
                       <StyledTableCell
                         component="th"
                         scope="row"
-                        sx={{ width: "40%" }}
+                        sx={{width: "40%"}}
                       >
                         {row.description}
                       </StyledTableCell>
                       <StyledTableCell align="right">
                         {row.description === "Bill Amount" ? (
-                          <span style={{ fontWeight: "bold" }}>
+                          <span style={{fontWeight: "bold"}}>
                             {row.amount}
                           </span>
                         ) : (

@@ -2,92 +2,70 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
-import { Field, Form, FormSpy } from "react-final-form";
-import Typography from "./modules/components/Typography";
-import Header from "./modules/views/Header";
-import AppForm from "./modules/views/AppForm";
-import { email, required } from "./modules/form/validation";
-import RFTextField from "./modules/form/RFTextField";
-import FormButton from "./modules/form/FormButton";
-import FormFeedback from "./modules/form/FormFeedback";
-import withRoot from "./modules/withRoot";
-import { useNavigate } from "react-router-dom";
-import { Alert, Stack } from "@mui/material";
+import {Field, Form, FormSpy} from "react-final-form";
+import Typography from "../../pages/modules/components/Typography";
+import Header from "../components/common/Header";
+import AppForm from "../../pages/modules/views/AppForm";
+import {email, required} from "../../pages/modules/form/validation";
+import RFTextField from "../../pages/modules/form/RFTextField";
+import FormButton from "../../pages/modules/form/FormButton";
+import FormFeedback from "../../pages/modules/form/FormFeedback";
+import withRoot from "../../pages/modules/withRoot";
+import {useNavigate} from "react-router-dom";
+import {Alert, Stack} from "@mui/material";
 
 import axios from "axios";
 
+const validate = (values) => {
+  const errors = required(
+    ["firstName", "lastName", "email", "password"],
+    values
+  );
+  if (!errors.email) {
+    const emailError = email(values.email);
+    if (emailError) {
+      errors.email = emailError;
+    }
+  }
+  return errors;
+};
+
+
 function SignUp() {
+  let navigate = useNavigate();
+  
   const [sent, setSent] = React.useState(false);
   const [warning, setWarning] = React.useState(false);
   const [warningMessage, setWarningMessage] = React.useState(null);
-  const [accessToken, setAccessToken] = React.useState(null);
-  const [refreshToken, setRefreshToken] = React.useState(null);
-  const [firstName, setFirstName] = React.useState(null);
-  const [role, setRole] = React.useState(null);
-
-  let navigate = useNavigate();
-
-  const validate = (values) => {
-    const errors = required(
-      ["firstName", "lastName", "email", "password"],
-      values
-    );
-    if (!errors.email) {
-      const emailError = email(values.email);
-      if (emailError) {
-        errors.email = emailError;
-      }
-    }
-    return errors;
-  };
-
+  
   const handleSubmit = async (values) => {
-    try {
-      const response = await axios.post("/user/register", values);
-      console.log(response.status);
-      console.log(response.data.data[0]);
+    await axios.post("/user/register", values).then((response) => {
       if (response.status === 200) {
-        //const { accessToken, refreshToken } = response.data;
-        const accessToken = response.data.data[0].accessToken;
-        const refreshToken = response.data.data[0].refreshToken;
-        const firstName = response.data.data[0].firstName;
-        const role = response.data.data[0].role;
-        const accessTokenET = response.data.data[0].accessTokenExpireTime;
-        const userId = response.data.data[0].userId;
-        setAccessToken(accessToken);
-        setRefreshToken(refreshToken);
-        setFirstName(firstName);
-        setRole(role);
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-        localStorage.setItem("accessTokenExpiration", accessTokenET);
-        localStorage.setItem("firstName", firstName);
-        localStorage.setItem("role", role);
-        localStorage.setItem("userId", userId);
-        console.log(accessTokenET);
-        console.log(accessToken);
-        console.log(userId);
-
+        localStorage.setItem("accessToken", response.data.data[0].accessToken);
+        localStorage.setItem("refreshToken", response.data.data[0].refreshToken);
+        localStorage.setItem("accessTokenExpiration", response.data.data[0].accessTokenExpireTime);
+        localStorage.setItem("firstName", response.data.data[0].firstName);
+        localStorage.setItem("role", response.data.data[0].role);
+        localStorage.setItem("userId", response.data.data[0].userId);
+        
         setSent(true);
         navigate("/subcription");
       }
-    } catch (error) {
+    }).catch((error) => {
       setWarningMessage(error.response.data.message);
       setWarning(true);
-
-      // handle error
-    }
+    })
   };
-
+  
   return (
     <React.Fragment>
-      <Header />
+      <Header/>
       <AppForm>
         <React.Fragment>
           <Typography
             variant="h3"
             align="center"
-            sx={{ fontFamily: "Montserrat" }}
+            sx={{fontFamily: "Montserrat"}}
           >
             Sign Up
           </Typography>
@@ -99,15 +77,15 @@ function SignUp() {
         </React.Fragment>
         <Form
           onSubmit={handleSubmit}
-          subscription={{ submitting: true }}
+          subscription={{submitting: true}}
           validate={validate}
         >
-          {({ handleSubmit: handleSubmit2, submitting }) => (
+          {({handleSubmit: handleSubmit2, submitting}) => (
             <Box
               component="form"
               onSubmit={handleSubmit2}
               noValidate
-              sx={{ mt: 6 }}
+              sx={{mt: 6}}
             >
               <Grid container spacing={1}>
                 <Grid item xs={12} sm={6}>
@@ -155,10 +133,10 @@ function SignUp() {
                 type="password"
                 margin="normal"
               />
-              <FormSpy subscription={{ submitError: true }}>
-                {({ submitError }) =>
+              <FormSpy subscription={{submitError: true}}>
+                {({submitError}) =>
                   submitError ? (
-                    <FormFeedback error sx={{ mt: 2 }}>
+                    <FormFeedback error sx={{mt: 2}}>
                       {submitError}
                     </FormFeedback>
                   ) : null

@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from "react";
-import withRoot from "../modules/withRoot";
-import AdminDashboard from "./components/AdminDashboard";
+import React from "react";
+import AdminDrawer from "../../app/components/common/AdminDrawer";
 import StaticsSummary from "./components/StaticsSummary";
 import StaticForm from "../modules/views/StaticForm";
-import { Dashboard } from "@mui/icons-material";
 
 function Statics() {
   return (
     <React.Fragment>
-      <AdminDashboard />
-
+      <AdminDrawer/>
       <StaticForm>
-        <StaticsSummary />
+        <StaticsSummary/>
       </StaticForm>
     </React.Fragment>
   );

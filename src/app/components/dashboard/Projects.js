@@ -1,16 +1,16 @@
-import React from "react";
+import * as React from "react";
+import Container from "@mui/material/Container";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useProjectsStore } from "../../util/store";
 import NewProject from "./NewProject";
 import ProjectTable from "./ProjectTable";
-import Container from "@mui/material/Container";
-import {useProjectsStore} from "../../util/store";
-import axios from "axios";
-import {useNavigate} from "react-router-dom";
 
 function Projects() {
   const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
   const updateProjects = useProjectsStore((state) => state.updateProjects);
-  
+
   const getProjectList = async () => {
     await axios.get("/project/getAll", {
       headers: {
@@ -25,11 +25,11 @@ function Projects() {
       navigate("/error");
     });
   };
-  
+
   return (
-    <Container maxWidth="lg" sx={{mt: 12}}>
-      <ProjectTable getProjectList={getProjectList}/>
-      <NewProject getProjectList={getProjectList}/>
+    <Container maxWidth="lg" sx={{ mt: 12 }}>
+      <ProjectTable getProjectList={getProjectList} />
+      <NewProject getProjectList={getProjectList} />
     </Container>
   )
 }

@@ -24,7 +24,6 @@ const newGroupTextStyle = {
 
 const submitButtonStyle = {
   width: "20%",
-  fontFamily: "Montserrat",
   backgroundColor: "#1F8A70",
   "&:hover": {
     backgroundColor: "#1c7861",
@@ -125,8 +124,10 @@ function NewProject({getProjectList}) {
             onChange={handleDropdownChange}
           />
           <Button
-            variant="contained"
-            sx={submitButtonStyle}
+            variant="outlined"
+            size="small"
+            color="primary"
+            sx={{width: "20%"}}
             onClick={handleSubmit}
           >
             Create

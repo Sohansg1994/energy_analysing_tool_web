@@ -1,13 +1,12 @@
-import * as React from "react";
 
-import {ThemeProvider} from "@mui/material/styles";
 import Drawer from '@mui/material/Drawer';
+import { ThemeProvider } from "@mui/material/styles";
 
-import theme from "../../../pages/modules/theme";
-import {Divider} from "@mui/material";
+import { Divider } from "@mui/material";
 import List from "@mui/material/List";
-import {mainListItems} from "../../../pages/UserDashboard/components/listItems";
 import Toolbar from "@mui/material/Toolbar";
+import theme from "../../../pages/modules/theme";
+import { userListItems } from "./DrawerMenuItems";
 
 const drawerWidth = 200;
 
@@ -26,9 +25,9 @@ function UserDrawer() {
       <Drawer sx={drawerStyles} variant="permanent" anchor="left">
         <Toolbar />
         <List component="nav">
-          {mainListItems}
+          {userListItems}
         </List>
-        <Divider/>
+        <Divider />
       </Drawer>
     </ThemeProvider>
   );

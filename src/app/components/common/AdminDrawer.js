@@ -1,13 +1,11 @@
-import * as React from "react";
 
-import {ThemeProvider} from "@mui/material/styles";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
+import { Drawer } from "@mui/material";
 import Divider from "@mui/material/Divider";
-
+import List from "@mui/material/List";
+import Toolbar from "@mui/material/Toolbar";
+import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../../pages/modules/theme";
-import {mainListItems} from "../../../pages/UserDashboard/components/listItems";
-import {Drawer} from "@mui/material";
+import { adminListItems } from "./DrawerMenuItems";
 
 const drawerWidth = 200;
 
@@ -21,15 +19,14 @@ const drawerStyles = {
 }
 
 function AdminDrawer() {
-  
   return (
     <ThemeProvider theme={theme}>
       <Drawer sx={drawerStyles} variant="permanent" anchor="left">
-        <Toolbar/>
+        <Toolbar />
         <List component="nav">
-          {mainListItems}
+          {adminListItems}
         </List>
-        <Divider/>
+        <Divider />
       </Drawer>
     </ThemeProvider>
   );

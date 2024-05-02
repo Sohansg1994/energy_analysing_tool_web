@@ -59,7 +59,7 @@ function Header() {
         localStorage.setItem("accessToken", newAccessToken);
         localStorage.setItem("accessTokenExpiration", newExpirationTime);
         setAccessToken(newAccessToken);
-      } // what happens otherwise
+      }
     }).catch((error) => {
       console.log(error);
       setIsTokenValid(false);

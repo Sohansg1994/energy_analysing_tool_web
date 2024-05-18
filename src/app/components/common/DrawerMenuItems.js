@@ -1,17 +1,18 @@
 import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded';
-import TableViewRoundedIcon from '@mui/icons-material/TableViewRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import TableViewRoundedIcon from '@mui/icons-material/TableViewRounded';
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import * as React from "react";
 import { NavLink } from "react-router-dom";
+import { PATHS } from '../../util/CommonUtil';
 
 const navListStyle = { textDecoration: "none", color: "#424242" }
 
 export const userListItems = (
   <React.Fragment>
-    <NavLink to="/projects" style={navListStyle}>
+    <NavLink to={PATHS.PROJECTS} style={navListStyle}>
       <ListItemButton>
         <ListItemIcon>
           <AccountTreeRoundedIcon />
@@ -20,7 +21,7 @@ export const userListItems = (
       </ListItemButton>
     </NavLink>
     <NavLink
-      to="/tariffdata" style={navListStyle}>
+      to={PATHS.TARIFF} style={navListStyle}>
       <ListItemButton>
         <ListItemIcon>
           <TableViewRoundedIcon />
@@ -34,7 +35,7 @@ export const userListItems = (
 export const adminListItems = (
   <React.Fragment>
     <NavLink
-      to="/projects" style={navListStyle}>
+      to={PATHS.PROJECTS} style={navListStyle}>
       <ListItemButton>
         <ListItemIcon>
           <AccountTreeRoundedIcon />
@@ -43,7 +44,7 @@ export const adminListItems = (
       </ListItemButton>
     </NavLink>
     <NavLink
-      to="/tariffdata" style={navListStyle}>
+      to={PATHS.TARIFF} style={navListStyle}>
       <ListItemButton>
         <ListItemIcon>
           <TableViewRoundedIcon />
@@ -51,7 +52,7 @@ export const adminListItems = (
         <ListItemText primary="Tariff Data" />
       </ListItemButton>
     </NavLink>
-    <NavLink to="/settings" style={navListStyle}>
+    <NavLink to={PATHS.SETTINGS} style={navListStyle}>
       <ListItemButton>
         <ListItemIcon>
           <SettingsRoundedIcon />

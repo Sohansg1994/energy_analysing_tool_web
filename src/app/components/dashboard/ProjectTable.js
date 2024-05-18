@@ -1,15 +1,8 @@
-import { Paper, TableCell } from "@mui/material";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import axios from "axios";
+import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { PATHS } from "../../util/CommonUtil";
 import { useProjectsStore } from "../../util/store";
+import useAxiosPrivate from "../../util/useAxiosPrivate";
 
 
 const tableStyle = {
@@ -24,22 +17,28 @@ const actionCellStyles = {
 }
 
 function ProjectTable({ getProjectList }) {
-  const accessToken = localStorage.getItem("accessToken");
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
   const projects = useProjectsStore((state) => state.projects);
 
   const handleDelete = async (projectId) => {
-    await axios.delete(`/project?projectId=${projectId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }).then((response) => {
+    await axiosPrivate.delete(`/project?projectId=${projectId}`).then((response) => {
       if (response.status === 200) {
         getProjectList();
       }
     }).catch((error) => {
-      console.log(error.message);
-      navigate("/error");
+      if (error.status === 403 || error.status === 401) {
+        navigate(PATHS.SIGN_IN);
+      } else {
+        navigate(PATHS.ERROR, {
+          state: {
+            action: "Deleting a project from the table",
+            code: error.code,
+            message: error.message,
+            stack: error.stack
+          }
+        });
+      }
     })
   };
 

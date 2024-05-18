@@ -5,9 +5,12 @@ import { ROLES } from "../util/CommonUtil";
 import TariffDataTable from "../components/dashboard/TariffDataTable";
 import Box from "@mui/material/Box";
 import Header from "../components/common/Header";
+import { useAuthStore } from "../util/store";
 
 function TariffDataPage() {
-  const role = localStorage.getItem("role");
+  const authData = useAuthStore((state) => state.authData);
+  const role = authData.role;
+  
   return (
     <Box sx={{ display: 'flex' }}>
       <Header position="absolute" />

@@ -1,10 +1,8 @@
-import {Autocomplete, Container, Paper, Typography} from "@mui/material";
-import React, {useEffect, useState} from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import axios from "axios";
-import {useNavigate} from "react-router-dom";
-import Grid from "@mui/material/Grid";
+import { Autocomplete, Button, Container, Grid, Paper, TextField, Typography } from "@mui/material";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useAxiosPrivate from "../../util/useAxiosPrivate";
+import { PATHS } from "../../util/CommonUtil";
 
 
 const formContainerStyle = {
@@ -31,27 +29,24 @@ const submitButtonStyle = {
 }
 
 const Type = [
-  {label: "Domestic", id: 1},
-  {label: "Industry", id: 2},
+  { label: "Domestic", id: 1 },
+  { label: "Industry", id: 2 },
 ];
 
-function NewProject({getProjectList}) {
-  const accessToken = localStorage.getItem("accessToken");
+function NewProject({ getProjectList }) {
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
+
   const [projectName, setProjectName] = useState("");
   const [projectType, setProjectType] = useState();
   const [errors, setErrors] = useState({});
-  
+
   const handleNameChange = (e) => setProjectName(e.target.value)
   const handleDropdownChange = (event, newValue) => {
     setProjectType(newValue?.label || "");
   }
-  const renderAutoComplete = (params) => <TextField {...params} label="Type"/>
-  
-  useEffect(() => {
-    getProjectList();
-  }, [accessToken]);
-  
+  const renderAutoComplete = (params) => <TextField {...params} label="Type" />
+
   const validateForm = () => {
     const errorMessages = {};
     if (!projectName) {
@@ -63,7 +58,7 @@ function NewProject({getProjectList}) {
     setErrors(errorMessages);
     return Object.keys(errorMessages).length === 0;
   };
-  
+
   const handleSubmit = async (e) => {
     const data = {
       name: projectName,
@@ -71,24 +66,31 @@ function NewProject({getProjectList}) {
     };
     e.preventDefault();
     if (validateForm()) {
-      await axios.post("/project", data, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }).then((response) => {
+      await axiosPrivate.post("/project", data).then((response) => {
         if (response.status === 200) {
           setProjectName("");
           setProjectType(null);
           getProjectList();
         }
       }).catch((error) => {
-        console.log(error.message)
-        navigate("/error");
+        // if status = 409 => project limit reached / ask to update the subscription plan
+        if (error.status === 403 || error.status === 401) {
+          navigate(PATHS.SIGN_IN);
+        } else {
+          navigate(PATHS.ERROR, {
+            state: {
+              action: "Creating a new project",
+              code: error.code,
+              message: error.message,
+              stack: error.stack
+            }
+          });
+        }
       });
     }
     ;
   };
-  
+
   return (
     <Grid container spacing={0}>
       <Grid item xs={12}>
@@ -104,7 +106,7 @@ function NewProject({getProjectList}) {
             id="outlined-required"
             label="Project name"
             size="small"
-            sx={{width: "40%"}}
+            sx={{ width: "40%" }}
             error={Boolean(errors.projectName)}
             helperText={errors.projectName}
             value={projectName}
@@ -116,7 +118,7 @@ function NewProject({getProjectList}) {
             label="Project type"
             options={Type}
             size="small"
-            sx={{width: "30%"}}
+            sx={{ width: "30%" }}
             value={projectType}
             // error={Boolean(errors.projectType)}
             // helperText={errors.projectType}
@@ -127,7 +129,7 @@ function NewProject({getProjectList}) {
             variant="outlined"
             size="small"
             color="primary"
-            sx={{width: "20%"}}
+            sx={{ width: "20%" }}
             onClick={handleSubmit}
           >
             Create

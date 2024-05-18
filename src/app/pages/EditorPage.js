@@ -5,19 +5,23 @@ import AdminDrawer from "../components/common/AdminDrawer";
 import Header from "../components/common/Header";
 import UserDrawer from "../components/common/UserDrawer";
 import ProjectEditor from "../components/dashboard/editor/ProjectEditor";
-import { ROLES } from "../util/CommonUtil";
+import { PATHS, ROLES } from "../util/CommonUtil";
+import { useAuthStore } from "../util/store";
 
 function EditorPage() {
+  const authData = useAuthStore((state) => state.authData);
+  const role = authData.role;
+
   const location = useLocation();
   const navigate = useNavigate();
   const projectId = location.state?.projectId;
-  const role = localStorage.getItem("role");
+
 
   useEffect(() => {
     if (!projectId) {
-      navigate('/error');
+      navigate(PATHS.ERROR);
     }
-  }, [projectId, navigate]);
+  }, [projectId]);
 
   return (
     <Box sx={{ display: 'flex' }}>

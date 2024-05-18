@@ -1,28 +1,39 @@
-import * as React from "react";
 import Container from "@mui/material/Container";
-import axios from "axios";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { PATHS } from "../../util/CommonUtil";
 import { useProjectsStore } from "../../util/store";
+import useAxiosPrivate from "../../util/useAxiosPrivate";
 import NewProject from "./NewProject";
 import ProjectTable from "./ProjectTable";
 
 function Projects() {
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("accessToken");
   const updateProjects = useProjectsStore((state) => state.updateProjects);
+  const axiosPrivate = useAxiosPrivate();
+
+  useEffect(() => {
+    getProjectList();
+  }, []);
 
   const getProjectList = async () => {
-    await axios.get("/project/getAll", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }).then((response) => {
+    await axiosPrivate.get("/project/getAll").then((response) => {
       if (response.data.status === 200) {
         updateProjects(response.data.data);
       }
     }).catch((error) => {
-      console.log(error.message);
-      navigate("/error");
+      if (error.status === 403 || error.status === 401) {
+        navigate(PATHS.SIGN_IN);
+      } else {
+        navigate(PATHS.ERROR, {
+          state: {
+            action: "Loading project list",
+            code: error.code,
+            message: error.message,
+            stack: error.stack
+          }
+        });
+      }
     });
   };
 

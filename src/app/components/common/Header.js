@@ -1,135 +1,175 @@
-import React, {useEffect, useState} from "react";
-import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import AppBar from "../../../pages/modules/components/AppBar";
-import Toolbar from "../../../pages/modules/components/Toolbar";
-import {MdPerson} from "react-icons/md";
-import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import { AppBar, Avatar, Box, Button, IconButton, Link, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { PATHS } from "../../util/CommonUtil";
+import { useAuthStore } from "../../util/store";
+import useAxiosPrivate from "../../util/useAxiosPrivate";
 
-const rightLinkStyles = {
-  fontFamily: "Montserrat", fontSize: 16, color: "common.white", ml: 3,
-  "&:hover": {color: "secondary.light", cursor: "pointer"}
+
+const titleStyles = {
+  m: 0, mr: 2,
+  color: "white",
+  flexGrow: 1,
+  display: { xs: 'none', sm: 'block' },
+  fontSize: 24,
+  fontFamily: "Montserrat"
 };
 
-const linkBoxStyles = {
-  flex: 1, display: "flex", justifyContent: "flex-end"
-};
+function stringToColor(string) {
+  let hash = 0;
+  let color = '#';
+  let i;
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  return color;
+}
 
-const titleStyles = {fontSize: 24, fontFamily: "Montserrat"};
+function stringAvatar(name) {
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: `${name[0]}`,
+  };
+}
 
 function Header() {
-  const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken"));
-  const [isTokenValid, setIsTokenValid] = useState(false);
-  const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken"));
+  // add load user details component here, to fix the home page issue
+  // check for subscription plan and redirect to plan selection page (unless we are at subscription/error/home pages)
+
+  const location = useLocation();
   const navigate = useNavigate();
-  
+  const axiosPrivate = useAxiosPrivate();
+
+  const notSignInPath = location.pathname !== PATHS.SIGN_IN;
+  const notSignUpPath = location.pathname !== PATHS.SIGN_UP;
+
+  const [anchorUser, setAnchorUser] = useState(null);
+
+  const authData = useAuthStore((state) => state.authData);
+  const setAuthData = useAuthStore((state) => state.setAuthData);
+  const [isLogged, setLogged] = useState(false);
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      const expireTime = parseInt(localStorage.getItem("accessTokenExpiration"));
-      if (accessToken != null && expireTime != null) {
-        const currentTime = new Date().getTime();
-        if (currentTime < expireTime) {
-          setIsTokenValid(true);
-        } else {
-          refreshAccessToken();
-        }
-      }
-    }, 300000);
-    return () => clearInterval(interval);
-  }, []);
-  
-  useEffect(() => {
-    const expireTime = parseInt(localStorage.getItem("accessTokenExpiration"));
-    if (accessToken != null && expireTime != null) {
-      setIsTokenValid(true);
-    }
-  }, [accessToken]);
-  
-  const refreshAccessToken = async () => {
-    await axios.get("/auth/token", {
-      headers: {
-        Authorization: `Bearer ${refreshToken}`
-      },
-    }).then((response) => {
-      if (response.data.status === 200) {
-        const newAccessToken = response.data.data[0].accessToken;
-        const newExpirationTime = response.data.data[0].accessTokenExpireTime;
-        setIsTokenValid(true);
-        localStorage.setItem("accessToken", newAccessToken);
-        localStorage.setItem("accessTokenExpiration", newExpirationTime);
-        setAccessToken(newAccessToken);
-      }
-    }).catch((error) => {
-      console.log(error);
-      setIsTokenValid(false);
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("expirationTime");
-      localStorage.removeItem("firstName");
-      setAccessToken(null);
-      setRefreshToken(null);
-      navigate("/signIn");
-    });
-  };
-  
-  const handleLogout = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-    await axios.post(
-      "/user/logout",
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    ).then((response) => {
+    setLogged(Boolean(authData?.accessToken));
+  }, [authData])
+
+  const handleOpenUserMenu = (event) => {
+    setAnchorUser(event.currentTarget);
+  }
+
+  const handleCloseUserMenu = () => {
+    setAnchorUser(null);
+  }
+
+  const handleLogOutClick = async () => {
+    await axiosPrivate.post("/user/logout").then((response) => {
       if (response.status === 200) {
-        setIsTokenValid(false);
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("expirationTime");
-        localStorage.removeItem("firstName");
-        setAccessToken(null);
-        setRefreshToken(null);
-        navigate("/signIn");
+        setAuthData({});
+        setAnchorUser(null);
+        navigate(PATHS.SIGN_IN);
       }
     }).catch((error) => {
-      console.log(error);
-      navigate("/error");
+      if (error.status === 403 || error.status === 401) {
+        navigate(PATHS.SIGN_IN);
+      } else {
+        navigate(PATHS.ERROR, {
+          state: {
+            action: "Logging out",
+            code: error.code,
+            message: error.message,
+            stack: error.stack
+          }
+        });
+      }
     });
-  };
-  
+  }
+
+  const handleProjectsClick = () => {
+    setAnchorUser(null);
+    navigate(PATHS.PROJECTS);
+  }
+
+  const handleSignInClick = () => {
+    navigate(PATHS.SIGN_IN);
+  }
+
+  const handleSignUpClick = () => {
+    navigate(PATHS.SIGN_UP);
+  }
+
   return (
-    <div>
-      <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
-        <Toolbar sx={{justifyContent: "space-between"}}>
-          <Link variant="h6" underline="none" color="white" href="/" sx={titleStyles}>
-            GREENBILL
-          </Link>
-          
-          {!isTokenValid && (
-            <Box sx={linkBoxStyles}>
-              <Link color="inherit" variant="h6" underline="none" href="/signIn" sx={rightLinkStyles}>
-                Sign In
-              </Link>
-              <Link color="inherit" variant="h6" underline="none" href="/Signup" sx={rightLinkStyles}>
-                Sign Up
-              </Link>
-            </Box>
+    <AppBar component="nav" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <Toolbar>
+        <Link
+          variant="h6"
+          underline="none"
+          href={PATHS.HOME}
+          sx={titleStyles}
+        >
+          GREENBILL
+        </Link>
+
+        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+          {(!isLogged && notSignInPath) && (
+            <Button
+              onClick={handleSignInClick}
+              sx={{ color: "white" }}
+            >
+              SIGN IN
+            </Button>
           )}
-          {isTokenValid && (
-            <Box sx={linkBoxStyles}>
-              <Link colour="inherit" underline="none" href="/projects" sx={rightLinkStyles}>
-                <MdPerson size="1.5rem"/>
-              </Link>
-              <Link variant="h6" underline="none" sx={rightLinkStyles} onClick={handleLogout}>
-                Log Out
-              </Link>
-            </Box>
+
+          {(!isLogged && notSignUpPath) && (
+            <Button
+              onClick={handleSignUpClick}
+              sx={{ color: "white" }}
+            >
+              SIGN UP
+            </Button>
           )}
-        </Toolbar>
-      </AppBar>
-    </div>
+
+          {isLogged && authData?.firstName && (
+            <>
+              <IconButton onClick={handleOpenUserMenu}>
+                <Avatar {...stringAvatar(authData?.firstName)} />
+              </IconButton>
+              <Menu
+                sx={{ mt: 4 }}
+                anchorEl={anchorUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right"
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right"
+                }}
+                open={Boolean(anchorUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <MenuItem onClick={handleProjectsClick}>
+                  <Typography textAlign="center">
+                    PROJECTS
+                  </Typography>
+                </MenuItem>
+                <MenuItem onClick={handleLogOutClick}>
+                  <Typography textAlign="center">
+                    LOG OUT
+                  </Typography>
+                </MenuItem>
+              </Menu>
+            </>
+          )}
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 }
 

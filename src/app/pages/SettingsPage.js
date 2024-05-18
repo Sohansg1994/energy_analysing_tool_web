@@ -5,9 +5,11 @@ import Header from "../components/common/Header";
 import UserDrawer from "../components/common/UserDrawer";
 import Settings from "../components/dashboard/Settings";
 import { ROLES } from "../util/CommonUtil";
+import { useAuthStore } from "../util/store";
 
 function SettingsPage() {
-  const role = localStorage.getItem("role");
+  const authData = useAuthStore((state) => state.authData);
+  const role = authData.role;
 
   return (
     <Box sx={{ display: 'flex' }}>

@@ -1,146 +1,158 @@
-import * as React from "react";
-import {Field, Form, FormSpy} from "react-final-form";
-import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import Typography from "../../pages/modules/components/Typography";
-import Footer from "../../pages/modules/views/Footer";
+import { Alert, Box, Button, Container, Grid, Paper, TextField, Typography } from "@mui/material";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/common/Header";
-import AppForm from "../../pages/modules/views/AppForm";
-import {email, required} from "../../pages/modules/form/validation";
-import RFTextField from "../../pages/modules/form/RFTextField";
-import FormButton from "../../pages/modules/form/FormButton";
-import FormFeedback from "../../pages/modules/form/FormFeedback";
-import withRoot from "../../pages/modules/withRoot";
-import axios from "axios";
-import {Alert, Stack} from "@mui/material";
-import {useNavigate} from "react-router-dom";
-
-const validate = (values) => {
-  const errors = required(["email", "password"], values);
-  if (!errors.email) {
-    const emailError = email(values.email);
-    if (emailError) {
-      errors.email = emailError;
-    }
-  }
-  return errors;
-};
+import { axiosPublic } from "../util/axios";
+import { useAuthStore } from "../util/store";
+import { PATHS } from "../util/CommonUtil";
 
 function SignIn() {
-  let navigate = useNavigate();
-  
-  const [sent, setSent] = React.useState(false);
-  const [warning, setWarning] = React.useState(false);
-  const [warningMessage, setWarningMessage] = React.useState(null);
-  
-  const handleSubmit = async (values) => {
-    await axios.post("/user/login", values).then((response) => {
-      if (response.status === 200) {
-        localStorage.setItem("accessToken", response.data.data[0].accessToken);
-        localStorage.setItem("refreshToken", response.data.data[0].refreshToken);
-        localStorage.setItem("accessTokenExpiration", response.data.data[0].accessTokenExpireTime);
-        localStorage.setItem("firstName", response.data.data[0].firstName);
-        localStorage.setItem("role", response.data.data[0].role);
-        localStorage.setItem("userId", response.data.data[0].userId);
-        
-        setSent(true);
-        navigate("/projects");
+  const navigate = useNavigate();
+
+  // should be sign-offed at this moment ??
+  const setAuthData = useAuthStore((state) => state.setAuthData);
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    if (e.target.validity.valid) {
+      setShowAlert(false);
+      setAlertMessage("");
+      setEmailError(false);
+    } else {
+      setShowAlert(true);
+      setAlertMessage("Please provide an valid email");
+      setEmailError(true);
+    }
+  }
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    if (e.target.validity.valid) {
+      setShowAlert(false);
+      setAlertMessage("");
+      setPasswordError(false);
+    } else {
+      setShowAlert(true);
+      setAlertMessage("Please provide a valid password");
+      setPasswordError(true);
+    }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (e.target.checkValidity() && !emailError && !passwordError) {
+      setAlertMessage("");
+      setShowAlert(false);
+      loginUser();
+    } else {
+      setAlertMessage("Please provide valid details");
+      setShowAlert(true);
+    }
+  };
+
+  const loginUser = async (e) => {
+    const body = {
+      email: email,
+      password: password
+    }
+    await axiosPublic.post("/user/login", body).then((response) => {
+      if (response.status === 200 && response?.data?.data[0]) {
+        setAuthData(response?.data?.data[0]);
+        navigate(PATHS.PROJECTS, { replace: true });
       }
     }).catch((error) => {
-      setWarningMessage(error.response.data.message);
-      setWarning(true);
+      navigate(PATHS.ERROR, {
+        state:
+        {
+          action: "Signing in",
+          error: error
+        }
+      });
     });
-  };
-  
+  }
+
   return (
-    <React.Fragment>
-      <Header/>
-      <AppForm>
-        <React.Fragment>
-          <Typography
-            variant="h3"
-            align="center"
-            sx={{fontFamily: "Montserrat"}}
-          >
-            Sign In
-          </Typography>
-          <Typography variant="body2" align="center">
-            {"Not a member yet? "}
-            <Link href="/signup" underline="hover">
-              Sign Up here
-            </Link>
-          </Typography>
-        </React.Fragment>
-        <Form
-          onSubmit={handleSubmit}
-          subscription={{submitting: true}}
-          validate={validate}
-        >
-          {({handleSubmit: handleSubmit2, submitting}) => (
-            <Box
-              component="form"
-              onSubmit={handleSubmit2}
-              noValidate
-              sx={{mt: 6}}
-            >
-              <Field
-                autoComplete="email"
-                autoFocus
-                component={RFTextField}
-                disabled={submitting || sent}
-                fullWidth
-                label="Email"
-                margin="normal"
-                name="email"
-                required
-              />
-              <Field
-                fullWidth
-                component={RFTextField}
-                disabled={submitting || sent}
-                required
-                name="password"
-                autoComplete="current-password"
-                label="Password"
-                type="password"
-                margin="normal"
-              />
-              <FormSpy subscription={{submitError: true}}>
-                {({submitError}) =>
-                  submitError ? (
-                    <FormFeedback error sx={{mt: 2}}>
-                      {submitError}
-                    </FormFeedback>
-                  ) : null
-                }
-              </FormSpy>
-              <FormButton
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  fontFamily: "Montserrat",
-                  backgroundColor: "#1F8A70",
-                  "&:hover": {
-                    backgroundColor: "#1c7861",
-                  },
-                }}
-                disabled={submitting || sent}
-                fullWidth
-              >
-                {submitting || sent ? "In progress…" : "Sign In"}
-              </FormButton>
-              {warning && (
-                <Stack spacing={2}>
-                  <Alert severity="error">{warningMessage}</Alert>
-                </Stack>
-              )}
+    <Box sx={{ display: 'flex' }}>
+      <Header position="absolute" />
+
+      <Container maxWidth="lg" sx={{ mt: 12 }}>
+        <Grid container spacing={0} sx={{ justifyContent: "center" }}>
+
+          <Grid item xs={6} sx={{ m: 0, mb: 2 }}>
+            <Box component={Paper} sx={{ p: 2 }}>
+              <Grid component={"form"} onSubmit={handleSubmit} container sx={{ justifyContent: "center" }}>
+
+                <Grid item xs={12} sx={{ mb: 4 }}>
+                  <Typography variant="h4" align="center">
+                    Sign In
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12} sx={{ p: 1, mb: 1 }}>
+                  <TextField fullWidth
+                    id="email"
+                    required
+                    inputProps={{
+                      autoComplete: "off",
+                      type: "email"
+                    }}
+                    value={email}
+                    onChange={handleEmailChange}
+                    error={emailError}
+                    label="Email"
+                    size="small"
+                    variant="outlined" />
+                </Grid>
+
+                <Grid item xs={12} sx={{ p: 1, mb: 1 }}>
+                  <TextField fullWidth
+                    id="password"
+                    required
+                    inputProps={{
+                      autoComplete: "off",
+                      type: "password"
+                    }}
+                    value={password}
+                    onChange={handlePasswordChange}
+                    error={passwordError}
+                    label="Password"
+                    size="small"
+                    variant="outlined" />
+                </Grid>
+
+                <Grid item xs={6} sx={{ p: 1, mb: 1 }}>
+                  <Button
+                    fullWidth
+                    type="submit"
+                    color="success"
+                    variant="contained"
+                    size="small">
+                    Sign In
+                  </Button>
+                </Grid>
+              </Grid>
             </Box>
-          )}
-        </Form>
-      </AppForm>
-      <Footer/>
-    </React.Fragment>
+          </Grid>
+
+          <Grid item xs={8} sx={{ p: 2 }}>
+            {showAlert && (
+              <Alert severity="warning" variant="outlined">
+                {alertMessage}
+              </Alert>
+            )}
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
   );
 }
 
-export default withRoot(SignIn);
+export default SignIn;

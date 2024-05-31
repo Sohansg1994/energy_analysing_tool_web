@@ -4,7 +4,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { PATHS } from "../../util/CommonUtil";
 import { useAuthStore } from "../../util/store";
 import useAxiosPrivate from "../../util/useAxiosPrivate";
+import useRefreshToken from "../../util/useRefreshToken";
 
+const UNAUTH_PATHS = [PATHS.SIGN_IN, PATHS.SIGN_UP, PATHS.ERROR, PATHS.HOME];
 
 const titleStyles = {
   m: 0, mr: 2,
@@ -42,6 +44,7 @@ function Header() {
   // add load user details component here, to fix the home page issue
   // check for subscription plan and redirect to plan selection page (unless we are at subscription/error/home pages)
 
+  const refresh = useRefreshToken();
   const location = useLocation();
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
@@ -57,7 +60,26 @@ function Header() {
 
   useEffect(() => {
     setLogged(Boolean(authData?.accessToken));
-  }, [authData])
+  }, [authData]);
+
+  useEffect(() => {
+    refresh().catch((error) => {
+      if (error.response?.status === 404 || error.response?.status === 401) {
+        if (!UNAUTH_PATHS.includes(location.pathname)) {
+          navigate(PATHS.SIGN_IN);
+        }
+      } else {
+        navigate(PATHS.ERROR, {
+          state: {
+            action: "Loading user auth data",
+            code: error.code,
+            message: error.message,
+            stack: error.stack
+          }
+        });
+      }
+    });
+  }, [])
 
   const handleOpenUserMenu = (event) => {
     setAnchorUser(event.currentTarget);

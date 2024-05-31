@@ -147,10 +147,11 @@ function SignUp() {
         setAlertMessage("Email already in use. Please use a different email address.");
       } else {
         navigate(PATHS.ERROR, {
-          state:
-          {
+          state: {
             action: "Registering a new user",
-            error: error
+            code: error.code,
+            message: error.message,
+            stack: error.stack
           }
         });
       }

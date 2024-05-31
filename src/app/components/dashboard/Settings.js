@@ -1,23 +1,20 @@
-import { Divider, Paper, Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import CountUp from "react-countup";
 import { useNavigate } from "react-router-dom";
+import { PATHS } from "../../util/CommonUtil";
+import useAxiosPrivate from "../../util/useAxiosPrivate";
 import SubscriptionPlanUpload from "./SubscriptionPlanUpload";
 import TariffDataUpload from "./TariffDataUpload";
+import UserSubscriptionPlanChange from "./UserSubscriptionPlanChange";
 
 const gridBlockStyle = {
-  // display: "block",
-  // border: "solid 1px"
+  p: 1,
+  m: 0, mb: 4
 }
-
-const boxStyle = {
-  p: 2,
-  mt: 0, mr: 2, mb: 8
-};
 
 const countUpStyle = {
   textAlign: "center",
@@ -26,25 +23,31 @@ const countUpStyle = {
 };
 
 function Settings() {
+  const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("accessToken");
+
   const [userCount, setUserCount] = useState(0);
   const [projectCount, setProjectCount] = useState(0);
 
   const getStatistics = async () => {
-    await axios.get(`/sudo/statistic`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }).then((response) => {
+    await axiosPrivate.get(`/sudo/statistic`).then((response) => {
       if (response.status === 200) {
-        console.log(response.data);
         setUserCount(response.data.totalUsers);
         setProjectCount(response.data.totalProjects);
       }
     }).catch((error) => {
-      console.log(error.message);
-      navigate("/error");
+      if (error.status === 403 || error.status === 401) {
+        navigate(PATHS.SIGN_IN);
+      } else {
+        navigate(PATHS.ERROR, {
+          state: {
+            action: "Loading admin statistics",
+            code: error.code,
+            message: error.message,
+            stack: error.stack
+          }
+        });
+      }
     })
   };
 
@@ -56,7 +59,7 @@ function Settings() {
     <Container maxWidth="lg" sx={{ mt: 12 }}>
       <Grid container spacing={0}>
         <Grid item xs={12} md={6} sx={gridBlockStyle}>
-          <Box component={Paper} sx={boxStyle}>
+          <Box component={Paper} sx={{ p: 2 }}>
             <Typography sx={{ textAlign: "center" }} >
               Users
             </Typography>
@@ -67,7 +70,7 @@ function Settings() {
         </Grid>
 
         <Grid item xs={12} md={6} sx={gridBlockStyle}>
-          <Box component={Paper} sx={boxStyle}>
+          <Box component={Paper} sx={{ p: 2 }}>
             <Typography sx={{ textAlign: "center" }} >
               Projects
             </Typography>
@@ -78,33 +81,16 @@ function Settings() {
         </Grid>
 
         <Grid item xs={12} sx={gridBlockStyle}>
-          <Box component={Paper} sx={boxStyle}>
-            <Divider textAlign="center">
-              <Typography>
-                Upload subscription plans
-              </Typography>
-            </Divider>
-            <SubscriptionPlanUpload />
-          </Box>
+          <SubscriptionPlanUpload />
         </Grid>
 
         <Grid item xs={12} sx={gridBlockStyle}>
-          <Box component={Paper} sx={boxStyle}>
-          <Divider textAlign="center">
-              <Typography>
-                Upload tariff data sheet
-              </Typography>
-            </Divider>
-            <TariffDataUpload />
-          </Box>
+          <TariffDataUpload />
         </Grid>
 
         <Grid item xs={12} sx={gridBlockStyle}>
-          <Box component={Paper} sx={boxStyle}>
-            <p>UserSubPlanChange</p>
-          </Box>
+          <UserSubscriptionPlanChange />
         </Grid>
-
       </Grid>
     </Container>
   )

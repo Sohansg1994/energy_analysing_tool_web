@@ -9,7 +9,9 @@ import ProjectTable from "./ProjectTable";
 
 function Projects() {
   const navigate = useNavigate();
+
   const updateProjects = useProjectsStore((state) => state.updateProjects);
+
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
@@ -20,6 +22,8 @@ function Projects() {
     await axiosPrivate.get("/project/getAll").then((response) => {
       if (response.data.status === 200) {
         updateProjects(response.data.data);
+      } else {
+        console.log(response);
       }
     }).catch((error) => {
       if (error.status === 403 || error.status === 401) {

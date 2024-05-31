@@ -70,10 +70,11 @@ function SignIn() {
       }
     }).catch((error) => {
       navigate(PATHS.ERROR, {
-        state:
-        {
+        state: {
           action: "Signing in",
-          error: error
+          code: error.code,
+          message: error.message,
+          stack: error.stack
         }
       });
     });

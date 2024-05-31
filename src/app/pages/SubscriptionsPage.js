@@ -1,33 +1,119 @@
-import { Box, Button, Card, CardActions, CardContent, CardHeader, Container, Typography } from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, CardHeader, Container, Grid, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/common/Header";
+import { PATHS, SUBSCRIPTION_CYCLES, SUBSPRIPTION_PLANS } from "../util/CommonUtil";
+import { axiosPublic } from "../util/axios";
+import useAxiosPrivate from "../util/useAxiosPrivate";
 
+
+// no need to come here if you already dont have a subscription plan, redirect to the projects or error page
 function SubscriptionsPage() {
+  const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+
+  const [subscriptionPlans, setSubscriptionPlans] = useState([]);
+
+  const getSubscriptionPlans = async () => {
+    await axiosPublic.get("/subscription/plans").then((response) => {
+      if (response.status === 200) {
+        setSubscriptionPlans(response.data?.data);
+        console.log(response.data?.data);
+      };
+    }).catch((error) => {
+      navigate(PATHS.ERROR, {
+        state: {
+          action: "Loading subscription plans",
+          code: error.code,
+          message: error.message,
+          stack: error.stack
+        }
+      });
+    });
+  }
+
+  useEffect(() => {
+    getSubscriptionPlans();
+  }, []);
+
+  const handleSubmit = async (plan) => {
+    const body = {
+      userEmail: "",
+      subscriptionPlanName: plan.planType,
+    }
+
+    await axiosPrivate.post("/subscription", body).then((response) => {
+      if (response.status === 200) {
+        navigate(PATHS.PROJECTS);
+      } else {
+        console.log(response);
+      }
+    }).catch((error) => {
+      if (error.status === 403 || error.status === 401) {
+        navigate(PATHS.SIGN_IN);
+      } else {
+        navigate(PATHS.ERROR, {
+          state: {
+            action: "Subscribing to a new plan",
+            code: error.code,
+            message: error.message,
+            stack: error.stack
+          }
+        });
+      }
+    })
+  }
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Header position="absolute" />
       <Container maxWidth="lg" sx={{ mt: 12, p: 1 }}>
-        <Card sx={{ maxWidth: 300, m: 1 }}>
-          <CardHeader title="Free Plan" sx={{backgroundColor: "#EFEFEF"}} />
-          <CardContent>
-            <Typography>
-              10 max projects
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item xs={12}>
+            <Typography variant="h6" sx={{ textAlign: "center", mb: 4 }}>
+              Please select a subscription plan
             </Typography>
-            <Typography>
-              100 max nodes
-            </Typography>
-            <Typography variant="h6">
-              2000 LKR/YEAR
-            </Typography>
-          </CardContent>
-          <CardActions sx={{ m: 1 }}>
-            <Button 
-              variant="outlined" 
-              size="medium"
-            >
-              GET STARTED
-            </Button>
-          </CardActions>
-        </Card>
+          </Grid>
+          {subscriptionPlans.length && subscriptionPlans.map(plan => (
+            <Grid item xs={4} key={plan.planType}>
+              <Card sx={{ maxWidth: 300, m: 1 }}>
+                <CardHeader
+                  title={SUBSPRIPTION_PLANS[plan.name]}
+                  sx={{ backgroundColor: "#EFEFEF" }}
+                />
+                <CardContent>
+                  <Typography>
+                    {plan.maxNumProject} projects
+                  </Typography>
+                  <Typography>
+                    {plan.maxNumNode} nodes
+                  </Typography>
+                  <Typography variant="h6">
+                    {
+                      (plan.planType === "FREE") ? "Free subscription" : plan.rate + " LKR / " + SUBSCRIPTION_CYCLES[plan.cycle]
+                    }
+                  </Typography>
+                </CardContent>
+                <CardActions sx={{ m: 1 }}>
+                  <Button
+                    onClick={() => handleSubmit(plan)}
+                    variant="outlined"
+                    size="medium"
+                    disabled={plan.planType !== "FREE"}
+                  >
+                    GET STARTED
+                  </Button>
+                  {plan.planType !== "FREE" && (
+                    <Typography>
+                      Coming soon
+                    </Typography>
+                  )}
+                </CardActions>
+              </Card>
+            </Grid>
+          ))
+          }
+        </Grid>
       </Container>
     </Box>
   )

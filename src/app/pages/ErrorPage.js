@@ -6,10 +6,10 @@ import { useAuthStore } from "../util/store";
 
 function ErrorPage() {
   const location = useLocation();
-  const action = location.state.action;
-  const code = location.state.code;
-  const message = location.state.message;
-  const stack = location.state.stack;
+  const action = location.state?.action;
+  const code = location.state?.code;
+  const message = location.state?.message;
+  const stack = location.state?.stack;
 
   const authData = useAuthStore((state) => state.authData);
   const role = authData.role;

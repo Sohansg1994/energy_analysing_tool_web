@@ -1,89 +1,119 @@
-import { Alert, Box, Button, Stack } from "@mui/material";
-import axios from "axios";
-import { useState } from "react";
-import { RiUploadCloudFill } from "react-icons/ri";
-import { MuiFileInput } from 'mui-file-input'
-import AttachFileIcon from '@mui/icons-material/AttachFile'
+import { Box, Button, Grid, Paper, Typography } from "@mui/material";
+import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { PATHS } from "../../util/CommonUtil";
+import useAxiosPrivate from "../../util/useAxiosPrivate";
 
-const acceptedFileFormats = ".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-exce";
+const fileLabelStyle = {
+  backgroundColor: "#EFEFEF",
+  p: 0.5, pl: 2, pr: 2,
+  border: "1px solid #EFEFEF",
+  borderRadius: "4px"
+}
 
 function SubscriptionPlanUpload() {
-  const accessToken = localStorage.getItem("accessToken");
-
+  const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
+  const fileInput = useRef();
   const [file, setFile] = useState(null);
-  const [IsSuccess, setIsSuccess] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [message, setMessage] = useState("Please select a subscription plan sheet");
 
-  const handleFileChange = (e) => {
-    setIsSuccess(false);
-    setIsError(false);
-    setFile(e.target.files[0]);
-  };
+  const handleFileInputChange = (event) => {
+    const files = event.target.files;
+    if (files.length == 1) {
+      const selectedFile = files[0];
+      if (selectedFile) {
+        if (selectedFile.type === "text/csv") {
+          console.log(selectedFile);
+          setFile(selectedFile);
+          setMessage(selectedFile.name);
+        } else {
+          setFile(null);
+          setMessage("Select a CSV file with subscriptions plans");
+        }
+      } else {
+        setMessage("Something went wrong");
+        setFile(null);
+      }
+    } else {
+      setMessage("Please select one file to upload");
+      setFile(null);
+    }
+  }
 
   const handleFileUpload = async () => {
-    // setIsSuccess(false);
-    // setIsError(false);
+    setMessage("Fille uploading...");
     let formData = new FormData();
     formData.append("file", file);
+
     const config = {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    };
-    console.log("method called");
-
-    // await axios.post("upload/subscription_plan", formData, config).then((response) => {
-    //   if (response.status === 200) {
-    //     setIsSuccess(true);
-    //   }
-    // }).catch((error) => {
-    //   console.log(error.response.data.message);
-    //   setIsError(true);
-    // });
+        'Content-Type': 'multipart/form-data',
+      }
+    }
+    await axiosPrivate.post("upload/subscription_plan", formData, config).then((response) => {
+      if (response.status === 200) {
+        setMessage("File successfully uploaded");
+      }
+    }).catch((error) => {
+      console.log(error);
+      if (error.status === 403 || error.status === 401) {
+        navigate(PATHS.SIGN_IN);
+      } else {
+        navigate(PATHS.ERROR, {
+          state: {
+            action: "Uploading subscription plans",
+            code: error.code,
+            message: error.message,
+            stack: error.stack
+          }
+        });
+      }
+    });
   };
 
   return (
-    <Box sx={{ p: 0, pt: 4, pb: 2 }}>
-      <MuiFileInput
-        label="Select subscription sheet"
-        size="small"
-        value={file}
-        onChange={handleFileUpload}
-        accept={acceptedFileFormats}
-      />
+    <Box component={Paper} sx={{ p: 2, m: 0 }}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sx={{ mb: 2 }}>
+          <Typography>
+            Upload subscription plans
+          </Typography>
+        </Grid>
+        <Grid item xs={12} md={1} sx={{ display: "flex", justifyContent: "start" }}>
+          <Button
+            size="small"
+            variant="outlined"
+            onClick={() => fileInput.current.click()}
+          >
+            Browse
+          </Button>
+          <input
+            ref={fileInput}
+            accept={".csv"}
+            type="file"
+            onChange={handleFileInputChange}
+            style={{ display: 'none' }}
+          />
+        </Grid>
 
-      {/* <input
-        type="file"
-        inputProps={{ style: { color: "blue" } }}
-        onChange={handleFileChange}
-      ></input>
+        <Grid item xs={12} md={8}>
+          <Typography sx={fileLabelStyle}>
+            {message}
+          </Typography>
+        </Grid>
 
-      <Button
-        variant="contained"
-        color="secondary"
-        sx={{ ml: 3 }}
-        endIcon={<RiUploadCloudFill />}
-        onClick={handleFileUpload}
-      >
-        Upload
-      </Button> */}
-
-
-
-      {IsSuccess && (
-        <Stack>
-          <Alert severity="success" sx={{ fontSize: 16 }}>
-            File Successfully Uploaded
-          </Alert>
-        </Stack>
-      )}
-      {isError && (
-        <Stack>
-          <Alert severity="error" sx={{ fontSize: 16 }}>
-            Error
-          </Alert>
-        </Stack>
-      )}
+        <Grid item xs={12} md={3} sx={{ display: "flex", justifyContent: "end" }}>
+          <Button
+            disabled={!file}
+            size="small"
+            variant="outlined"
+            onClick={handleFileUpload}
+          >
+            Upload
+          </Button>
+        </Grid>
+      </Grid>
     </Box>
   )
 }

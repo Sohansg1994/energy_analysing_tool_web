@@ -1,15 +1,16 @@
 import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PATHS } from "../../util/CommonUtil";
+import { COLORS, PATHS } from "../../util/CommonUtil";
 import useAxiosPrivate from "../../util/useAxiosPrivate";
 
 const fileLabelStyle = {
-  backgroundColor: "#EFEFEF",
+  backgroundColor: COLORS.WHITE,
   p: 0.5, pl: 2, pr: 2,
-  border: "1px solid #EFEFEF",
+  border: "1px solid #FFF",
   borderRadius: "4px"
 }
+
 
 function TariffDataUpload() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ function TariffDataUpload() {
 
   const handleFileInputChange = (event) => {
     const files = event.target.files;
-    if (files.length == 1) {
+    if (files.length === 1) {
       const selectedFile = files[0];
       if (selectedFile) {
         if (selectedFile.type === "text/csv") {
@@ -51,7 +52,7 @@ function TariffDataUpload() {
         'Content-Type': 'multipart/form-data',
       }
     }
-    await axiosPrivate.post("upload/subscription_planss", formData, config).then((response) => {
+    await axiosPrivate.post("upload/tariff", formData, config).then((response) => {
       if (response.status === 200) {
         setMessage("File successfully uploaded");
       }
@@ -72,7 +73,7 @@ function TariffDataUpload() {
   };
 
   return (
-    <Box component={Paper} sx={{ p: 2, m: 0 }}>
+    <Box component={Paper} sx={{ p: 2, m: 0, backgroundColor: COLORS.LIGHT_GRAY }}>
       <Grid container spacing={ 2 }>
         <Grid item xs={12} sx={{ mb: 2 }}>
           <Typography>

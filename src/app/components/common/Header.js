@@ -1,12 +1,12 @@
 import { AppBar, Avatar, Box, Button, IconButton, Link, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { PATHS } from "../../util/CommonUtil";
+import { COLORS, PATHS } from "../../util/CommonUtil";
 import { useAuthStore } from "../../util/store";
 import useAxiosPrivate from "../../util/useAxiosPrivate";
 import useRefreshToken from "../../util/useRefreshToken";
 
-const UNAUTH_PATHS = [PATHS.SIGN_IN, PATHS.SIGN_UP, PATHS.ERROR, PATHS.HOME];
+const UNAUTH_PATHS = [PATHS.SIGN_IN, PATHS.SIGN_UP, PATHS.ERROR, PATHS.HOME, PATHS.OUR_SERVICES];
 
 const titleStyles = {
   m: 0, mr: 2,
@@ -126,7 +126,7 @@ function Header() {
   }
 
   return (
-    <AppBar component="nav" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+    <AppBar component="nav" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: COLORS.SUCCESS_GREEN }}>
       <Toolbar>
         <Link
           variant="h6"

@@ -1,7 +1,7 @@
 import { Alert, Button, Container, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PATHS, PROJECT_REGEX } from "../../util/CommonUtil";
+import { COLORS, PATHS, PROJECT_REGEX } from "../../util/CommonUtil";
 import useAxiosPrivate from "../../util/useAxiosPrivate";
 
 const PROJECT_TYPE = ["Domestic"];
@@ -48,7 +48,7 @@ function NewProject({ getProjectList }) {
       }
     } else {
       setShowAlert(true);
-      setAlertMessage("Please provide an valid project name");
+      setAlertMessage("Please provide a valid project name");
       setProjectNameError(true);
     }
   }
@@ -86,7 +86,7 @@ function NewProject({ getProjectList }) {
   };
 
   return (
-    <Container component={Paper} sx={{ p: 2, m: 0 }}>
+    <Container component={Paper} sx={{ p: 2, m: 0, backgroundColor: COLORS.LIGHT_GRAY }}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography>

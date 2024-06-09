@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { PATHS } from "../../util/CommonUtil";
+import { COLORS, PATHS } from "../../util/CommonUtil";
 import { useProjectsStore } from "../../util/store";
 import useAxiosPrivate from "../../util/useAxiosPrivate";
 
@@ -8,6 +8,7 @@ import useAxiosPrivate from "../../util/useAxiosPrivate";
 const tableStyle = {
   p: 1, pt: 2, pb: 2,
   m: 0, mb: 2,
+  backgroundColor: COLORS.LIGHT_GRAY
 }
 
 const actionCellStyles = {
@@ -43,14 +44,14 @@ function ProjectTable({ getProjectList }) {
   };
 
   const goToEditor = (projectId) => {
-    navigate("/editor", { state: { projectId: projectId } });
+    navigate(PATHS.EDITOR_PREFIX + projectId);
   };
 
   return (
     <Grid container spacing={0}>
       {projects.length !== 0 && (
         <TableContainer sx={tableStyle} component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table sx={{ minWidth: 650 }} size="small">
             <TableHead>
               <TableRow>
                 <TableCell sx={{ fontWeight: "bold" }}>
@@ -79,6 +80,7 @@ function ProjectTable({ getProjectList }) {
                   <TableCell align="right">
                     <Box sx={actionCellStyles}>
                       <Button
+                        size="small"
                         variant="outlined"
                         color="info"
                         sx={{ mr: 2 }}
@@ -87,6 +89,7 @@ function ProjectTable({ getProjectList }) {
                         View
                       </Button>
                       <Button
+                        size="small"
                         variant="outlined"
                         color="error"
                         onClick={() => handleDelete(project.projectId)}

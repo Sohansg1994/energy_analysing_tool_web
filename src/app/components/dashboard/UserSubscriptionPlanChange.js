@@ -1,7 +1,7 @@
 import { Alert, Box, Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PATHS } from "../../util/CommonUtil";
+import { COLORS, PATHS } from "../../util/CommonUtil";
 import useAxiosPrivate from "../../util/useAxiosPrivate";
 
 const SUBSCRIPTION_PLANS = ["FREE", "DOMESTIC_LITE"];
@@ -83,7 +83,7 @@ function UserSubscriptionPlanChange() {
   }
 
   return (
-    <Box component={Paper} sx={{ p: 2, m: 0 }}>
+    <Box component={Paper} sx={{ p: 2, m: 0, backgroundColor: COLORS.LIGHT_GRAY }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ mb: 2 }}>
           <Typography>

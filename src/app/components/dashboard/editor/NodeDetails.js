@@ -1,4 +1,4 @@
-import { Container, Paper, Typography } from "@mui/material";
+import { Chip, Container, Divider, Paper, Stack, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Table from "@mui/material/Table";
@@ -7,10 +7,10 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { NODE_TYPES } from "../../../util/CommonUtil";
+import { COLORS, NODE_TYPES, PATHS } from "../../../util/CommonUtil";
 import { useNodeStore } from "../../../util/store";
+import useAxiosPrivate from "../../../util/useAxiosPrivate";
 import AddNode from "./AddNode";
 
 const detailsContainerStyle = {
@@ -24,52 +24,66 @@ const detailsContainerStyle = {
 }
 
 function NodeDetails() {
-  const accessToken = localStorage.getItem("accessToken");
   const navigate = useNavigate();
-  const node = useNodeStore((state) => state.selectedNode);
-  const isSection = node?.nodeType == NODE_TYPES.SECTION;
-  const isAppliance = node?.nodeType == NODE_TYPES.APPLIANCE;
+  const axiosPrivate = useAxiosPrivate();
 
-  const handleChildRemove = (frontendId) => {
-    console.log("deleting " + frontendId);
-  }
+  const node = useNodeStore((state) => state.selectedNode);
+  const trigger = useNodeStore((state) => state.trigger); // to re-render the component tree
+  const setTrigger = useNodeStore((state) => state.setTrigger);
+
+  const isSection = node?.nodeType === NODE_TYPES.SECTION;
+  const isRoot = node?.nodeType === NODE_TYPES.ROOT;
 
   const handleDelete = async (nodeId) => {
-    await axios.delete(`/node?frontEndId=${nodeId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      }
-    }).then((response) => {
-      if (response.status == 200) {
-        // reset everything in the view
+    await axiosPrivate.delete(`/node?frontEndId=${nodeId}`).then((response) => {
+      if (response.status === 200) {
+        setTrigger();
       }
     }).catch((error) => {
-      console.log(error);
-      navigate("/error");
+      if (error.status === 403 || error.status === 401) {
+        navigate(PATHS.SIGN_IN);
+      } else {
+        navigate(PATHS.ERROR, {
+          state: {
+            action: "Deleting a node",
+            code: error.code,
+            message: error.message,
+            stack: error.stack
+          }
+        });
+      }
     });
-  };
+  }
 
   return (
     <Container component={Paper} disableGutters sx={detailsContainerStyle}>
       <Grid container spacing={0}>
 
         <Grid item xs={12} sx={{ mb: 2 }}>
-          <Typography>
-            Component - {node?.name}
-          </Typography>
+          <Stack direction="row" spacing={1}>
+            <Typography variant="h5">{node?.name}</Typography>
+            <Chip label={node?.nodeType} color="primary" size="small" variant="outlined"/>
+          </Stack>
+          <Divider />
         </Grid>
 
-        <Grid item xs={12} sx={{ mb: 2 }}>
-          <AddNode nodeDetails={node} />
-        </Grid>
-
-        {isSection && (
+        {/* Update the current node. Root cannot be updated */}
+        {!isRoot && (
           <Grid item xs={12} sx={{ mb: 2 }}>
-            <TableContainer component={Paper}>
-              <Typography sx={{p: 1, m: 0, mb: 2, mt: 1}}>
+            <AddNode
+              currentNodeDetails={node}
+              parentId={node?.frontEndId}
+            />
+          </Grid>
+        )}
+
+        {(isSection || isRoot) && Boolean(node.children?.length) && (
+          <Grid item xs={12} component={Paper} sx={{ p: 2, mb: 2, backgroundColor: COLORS.LIGHT_GRAY }}>
+            <TableContainer>
+              <Typography sx={{ mb: 2 }}>
                 Component child table
               </Typography>
-              <Table>
+              <Table size="small">
                 <TableHead>
                   <TableRow>
                     <TableCell align="left">
@@ -96,7 +110,7 @@ function NodeDetails() {
                             variant="outlined"
                             color="warning"
                             size="small"
-                            onClick={() => handleChildRemove(childNode.frontEndId)}
+                            onClick={() => handleDelete(childNode.frontEndId)}
                           >
                             Delete
                           </Button>
@@ -110,9 +124,12 @@ function NodeDetails() {
           </Grid>
         )}
 
-        {isSection && (
+        {/* Add child node */}
+        {(isSection || isRoot) && (
           <Grid item xs={12} sx={{ mb: 2 }}>
-            <AddNode parentId={node.frontEndId} />
+            <AddNode
+              parentId={node.frontEndId}
+            />
           </Grid>
         )}
       </Grid>

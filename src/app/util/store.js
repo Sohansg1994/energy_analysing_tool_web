@@ -10,7 +10,9 @@ export const useProjectsStore = create((set) => (
 export const useNodeStore = create((set) => (
   {
     selectedNode: undefined,
-    setSelectedNode: (node) => set({selectedNode: node})
+    setSelectedNode: (node) => set({selectedNode: node}),
+    trigger: false,
+    setTrigger: () => set((state) => ({trigger: !state.trigger}))
   }
 ));
 

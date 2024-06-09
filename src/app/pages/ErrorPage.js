@@ -29,7 +29,7 @@ function ErrorPage() {
           </Typography>
         </Grid>
 
-        {(role === ROLES.ADMIN || role == ROLES.USER) && (
+        {(role === ROLES.ADMIN || role === ROLES.USER) && (
           <>
             <Grid item xs={12}>
               <Typography>

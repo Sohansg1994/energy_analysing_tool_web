@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Introduction from './modules/views/Introduction';
 import Header from '../app/components/common/Header';
 import withRoot from './modules/withRoot';
 import OurServices from "./modules/views/OurServices";
@@ -12,7 +11,7 @@ function Index() {
   return (
     <React.Fragment>
       <Header/>
-      <Introduction/>
+      {/* <Introduction/> */}
       <WhatWeDo/>
       <OurServices/>
       <HomeVisits/>

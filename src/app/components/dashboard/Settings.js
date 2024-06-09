@@ -5,22 +5,19 @@ import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
 import CountUp from "react-countup";
 import { useNavigate } from "react-router-dom";
-import { PATHS } from "../../util/CommonUtil";
+import { COLORS, PATHS } from "../../util/CommonUtil";
 import useAxiosPrivate from "../../util/useAxiosPrivate";
 import SubscriptionPlanUpload from "./SubscriptionPlanUpload";
 import TariffDataUpload from "./TariffDataUpload";
 import UserSubscriptionPlanChange from "./UserSubscriptionPlanChange";
-
-const gridBlockStyle = {
-  p: 1,
-  m: 0, mb: 4
-}
 
 const countUpStyle = {
   textAlign: "center",
   fontSize: 40,
   fontWeight: "bold",
 };
+
+const statsBoxStyle = { p: 2, backgroundColor: COLORS.LIGHT_GRAY }
 
 function Settings() {
   const axiosPrivate = useAxiosPrivate();
@@ -57,9 +54,9 @@ function Settings() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 12 }}>
-      <Grid container spacing={0}>
-        <Grid item xs={12} md={6} sx={gridBlockStyle}>
-          <Box component={Paper} sx={{ p: 2 }}>
+      <Grid container spacing={4}>
+        <Grid item xs={12} md={6}>
+          <Box component={Paper} sx={statsBoxStyle}>
             <Typography sx={{ textAlign: "center" }} >
               Users
             </Typography>
@@ -69,8 +66,8 @@ function Settings() {
           </Box>
         </Grid>
 
-        <Grid item xs={12} md={6} sx={gridBlockStyle}>
-          <Box component={Paper} sx={{ p: 2 }}>
+        <Grid item xs={12} md={6}>
+          <Box component={Paper} sx={statsBoxStyle}>
             <Typography sx={{ textAlign: "center" }} >
               Projects
             </Typography>
@@ -80,15 +77,15 @@ function Settings() {
           </Box>
         </Grid>
 
-        <Grid item xs={12} sx={gridBlockStyle}>
+        <Grid item xs={12}>
           <SubscriptionPlanUpload />
         </Grid>
 
-        <Grid item xs={12} sx={gridBlockStyle}>
+        <Grid item xs={12}>
           <TariffDataUpload />
         </Grid>
 
-        <Grid item xs={12} sx={gridBlockStyle}>
+        <Grid item xs={12} sx={{mb: 4}}>
           <UserSubscriptionPlanChange />
         </Grid>
       </Grid>

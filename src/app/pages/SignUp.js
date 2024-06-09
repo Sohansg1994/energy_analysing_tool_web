@@ -2,7 +2,7 @@ import { Alert, Box, Button, Container, Grid, Paper, TextField, Typography } fro
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/common/Header";
-import { LAST_NAME_REGEX, PASSWORD_REGEX, PATHS, USERNAME_REGEX } from "../util/CommonUtil";
+import { COLORS, LAST_NAME_REGEX, PASSWORD_REGEX, PATHS, USERNAME_REGEX } from "../util/CommonUtil";
 import { axiosPublic } from "../util/axios";
 import { useAuthStore } from "../util/store";
 
@@ -49,7 +49,7 @@ function SignUp() {
 
   const handleLastNameChange = (e) => {
     setLastName(e.target.value);
-    if (e.target.value == "" || LAST_NAME_REGEX.test(e.target.value)) {
+    if (e.target.value === "" || LAST_NAME_REGEX.test(e.target.value)) {
       setShowAlert(false);
       setAlertMessage("");
       setLastNameError(false);
@@ -166,7 +166,7 @@ function SignUp() {
         <Grid container spacing={0} sx={{ justifyContent: "center" }}>
 
           <Grid item xs={6} sx={{ m: 0, mb: 2 }}>
-            <Box component={Paper} sx={{ p: 2 }}>
+            <Box component={Paper} sx={{ p: 2, backgroundColor: COLORS.LIGHT_GRAY }}>
               <Grid component={"form"} onSubmit={handleSubmit} container sx={{ justifyContent: "center" }}>
 
                 <Grid item xs={12} sx={{ mb: 4 }}>

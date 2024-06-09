@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/common/Header";
 import { axiosPublic } from "../util/axios";
 import { useAuthStore } from "../util/store";
-import { PATHS } from "../util/CommonUtil";
+import { COLORS, PATHS } from "../util/CommonUtil";
 
 function SignIn() {
   const navigate = useNavigate();
@@ -88,7 +88,7 @@ function SignIn() {
         <Grid container spacing={0} sx={{ justifyContent: "center" }}>
 
           <Grid item xs={6} sx={{ m: 0, mb: 2 }}>
-            <Box component={Paper} sx={{ p: 2 }}>
+            <Box component={Paper} sx={{ p: 2, backgroundColor: COLORS.LIGHT_GRAY }}>
               <Grid component={"form"} onSubmit={handleSubmit} container sx={{ justifyContent: "center" }}>
 
                 <Grid item xs={12} sx={{ mb: 4 }}>

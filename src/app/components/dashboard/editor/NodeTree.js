@@ -3,10 +3,11 @@ import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/Indeterminate
 import { Container, Paper, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { PATHS } from '../../../util/CommonUtil';
 import { useNodeStore } from '../../../util/store';
+import useAxiosPrivate from '../../../util/useAxiosPrivate';
 
 const treeContainerStyle = {
   p: 2,
@@ -32,7 +33,7 @@ const convertToTreeNode = (data) => {
 }
 
 const getNodeFromId = (node, frontendId) => {
-  if (node?.frontEndId == frontendId) {
+  if (node?.frontEndId === frontendId) {
     return node;
   } else if (node?.children) {
     for (const i in node.children) {
@@ -45,45 +46,52 @@ const getNodeFromId = (node, frontendId) => {
   }
 }
 
-
-function NodeTree({ projectId }) {
+function NodeTree() {
+  const { projectId } = useParams();
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("accessToken");
+  const axiosPrivate = useAxiosPrivate();
 
-  const [nodes, setNodes] = useState([]);
-  const [treeData, setTreeData] = useState([]);
-  const setSelectedNode = useNodeStore((state) => state.setSelectedNode);
+  const [nodes, setNodes] = useState([]);       // nodes in its original form
+  const [treeData, setTreeData] = useState([]); // nodes converted to tree structure
+  const setSelectedNode = useNodeStore((state) => state.setSelectedNode);  
+  const trigger = useNodeStore((state) => state.trigger);
 
   const convetToTreeStructure = (root) => {
     const treeStructure = [];
     const rootNode = convertToTreeNode(root);
     if (rootNode) {
-      setSelectedNode(rootNode.details)
-      treeStructure.push(rootNode)
+      treeStructure.push(rootNode);
+      setSelectedNode(rootNode.details);
     }
     // else default root node ???
     return treeStructure
   }
 
   const getProjectNodes = async () => {
-    await axios.get(`/project?projectId=${projectId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }).then((response) => {
+    await axiosPrivate.get(`/project?projectId=${projectId}`).then((response) => {
       if (response.status === 200 && response.data.root) {
         setNodes(response.data.root);
         setTreeData(convetToTreeStructure(response.data.root));
       }
     }).catch((error) => {
-      console.log(error);
-      navigate("/error");
+      if (error.status === 403 || error.status === 401) {
+        navigate(PATHS.SIGN_IN);
+      } else {
+        navigate(PATHS.ERROR, {
+          state: {
+            action: "Loading project nodes",
+            code: error.code,
+            message: error.message,
+            stack: error.stack
+          }
+        });
+      }
     });
   }
 
   useEffect(() => {
     getProjectNodes();
-  }, []);
+  }, [trigger]);
 
   const handleItemSelection = (event, itemId, isSelected) => {
     if (isSelected) {

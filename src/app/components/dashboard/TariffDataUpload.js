@@ -1,8 +1,8 @@
 import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { COLORS, PATHS } from "../../util/CommonUtil";
+import { COLORS } from "../../util/CommonUtil";
 import useAxiosPrivate from "../../util/useAxiosPrivate";
+import useErrorHandler from "../../util/useErrorHandler";
 
 const fileLabelStyle = {
   backgroundColor: COLORS.WHITE,
@@ -13,7 +13,7 @@ const fileLabelStyle = {
 
 
 function TariffDataUpload() {
-  const navigate = useNavigate();
+  const handleError = useErrorHandler();
   const axiosPrivate = useAxiosPrivate();
   const fileInput = useRef();
   const [file, setFile] = useState(null);
@@ -57,24 +57,13 @@ function TariffDataUpload() {
         setMessage("File successfully uploaded");
       }
     }).catch((error) => {
-      if (error.status === 403 || error.status === 401) {
-        navigate(PATHS.SIGN_IN);
-      } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Uploading tariff data",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
-      }
+      handleError(error, "Uploading tariff data");
     });
   };
 
   return (
     <Box component={Paper} sx={{ p: 2, m: 0, backgroundColor: COLORS.LIGHT_GRAY }}>
-      <Grid container spacing={ 2 }>
+      <Grid container spacing={2}>
         <Grid item xs={12} sx={{ mb: 2 }}>
           <Typography>
             Upload tariff data
@@ -98,7 +87,7 @@ function TariffDataUpload() {
           />
         </Grid>
         <Grid item xs={12} md={8}>
-          <Typography sx={ fileLabelStyle }>
+          <Typography sx={fileLabelStyle}>
             {message}
           </Typography>
         </Grid>

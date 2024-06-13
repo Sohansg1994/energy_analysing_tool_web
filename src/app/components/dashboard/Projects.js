@@ -1,17 +1,14 @@
 import Container from "@mui/material/Container";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { PATHS } from "../../util/CommonUtil";
 import { useProjectsStore } from "../../util/store";
 import useAxiosPrivate from "../../util/useAxiosPrivate";
+import useErrorHandler from "../../util/useErrorHandler";
 import NewProject from "./NewProject";
 import ProjectTable from "./ProjectTable";
 
 function Projects() {
-  const navigate = useNavigate();
-
+  const handleError = useErrorHandler();
   const updateProjects = useProjectsStore((state) => state.updateProjects);
-
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
@@ -22,22 +19,9 @@ function Projects() {
     await axiosPrivate.get("/project/getAll").then((response) => {
       if (response.data.status === 200) {
         updateProjects(response.data.data);
-      } else {
-        console.log(response);
       }
     }).catch((error) => {
-      if (error.status === 403 || error.status === 401) {
-        navigate(PATHS.SIGN_IN);
-      } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Loading project list",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
-      }
+      handleError(error, "Loading project list");
     });
   };
 

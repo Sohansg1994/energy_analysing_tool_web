@@ -63,3 +63,5 @@ export const IMAGES = {
   SERVICES: "/services.jpg",
   BILL_CALCULATOR: "/bill_calculator.jpg"
 }
+
+export const REFRESH_TOKEN_KEY = "refresh_token";

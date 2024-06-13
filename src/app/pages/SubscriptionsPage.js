@@ -5,12 +5,14 @@ import Header from "../components/common/Header";
 import { PATHS, SUBSCRIPTION_CYCLES, SUBSPRIPTION_PLANS } from "../util/CommonUtil";
 import { axiosPublic } from "../util/axios";
 import useAxiosPrivate from "../util/useAxiosPrivate";
+import useErrorHandler from "../util/useErrorHandler";
 
 
 // no need to come here if you already dont have a subscription plan, redirect to the projects or error page
 function SubscriptionsPage() {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
+  const handleError = useErrorHandler();
 
   const [subscriptionPlans, setSubscriptionPlans] = useState([]);
 
@@ -21,14 +23,7 @@ function SubscriptionsPage() {
         console.log(response.data?.data);
       };
     }).catch((error) => {
-      navigate(PATHS.ERROR, {
-        state: {
-          action: "Loading subscription plans",
-          code: error.code,
-          message: error.message,
-          stack: error.stack
-        }
-      });
+      handleError(error, "Loading subscription plans");
     });
   }
 
@@ -45,22 +40,9 @@ function SubscriptionsPage() {
     await axiosPrivate.post("/subscription", body).then((response) => {
       if (response.status === 200) {
         navigate(PATHS.PROJECTS);
-      } else {
-        console.log(response);
       }
     }).catch((error) => {
-      if (error.status === 403 || error.status === 401) {
-        navigate(PATHS.SIGN_IN);
-      } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Subscribing to a new plan",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
-      }
+      handleError(error, "Subscribing to a new plan");
     })
   }
 

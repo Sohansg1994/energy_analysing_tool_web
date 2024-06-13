@@ -1,10 +1,11 @@
 import { Box, Paper } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import Plot from 'react-plotly.js';
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ResizeObserver from 'resize-observer-polyfill';
-import { COLORS, PATHS } from "../../../util/CommonUtil";
+import { COLORS } from "../../../util/CommonUtil";
 import useAxiosPrivate from "../../../util/useAxiosPrivate";
+import useErrorHandler from "../../../util/useErrorHandler";
 
 
 const convertData = (rootNode) => {
@@ -41,7 +42,7 @@ const flattenData = (node, labels, parents, values) => {
 
 function BreakdownChart() {
   const { projectId } = useParams();
-  const navigate = useNavigate();
+  const handleError = useErrorHandler();
   const axiosPrivate = useAxiosPrivate();
   const [data, setData] = useState(null);
 
@@ -57,18 +58,7 @@ function BreakdownChart() {
           setData(convertedResult);
         }
       }).catch((error) => {
-        if (error.status === 403 || error.status === 401) {
-          navigate(PATHS.SIGN_IN);
-        } else {
-          navigate(PATHS.ERROR, {
-            state: {
-              action: "Doing tariff calculations",
-              code: error.code,
-              message: error.message,
-              stack: error.stack
-            }
-          });
-        }
+        handleError(error, "Doing tariff calculations");
       });
   }
 

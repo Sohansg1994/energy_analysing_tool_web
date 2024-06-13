@@ -7,10 +7,10 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { useNavigate } from "react-router-dom";
-import { COLORS, NODE_TYPES, PATHS } from "../../../util/CommonUtil";
+import { COLORS, NODE_TYPES } from "../../../util/CommonUtil";
 import { useNodeStore } from "../../../util/store";
 import useAxiosPrivate from "../../../util/useAxiosPrivate";
+import useErrorHandler from "../../../util/useErrorHandler";
 import AddNode from "./AddNode";
 
 const detailsContainerStyle = {
@@ -24,8 +24,8 @@ const detailsContainerStyle = {
 }
 
 function NodeDetails() {
-  const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
+  const handleError = useErrorHandler();
 
   const node = useNodeStore((state) => state.selectedNode);
   const trigger = useNodeStore((state) => state.trigger); // to re-render the component tree
@@ -40,18 +40,7 @@ function NodeDetails() {
         setTrigger();
       }
     }).catch((error) => {
-      if (error.status === 403 || error.status === 401) {
-        navigate(PATHS.SIGN_IN);
-      } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Deleting a node",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
-      }
+      handleError(error, "Deleting a node");
     });
   }
 
@@ -62,7 +51,7 @@ function NodeDetails() {
         <Grid item xs={12} sx={{ mb: 2 }}>
           <Stack direction="row" spacing={1}>
             <Typography variant="h5">{node?.name}</Typography>
-            <Chip label={node?.nodeType} color="primary" size="small" variant="outlined"/>
+            <Chip label={node?.nodeType} color="primary" size="small" variant="outlined" />
           </Stack>
           <Divider />
         </Grid>

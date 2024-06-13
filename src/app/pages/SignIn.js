@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/common/Header";
 import { axiosPublic } from "../util/axios";
 import { useAuthStore } from "../util/store";
-import { COLORS, PATHS } from "../util/CommonUtil";
+import { COLORS, PATHS, REFRESH_TOKEN_KEY } from "../util/CommonUtil";
+import useErrorHandler from "../util/useErrorHandler";
 
 function SignIn() {
   const navigate = useNavigate();
+  const handleError = useErrorHandler();
 
   // should be sign-offed at this moment ??
   const setAuthData = useAuthStore((state) => state.setAuthData);
@@ -66,17 +68,11 @@ function SignIn() {
     await axiosPublic.post("/user/login", body).then((response) => {
       if (response.status === 200 && response?.data?.data[0]) {
         setAuthData(response?.data?.data[0]);
+        localStorage.setItem(REFRESH_TOKEN_KEY, response?.data?.data[0].refreshToken)
         navigate(PATHS.PROJECTS, { replace: true });
       }
     }).catch((error) => {
-      navigate(PATHS.ERROR, {
-        state: {
-          action: "Signing in",
-          code: error.code,
-          message: error.message,
-          stack: error.stack
-        }
-      });
+      handleError(error, "Signing in");
     });
   }
 

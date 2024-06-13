@@ -4,10 +4,10 @@ import { Container, Paper, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { PATHS } from '../../../util/CommonUtil';
+import { useParams } from 'react-router-dom';
 import { useNodeStore } from '../../../util/store';
 import useAxiosPrivate from '../../../util/useAxiosPrivate';
+import useErrorHandler from '../../../util/useErrorHandler';
 
 const treeContainerStyle = {
   p: 2,
@@ -48,12 +48,12 @@ const getNodeFromId = (node, frontendId) => {
 
 function NodeTree() {
   const { projectId } = useParams();
-  const navigate = useNavigate();
+  const handleError = useErrorHandler();
   const axiosPrivate = useAxiosPrivate();
 
   const [nodes, setNodes] = useState([]);       // nodes in its original form
   const [treeData, setTreeData] = useState([]); // nodes converted to tree structure
-  const setSelectedNode = useNodeStore((state) => state.setSelectedNode);  
+  const setSelectedNode = useNodeStore((state) => state.setSelectedNode);
   const trigger = useNodeStore((state) => state.trigger);
 
   const convetToTreeStructure = (root) => {
@@ -74,18 +74,7 @@ function NodeTree() {
         setTreeData(convetToTreeStructure(response.data.root));
       }
     }).catch((error) => {
-      if (error.status === 403 || error.status === 401) {
-        navigate(PATHS.SIGN_IN);
-      } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Loading project nodes",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
-      }
+      handleError(error, "Loading project nodes");
     });
   }
 

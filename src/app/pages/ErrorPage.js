@@ -12,7 +12,6 @@ function ErrorPage() {
   const stack = location.state?.stack;
 
   const authData = useAuthStore((state) => state.authData);
-  const role = authData.role;
 
   return (
     <Container sx={{ m: 1, p: 1, justifyContent: "center" }}>
@@ -28,8 +27,8 @@ function ErrorPage() {
             Error occured while : {action}
           </Typography>
         </Grid>
-
-        {(role === ROLES.ADMIN || role === ROLES.USER) && (
+        {/* (role === ROLES.ADMIN || role === ROLES.USER) &&  */}
+        {(
           <>
             <Grid item xs={12}>
               <Typography>

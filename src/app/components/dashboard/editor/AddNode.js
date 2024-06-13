@@ -1,9 +1,10 @@
 import { Alert, Box, Button, Grid, InputAdornment, Paper, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { COLORS, INTEGER_REGEX, NODE_REGEX, NODE_TYPES, PATHS } from "../../../util/CommonUtil";
+import { useParams } from "react-router-dom";
+import { COLORS, INTEGER_REGEX, NODE_REGEX, NODE_TYPES } from "../../../util/CommonUtil";
 import { useAuthStore, useNodeStore } from "../../../util/store";
 import useAxiosPrivate from "../../../util/useAxiosPrivate";
+import useErrorHandler from "../../../util/useErrorHandler";
 
 const nodeTypes = [
   NODE_TYPES.APPLIANCE,
@@ -24,7 +25,7 @@ const applianceTypes = [  // not using id values ??/
 
 function AddNode({ parentId, currentNodeDetails }) {
   const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
+  const handleError = useErrorHandler();
 
   const { projectId } = useParams();
   const selectedNode = useNodeStore((state) => state.selectedNode);
@@ -208,18 +209,7 @@ function AddNode({ parentId, currentNodeDetails }) {
         setTrigger();
       }
     }).catch((error) => {
-      if (error.status === 403 || error.status === 401) {
-        navigate(PATHS.SIGN_IN);
-      } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Updating a node details",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
-      }
+      handleError(error, "Updating a node details");
     });
   }
 
@@ -235,18 +225,7 @@ function AddNode({ parentId, currentNodeDetails }) {
         setTrigger();
       }
     }).catch((error) => {
-      if (error.status === 403 || error.status === 401) {
-        navigate(PATHS.SIGN_IN);
-      } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Adding a new node to the project",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
-      }
+      handleError(error, "Adding a new node to the project");
     });
   }
 

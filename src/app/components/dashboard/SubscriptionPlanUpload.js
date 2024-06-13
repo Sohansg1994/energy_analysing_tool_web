@@ -1,8 +1,8 @@
 import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { COLORS, PATHS } from "../../util/CommonUtil";
+import { COLORS } from "../../util/CommonUtil";
 import useAxiosPrivate from "../../util/useAxiosPrivate";
+import useErrorHandler from "../../util/useErrorHandler";
 
 const fileLabelStyle = {
   backgroundColor: COLORS.WHITE,
@@ -12,9 +12,10 @@ const fileLabelStyle = {
 }
 
 function SubscriptionPlanUpload() {
-  const navigate = useNavigate();
+  const handleError = useErrorHandler();
   const axiosPrivate = useAxiosPrivate();
   const fileInput = useRef();
+  
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("Please select a subscription plan sheet");
 
@@ -24,7 +25,6 @@ function SubscriptionPlanUpload() {
       const selectedFile = files[0];
       if (selectedFile) {
         if (selectedFile.type === "text/csv") {
-          console.log(selectedFile);
           setFile(selectedFile);
           setMessage(selectedFile.name);
         } else {
@@ -56,19 +56,7 @@ function SubscriptionPlanUpload() {
         setMessage("File successfully uploaded");
       }
     }).catch((error) => {
-      console.log(error);
-      if (error.status === 403 || error.status === 401) {
-        navigate(PATHS.SIGN_IN);
-      } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Uploading subscription plans",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
-      }
+      handleError(error, "Uploading subscription plans");
     });
   };
 

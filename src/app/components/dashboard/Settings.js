@@ -4,9 +4,9 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
 import CountUp from "react-countup";
-import { useNavigate } from "react-router-dom";
-import { COLORS, PATHS } from "../../util/CommonUtil";
+import { COLORS } from "../../util/CommonUtil";
 import useAxiosPrivate from "../../util/useAxiosPrivate";
+import useErrorHandler from "../../util/useErrorHandler";
 import SubscriptionPlanUpload from "./SubscriptionPlanUpload";
 import TariffDataUpload from "./TariffDataUpload";
 import UserSubscriptionPlanChange from "./UserSubscriptionPlanChange";
@@ -21,7 +21,7 @@ const statsBoxStyle = { p: 2, backgroundColor: COLORS.LIGHT_GRAY }
 
 function Settings() {
   const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
+  const handleError = useErrorHandler();
 
   const [userCount, setUserCount] = useState(0);
   const [projectCount, setProjectCount] = useState(0);
@@ -33,18 +33,7 @@ function Settings() {
         setProjectCount(response.data.totalProjects);
       }
     }).catch((error) => {
-      if (error.status === 403 || error.status === 401) {
-        navigate(PATHS.SIGN_IN);
-      } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Loading admin statistics",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
-      }
+      handleError(error, "Loading admin statistics");
     })
   };
 
@@ -85,7 +74,7 @@ function Settings() {
           <TariffDataUpload />
         </Grid>
 
-        <Grid item xs={12} sx={{mb: 4}}>
+        <Grid item xs={12} sx={{ mb: 4 }}>
           <UserSubscriptionPlanChange />
         </Grid>
       </Grid>

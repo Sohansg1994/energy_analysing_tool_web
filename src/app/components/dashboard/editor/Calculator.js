@@ -1,10 +1,11 @@
 import { Box, Button, Container, Grid, Paper, Table, TableBody, TableRow, Typography } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { COLORS, NODE_TYPES, PATHS } from "../../../util/CommonUtil";
+import { useParams } from "react-router-dom";
+import { COLORS, NODE_TYPES } from "../../../util/CommonUtil";
 import { useNodeStore } from "../../../util/store";
 import useAxiosPrivate from "../../../util/useAxiosPrivate";
+import useErrorHandler from "../../../util/useErrorHandler";
 import BreakdownChart from "./BreakdownChart";
 
 const containerStyle = {
@@ -18,7 +19,7 @@ const containerStyle = {
 }
 
 function Calculator() {
-  const navigate = useNavigate();
+  const handleError = useErrorHandler();
   const axiosPrivate = useAxiosPrivate();
   const { projectId } = useParams();
   const trigger = useNodeStore((state) => state.trigger);
@@ -37,49 +38,27 @@ function Calculator() {
         setBill(result);
       }
     }).catch((error) => {
-      if (error.status === 403 || error.status === 401) {
-        navigate(PATHS.SIGN_IN);
-      } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Doing tariff calculations",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
-      }
+      handleError(error, "Doing tariff calculations");
     })
   }
 
-  const handleDownload = async() => {
+  const handleDownload = async () => {
     const config = {
       responseType: "blob"
     }
     await axiosPrivate.get(`/report/pdf?projectId=${projectId}`, config)
-    .then((response) => {
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "results.pdf");
-      document.body.appendChild(link);
-      link.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(link);
-    }).catch((error) => {
-      if (error.status === 403 || error.status === 401) {
-        navigate(PATHS.SIGN_IN);
-      } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Downloading bill report",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
-      }
-    });
+      .then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "results.pdf");
+        document.body.appendChild(link);
+        link.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+      }).catch((error) => {
+        handleError(error, "Downloading bill report");
+      });
   }
 
   useEffect(() => {
@@ -93,7 +72,7 @@ function Calculator() {
           <Grid container spacing={2}>
             <Grid item xs={12} lg={6}>
               <Box component={Paper} sx={{ p: 2, mb: 2, backgroundColor: COLORS.LIGHT_GRAY }}>
-                <Typography sx={{ m: 1, mb: 2}}>
+                <Typography sx={{ m: 1, mb: 2 }}>
                   Tariff calculation breakdown
                 </Typography>
 
@@ -140,7 +119,7 @@ function Calculator() {
                   </TableBody>
                 </Table>
 
-                <Box sx={{ mt: 2, mb: 2, textAlign: "right"}}>
+                <Box sx={{ mt: 2, mb: 2, textAlign: "right" }}>
                   <Button
                     variant="outlined"
                     size="small"

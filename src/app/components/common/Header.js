@@ -1,9 +1,10 @@
 import { AppBar, Avatar, Box, Button, IconButton, Link, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { COLORS, PATHS } from "../../util/CommonUtil";
+import { COLORS, PATHS, REFRESH_TOKEN_KEY } from "../../util/CommonUtil";
 import { useAuthStore } from "../../util/store";
 import useAxiosPrivate from "../../util/useAxiosPrivate";
+import useErrorHandler from "../../util/useErrorHandler";
 import useRefreshToken from "../../util/useRefreshToken";
 
 const UNAUTH_PATHS = [PATHS.SIGN_IN, PATHS.SIGN_UP, PATHS.ERROR, PATHS.HOME, PATHS.OUR_SERVICES];
@@ -48,6 +49,7 @@ function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
+  const handleError = useErrorHandler();
 
   const notSignInPath = location.pathname !== PATHS.SIGN_IN;
   const notSignUpPath = location.pathname !== PATHS.SIGN_UP;
@@ -64,6 +66,7 @@ function Header() {
 
   useEffect(() => {
     refresh().catch((error) => {
+      // will this ever reach this catch block
       if (error.response?.status === 404 || error.response?.status === 401) {
         if (!UNAUTH_PATHS.includes(location.pathname)) {
           navigate(PATHS.SIGN_IN);
@@ -93,22 +96,12 @@ function Header() {
     await axiosPrivate.post("/user/logout").then((response) => {
       if (response.status === 200) {
         setAuthData({});
+        localStorage.removeItem(REFRESH_TOKEN_KEY);
         setAnchorUser(null);
         navigate(PATHS.SIGN_IN);
       }
     }).catch((error) => {
-      if (error.status === 403 || error.status === 401) {
-        navigate(PATHS.SIGN_IN);
-      } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Logging out",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
-      }
+      handleError(error, "Logging out");
     });
   }
 

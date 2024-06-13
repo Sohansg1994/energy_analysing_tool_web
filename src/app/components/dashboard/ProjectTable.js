@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { COLORS, PATHS } from "../../util/CommonUtil";
 import { useProjectsStore } from "../../util/store";
 import useAxiosPrivate from "../../util/useAxiosPrivate";
+import useErrorHandler from "../../util/useErrorHandler";
 
 
 const tableStyle = {
@@ -18,6 +19,7 @@ const actionCellStyles = {
 }
 
 function ProjectTable({ getProjectList }) {
+  const handleError = useErrorHandler();
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
   const projects = useProjectsStore((state) => state.projects);
@@ -28,18 +30,7 @@ function ProjectTable({ getProjectList }) {
         getProjectList();
       }
     }).catch((error) => {
-      if (error.status === 403 || error.status === 401) {
-        navigate(PATHS.SIGN_IN);
-      } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Deleting a project from the table",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
-      }
+      handleError(error, "Deleting a project from the table");
     })
   };
 

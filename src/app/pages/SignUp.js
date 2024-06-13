@@ -2,13 +2,15 @@ import { Alert, Box, Button, Container, Grid, Paper, TextField, Typography } fro
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/common/Header";
-import { COLORS, LAST_NAME_REGEX, PASSWORD_REGEX, PATHS, USERNAME_REGEX } from "../util/CommonUtil";
+import { COLORS, LAST_NAME_REGEX, PASSWORD_REGEX, PATHS, REFRESH_TOKEN_KEY, USERNAME_REGEX } from "../util/CommonUtil";
 import { axiosPublic } from "../util/axios";
 import { useAuthStore } from "../util/store";
+import useErrorHandler from "../util/useErrorHandler";
 
 
 function SignUp() {
   const navigate = useNavigate();
+  const handleError = useErrorHandler();
 
   // should be sign-offed at this moment ??
   const setAuthData = useAuthStore((state) => state.setAuthData);
@@ -139,6 +141,7 @@ function SignUp() {
     await axiosPublic.post("/user/register", body).then((response) => {
       if (response.status === 200) {
         setAuthData(response?.data?.data[0]);
+        localStorage.setItem(REFRESH_TOKEN_KEY, response?.data?.data[0].refreshToken)
         navigate(PATHS.SUBSPRIPTION, { replace: true });
       }
     }).catch((error) => {
@@ -146,14 +149,7 @@ function SignUp() {
         setShowAlert(true);
         setAlertMessage("Email already in use. Please use a different email address.");
       } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Registering a new user",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
+        handleError(error, "Registering a new user");
       }
     })
   }

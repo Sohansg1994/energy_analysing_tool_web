@@ -1,8 +1,8 @@
 import { Alert, Box, Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { COLORS, PATHS } from "../../util/CommonUtil";
+import { COLORS } from "../../util/CommonUtil";
 import useAxiosPrivate from "../../util/useAxiosPrivate";
+import useErrorHandler from "../../util/useErrorHandler";
 
 const SUBSCRIPTION_PLANS = ["FREE", "DOMESTIC_LITE"];
 
@@ -12,8 +12,8 @@ const submitGridStyle = {
 };
 
 function UserSubscriptionPlanChange() {
-  const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
+  const handleError = useErrorHandler();
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -39,7 +39,7 @@ function UserSubscriptionPlanChange() {
   }
 
   const handleSubscriptionPlanChange = (e) => {
-    if (e.target.value &&  SUBSCRIPTION_PLANS.includes(e.target.value)) {
+    if (e.target.value && SUBSCRIPTION_PLANS.includes(e.target.value)) {
       setSubscriptionPlan(e.target.value);
       setAlertMessage("");
       setShowAlert(false);
@@ -67,18 +67,7 @@ function UserSubscriptionPlanChange() {
       }
     }).catch((error) => {
       // handle use already has this subscription plan issue, and don't let change plan of current user
-      if (error.status === 403 || error.status === 401) {
-        navigate(PATHS.SIGN_IN);
-      } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Changing user subscription plan",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
-      }
+      handleError(error, "Changing user subscription plan");
     })
   }
 

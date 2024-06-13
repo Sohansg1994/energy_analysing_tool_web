@@ -1,8 +1,8 @@
 import { Alert, Button, Container, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { COLORS, PATHS, PROJECT_REGEX } from "../../util/CommonUtil";
+import { COLORS, PROJECT_REGEX } from "../../util/CommonUtil";
 import useAxiosPrivate from "../../util/useAxiosPrivate";
+import useErrorHandler from "../../util/useErrorHandler";
 
 const PROJECT_TYPE = ["Domestic"];
 
@@ -12,7 +12,7 @@ const submitGridStyle = {
 };
 
 function NewProject({ getProjectList }) {
-  const navigate = useNavigate();
+  const handleError = useErrorHandler();
   const axiosPrivate = useAxiosPrivate();
 
   const [showAlert, setShowAlert] = useState(false);
@@ -68,18 +68,8 @@ function NewProject({ getProjectList }) {
       if (error.status === 409) {
         showAlert(true);
         setAlertMessage("You have reached maximum project limit for the selected subscription plan");
-      }
-      else if (error.status === 403 || error.status === 401) {
-        navigate(PATHS.SIGN_IN);
       } else {
-        navigate(PATHS.ERROR, {
-          state: {
-            action: "Creating a new project",
-            code: error.code,
-            message: error.message,
-            stack: error.stack
-          }
-        });
+        handleError(error, "Creating a new project");
       }
     });
     ;

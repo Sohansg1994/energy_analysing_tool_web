@@ -72,7 +72,15 @@ function SignIn() {
         navigate(PATHS.PROJECTS, { replace: true });
       }
     }).catch((error) => {
-      handleError(error, "Signing in");
+      if (error?.response?.status === 404) {
+        setShowAlert(true);
+        setAlertMessage("Email is not registered. Please try again");
+      } else if (error?.response?.status === 406) {
+        setShowAlert(true);
+        setAlertMessage("Incorrect password. Please try again");
+      } else {
+        handleError(error, "Signing in");
+      }
     });
   }
 

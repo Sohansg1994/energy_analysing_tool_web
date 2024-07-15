@@ -1,8 +1,5 @@
-import { Container, Grid } from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
-import Typography from "../../pages/modules/components/Typography";
-import { ROLES } from "../util/CommonUtil";
-import { useAuthStore } from "../util/store";
 
 function ErrorPage() {
   const location = useLocation();
@@ -11,7 +8,7 @@ function ErrorPage() {
   const message = location.state?.message;
   const stack = location.state?.stack;
 
-  const authData = useAuthStore((state) => state.authData);
+  // const authData = useAuthStore((state) => state.authData);
 
   return (
     <Container sx={{ m: 1, p: 1, justifyContent: "center" }}>

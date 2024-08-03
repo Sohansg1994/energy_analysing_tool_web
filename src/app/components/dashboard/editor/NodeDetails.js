@@ -12,7 +12,6 @@ import { useNodeStore } from "../../../util/store";
 import useAxiosPrivate from "../../../util/useAxiosPrivate";
 import useErrorHandler from "../../../util/useErrorHandler";
 import AddNode from "./AddNode";
-import AddSolarPanel from "./AddSolarPanel";
 
 const detailsContainerStyle = {
   p: 2,
@@ -121,12 +120,6 @@ function NodeDetails() {
             <AddNode
               parentId={node.frontEndId}
             />
-          </Grid>
-        )}
-
-        {isRoot && (
-          <Grid item xs={12} sx={{ mb: 2 }}>
-            <AddSolarPanel />
           </Grid>
         )}
       </Grid>

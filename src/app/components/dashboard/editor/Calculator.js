@@ -33,6 +33,7 @@ function Calculator() {
     await axiosPrivate.get(`/playground/bill?projectId=${projectId}`).then((response) => {
       if (response.status === 200) {
         const result = response?.data?.data[0];
+        console.log(result);
         const isValidResult = isRoot && result?.totalUnits > 0;
         setResultAvailable(isValidResult);
         setBill(result);
@@ -76,48 +77,95 @@ function Calculator() {
                   Tariff calculation breakdown
                 </Typography>
 
-                <Table size="small">
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="left">Total units</TableCell>
-                      <TableCell align="right">{bill?.totalUnits}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">Usage breakdown</TableCell>
-                      <TableCell align="right">
-                        <Table size="small" sx={{ [`& .${tableCellClasses.root}`]: { borderBottom: "none" } }}>
-                          <TableBody>
-                            {Boolean(bill.calculationSteps?.length) && bill.calculationSteps.map(step => (
-                              <TableRow key={step}>
-                                <TableCell align="right">{step}</TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">Usage charge</TableCell>
-                      <TableCell align="right">{bill.usageCharge}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">Fixed charge</TableCell>
-                      <TableCell align="right">{bill.fixedCharge}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">Total charge</TableCell>
-                      <TableCell align="right">{bill.totalCharge}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">Levy</TableCell>
-                      <TableCell align="right">{bill.levy}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left"><b>Total bill amount</b></TableCell>
-                      <TableCell align="right"><b>{bill.billAmount}</b></TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+                {bill?.totalUnits >= bill?.solarUnits && (
+                  <Table size="small">
+                    <TableBody>
+                      <TableRow>
+                        <TableCell align="left">Total units</TableCell>
+                        <TableCell align="right">{bill?.totalUnits}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">Solar units</TableCell>
+                        <TableCell align="right">{bill?.solarUnits}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">Effective units</TableCell>
+                        <TableCell align="right">{bill?.totalUnits - bill?.solarUnits}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">Usage breakdown</TableCell>
+                        <TableCell align="right">
+                          <Table size="small" sx={{ [`& .${tableCellClasses.root}`]: { borderBottom: "none" } }}>
+                            <TableBody>
+                              {Boolean(bill.calculationSteps?.length) && bill.calculationSteps.map(step => (
+                                <TableRow key={step}>
+                                  <TableCell align="right">{step}</TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">Usage charge</TableCell>
+                        <TableCell align="right">{bill.usageCharge}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">Fixed charge</TableCell>
+                        <TableCell align="right">{bill.fixedCharge}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">Total charge</TableCell>
+                        <TableCell align="right">{bill.totalCharge}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">Levy</TableCell>
+                        <TableCell align="right">{bill.levy}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left"><b>Total bill amount</b></TableCell>
+                        <TableCell align="right"><b>{bill.billAmount}</b></TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                )}
+
+                {bill?.totalUnits < bill?.solarUnits && (
+                  <Table size="small">
+                    <TableBody>
+                      <TableRow>
+                        <TableCell align="left">Total units</TableCell>
+                        <TableCell align="right">{bill?.totalUnits}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">Solar units</TableCell>
+                        <TableCell align="right">{bill?.solarUnits}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">Effective units</TableCell>
+                        <TableCell align="right">{bill?.solarUnits - bill?.totalUnits}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">Solar income breakdown</TableCell>
+                        <TableCell align="right">
+                          <Table size="small" sx={{ [`& .${tableCellClasses.root}`]: { borderBottom: "none" } }}>
+                            <TableBody>
+                              {Boolean(bill.calculationSteps?.length) && bill.calculationSteps.map(step => (
+                                <TableRow key={step}>
+                                  <TableCell align="right">{step}</TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left"><b>Total solar income</b></TableCell>
+                        <TableCell align="right"><b>{bill.totalIncome}</b></TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                )}
 
                 <Box sx={{ mt: 2, mb: 2, textAlign: "right" }}>
                   <Button

@@ -1,8 +1,7 @@
-import { Alert, Box, Button, Grid, InputAdornment, Paper, TextField, Typography, Table, TableHead, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
+import { Alert, Box, Button, Grid, InputAdornment, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { COLORS, INTEGER_REGEX, NODE_REGEX, NODE_TYPES } from "../../../util/CommonUtil";
-import { useAuthStore, useNodeStore } from "../../../util/store";
+import { COLORS, INTEGER_REGEX } from "../../../util/CommonUtil";
 import useAxiosPrivate from "../../../util/useAxiosPrivate";
 import useErrorHandler from "../../../util/useErrorHandler";
 
@@ -26,17 +25,14 @@ function AddSolarPanel() {
   const { projectId } = useParams();
 
   useEffect(() => {
-    console.log("project id : ", projectId);
     if (showAlert === false && alertMessage === "") {
       getSolarPanels(projectId);
     }
   }, []);
 
   const getSolarPanels = async () => {
-    console.log("getting solar panels for project id : ", projectId);
     await axiosPrivate.get(`/solar_panel/?projectId=${projectId}`)
       .then((response) => {
-        console.log(response);
         setSolarPanels(response?.data.data);
       })
       .catch((error) => {
@@ -84,8 +80,6 @@ function AddSolarPanel() {
   }
 
   const handleSolarSubmit = async (e) => {
-    console.log("submitting solar panel");
-    console.log(wattRate, hours, quantity);
     e.preventDefault();
     if (e.target.checkValidity() && allFieldsProvided()) {
       saveNewSolarPanel();
@@ -110,14 +104,12 @@ function AddSolarPanel() {
     };
     await axiosPrivate.post("/solar_panel/", panelData).then((response) => {
       if (response.status === 200) {
-        console.log("successfully submitted solar panel");
         setWattRate(0);
         setHours(0);
         setQuantity(0);
         getSolarPanels(projectId);
       }
     }).catch((error) => {
-      console.log("somethigss wrong with submitting solar panel");
       handleError(error, "Adding a new solar panel");
     });
   }
@@ -174,7 +166,7 @@ function AddSolarPanel() {
                           onClick={() => handlePanelRemove(panel.id)}
                           variant="outlined"
                           size="small"
-                          color="primary">
+                          color="warning">
                           Remove
                         </Button>
                       </TableCell>
@@ -189,9 +181,11 @@ function AddSolarPanel() {
 
         <Grid item xs={12} component={Paper} sx={{ p: 2, mb: 2, backgroundColor: COLORS.WHITE }}>
           <Grid container spacing={2} component={"form"}>
+            
             <Grid item xs={12}>
               <Typography>Add new panel</Typography>
             </Grid>
+
             <Grid item xs={4}>
               <TextField
                 type="number"
@@ -251,7 +245,6 @@ function AddSolarPanel() {
                 type="button"
                 variant="outlined"
                 size="small"
-                enabled={allFieldsProvided()}
                 color="primary">
                 Save
               </Button>

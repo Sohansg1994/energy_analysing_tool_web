@@ -12,7 +12,7 @@ const fileLabelStyle = {
 }
 
 
-function TariffDataUpload() {
+function TariffDataUpload() { 
   const handleError = useErrorHandler();
   const axiosPrivate = useAxiosPrivate();
   const fileInput = useRef();

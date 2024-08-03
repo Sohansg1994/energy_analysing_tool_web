@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { useNodeStore } from '../../../util/store';
 import useAxiosPrivate from '../../../util/useAxiosPrivate';
 import useErrorHandler from '../../../util/useErrorHandler';
+import Switch from '@mui/material/Switch';
 
 const treeContainerStyle = {
   p: 2,
@@ -97,7 +98,7 @@ function NodeTree() {
             Project tree
           </Typography>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={{ mb: 2 }}>
           <RichTreeView
             items={treeData}
             onItemSelectionToggle={handleItemSelection}
@@ -106,6 +107,16 @@ function NodeTree() {
               collapseIcon: IndeterminateCheckBoxOutlinedIcon
             }} />
         </Grid>
+        {/* <Grid item xs={12}>
+          <Typography>
+            Enable solar
+            <Switch
+              onChange={(event) => {
+                // handle switch change event here
+              }}
+            />
+          </Typography>
+        </Grid> */}
       </Grid>
     </Container>
   )
